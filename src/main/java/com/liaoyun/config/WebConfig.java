@@ -1,6 +1,7 @@
 package com.liaoyun.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,20 +31,22 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
-    @Autowired
-    HandlerInterceptor loginInterceptor;
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)//添加拦截器
-                .addPathPatterns("/**") //配置拦截路径
-                .excludePathPatterns("/login");//配置排除路径
-    }
+//    @Autowired
+//    HandlerInterceptor loginInterceptor;
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(loginInterceptor)//添加拦截器
+//                .addPathPatterns("/**") //配置拦截路径
+//                .excludePathPatterns("/login");//配置排除路径
+//    }
 
     //实例化该参数处理器,使用addArgumentResolvers启用?
+    @Qualifier("userIdArgResolver")
     @Autowired
     private HandlerMethodArgumentResolver userArgumentResolver;
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(userArgumentResolver);
     }
+
 }

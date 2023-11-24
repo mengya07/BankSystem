@@ -1,2 +1,4 @@
-package com.liaoyun.utils;public class SendSMSCode {
+package com.liaoyun.utils;
+
+public class SendSMSCode {
 }

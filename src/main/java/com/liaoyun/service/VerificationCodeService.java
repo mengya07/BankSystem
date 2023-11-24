@@ -1,2 +1,7 @@
-package com.liaoyun.service;public interface VerificationCodeService {
+package com.liaoyun.service;
+
+import com.liaoyun.domain.ResponseResult;
+
+public interface VerificationCodeService {
+    ResponseResult sendCode(String phoneNumber);
 }

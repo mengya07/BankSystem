@@ -4,10 +4,22 @@
     <insert id="insert">
         insert into user values (#{id},#{username},#{age},#{address})
     </insert>
+    <insert id="insertUserPassword">
+        insert into app_user_password (username,password) values (#{username},#{password})
+    </insert>
+    <insert id="inserterUserInfo">
+        insert into app_user_info values (LAST_INSERT_ID(),#{phoneNumber},#{identityCard},#{permissions})
+    </insert>
     <select id="findAll" resultType="com.liaoyun.domain.User">
         select * from user
     </select>
     <select id="login" resultType="com.liaoyun.domain.loginUser">
         select id from password_user where username = #{username} and password = #{password}
+    </select>
+    <select id="selectOne" resultType="com.liaoyun.domain.AccountUserPassword">
+        select * from app_user_password where username=#{userName}
+    </select>
+    <select id="selectPermissionsById" resultType="java.lang.String">
+        select permissions from app_user_info where user_id = #{userId}
     </select>
 </mapper>

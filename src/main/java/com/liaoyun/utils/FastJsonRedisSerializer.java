@@ -1,4 +1,4 @@
-package com.liaoyun.config;
+package com.liaoyun.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
