@@ -57,7 +57,22 @@ public class InfoInspecter {
 
     //检验密码格式是否正确
     public static boolean checkPassword(String password){
-        return true;
+        int length=password.length();
+        if(length<8||length>15)return false;
+        boolean numflag=false;
+        boolean letterflag=false;
+        for(int i=0;i<length;i++){
+            if(Character.isDigit(password.charAt(i))){
+                numflag=true;
+            }
+            if(Character.isLetter(password.charAt(i))){
+                letterflag=true;
+            }
+        }
+        if(numflag&&letterflag){
+            return true;
+        }
+        else return false;
     }
 
     public static ResponseResult checkInfo(RegisterInfo UserInfo){
