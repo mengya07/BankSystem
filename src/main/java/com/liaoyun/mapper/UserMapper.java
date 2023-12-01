@@ -13,11 +13,9 @@ import java.util.List;
 @Mapper
 @Repository
 public interface UserMapper {
-    List<User> findAll();
 
     loginUser login(loginUser user);
 
-    void insert(User user);
     //根据用户名查询用户密码
     AccountUserPassword selectOne(String userName);
 

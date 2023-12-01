@@ -23,8 +23,8 @@ public class RegisterServiceImpl implements RegisterService {
         //TODO 短信验证码校验
 
         //验证码校验通过，进行注册
-        userMapper.insertUserPassword(registerInfo.getAccountUserPassword());
         userMapper.inserterUserInfo(registerInfo.getAccountUserInfo());
+        userMapper.insertUserPassword(registerInfo.getAccountUserPassword());
         return new ResponseResult<>(200,"账户创建成功");
     }
 }
