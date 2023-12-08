@@ -37,4 +37,6 @@ public interface UserMapper {
     BankCardInfo selectCardInfoByCardNumber(String name,String cardNumber);
 
     void updateBankCardBalance(String cardNumber,BigDecimal newBalance);
+
+    int insertTransferTransaction(TransferTransaction transferTransaction);
 }

@@ -2,6 +2,7 @@ package com.liaoyun.service.impl;
 
 import com.liaoyun.domain.BankCardInfo;
 import com.liaoyun.domain.ResponseResult;
+import com.liaoyun.domain.TransferTransaction;
 import com.liaoyun.domain.TransferUnit;
 import com.liaoyun.mapper.UserMapper;
 import com.liaoyun.service.TransferMoneyService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Transactional
@@ -35,6 +37,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
             newBalance = bankCardInfo.getBalance().add(transferUnit.getTransferAmount());
             //修改收款人余额
             userMapper.updateBankCardBalance(bankCardInfo.getCardNumber(),newBalance);
+            TransactionRecording(bankCardInfo,transferUnit);
             return new ResponseResult<>(200,"转账成功");
         }else if(transferUnit.getTransferAmount().compareTo(new BigDecimal(100000))<0){
             //转账金额大于一万小于十万
@@ -44,15 +47,22 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
             newBalance = bankCardInfo.getBalance().add(transferUnit.getTransferAmount());
             //修改收款人余额
             userMapper.updateBankCardBalance(bankCardInfo.getCardNumber(),newBalance);
+            TransactionRecording(bankCardInfo,transferUnit);
             return new ResponseResult<>(200,"转账成功");
         }
         return new ResponseResult(4,"转账金额超限");
     }
 
+    void TransactionRecording(BankCardInfo bankCardInfo,TransferUnit transferUnit){
+        TransferTransaction transferTransaction = new TransferTransaction(
+                transferUnit.getPayerId(),bankCardInfo.getCustomerId(),
+                transferUnit.getTransferAmount(), new Timestamp(System.currentTimeMillis()));
+        userMapper.insertTransferTransaction(transferTransaction);
+    }
     @Override
     public ResponseResult transferMoney(TransferUnit transferUnit) {
         //付款人查余额
-        BigDecimal payerBalance = (userMapper.selectBalanceByCustomerId(transferUnit.getCustomerId())).getBalance();
+        BigDecimal payerBalance = (userMapper.selectBalanceByCustomerId(transferUnit.getPayerId())).getBalance();
         if(payerBalance.compareTo(transferUnit.getTransferAmount())<0){
             return new ResponseResult<>(1,"余额不足");
         }

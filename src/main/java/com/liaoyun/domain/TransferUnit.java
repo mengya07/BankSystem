@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransferUnit {
-    private int CustomerId;
+    private int payerId;
     private String payerCardNumber;
     private String payeeName;
     private String payeeCardNumber;
