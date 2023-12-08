@@ -36,5 +36,5 @@ public interface UserMapper {
 
     BankCardInfo selectCardInfoByCardNumber(String name,String cardNumber);
 
-    void updateBankCardBalance(String cardNumber,BigDecimal updateAmount);
+    void updateBankCardBalance(String cardNumber,BigDecimal newBalance);
 }

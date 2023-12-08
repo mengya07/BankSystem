@@ -25,17 +25,17 @@ public class QueryController {
 
 
     @RequestMapping("/query/balance")
-    ResponseResult queryBalance(@RequestHeader("token") String token, HttpServletRequest request) throws Exception {
-        return queryInfo.queryBalance(tokenToId.toCustomerId(token, request));
+    ResponseResult queryBalance(HttpServletRequest request) throws Exception {
+        return queryInfo.queryBalance(tokenToId.toCustomerId( request));
     }
 
     @RequestMapping("/query/bankCard")
-    ResponseResult queryBankCards(@RequestHeader("token") String token, HttpServletRequest request) throws Exception {
-        return queryInfo.queryBankCards(tokenToId.toCustomerId(token, request));
+    ResponseResult queryBankCards(HttpServletRequest request) throws Exception {
+        return queryInfo.queryBankCards(tokenToId.toCustomerId(request));
     }
     @RequestMapping("/query/customerInfo")
-    ResponseResult queryCustomerInfo(@RequestHeader("token") String token, HttpServletRequest request) throws Exception {
-        return queryInfo.queryPersonalInformation(tokenToId.toCustomerId(token, request));
+    ResponseResult queryCustomerInfo(HttpServletRequest request) throws Exception {
+        return queryInfo.queryPersonalInformation(tokenToId.toCustomerId(request));
     }
 
     @RequestMapping("/query/transferTransaction")

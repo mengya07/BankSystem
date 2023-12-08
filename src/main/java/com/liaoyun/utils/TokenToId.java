@@ -11,7 +11,7 @@ public class TokenToId {
 
     @Autowired
     UserMapper userMapper;
-    public  int toCustomerId(String token, HttpServletRequest request) throws Exception {
+    public  int toCustomerId( HttpServletRequest request) throws Exception {
         int userId = Integer.parseInt(request.getAttribute("userId").toString());
         //根据APP用户ID查银行账户ID(顾客ID)
         int customerId = userMapper.selectCustomerIdByUserId(userId);

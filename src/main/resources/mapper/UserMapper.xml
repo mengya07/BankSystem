@@ -8,7 +8,7 @@
         insert into app_user_info (phone_number,Identity_card,Permissions) values (#{phoneNumber},#{identityCard},#{permissions})
     </insert>
     <update id="updateBankCardBalance">
-
+        update bank_card set balance = #{newBalance} where card_number = #{cardNumber}
     </update>
     <select id="login" resultType="com.liaoyun.domain.loginUser">
         select id from password_user where username = #{username} and password = #{password}

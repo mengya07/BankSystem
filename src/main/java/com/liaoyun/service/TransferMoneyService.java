@@ -2,10 +2,11 @@ package com.liaoyun.service;
 
 
 import com.liaoyun.domain.ResponseResult;
+import com.liaoyun.domain.TransferUnit;
 
 import java.math.BigDecimal;
 
 public interface TransferMoneyService {
 
-    ResponseResult transferMoney(int CustomerId, String payerCardNumber, String payeeName, String payeeCardNumber, BigDecimal transferAmount);
+    ResponseResult transferMoney(TransferUnit transferUnit);
 }
