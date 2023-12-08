@@ -5,6 +5,7 @@
     <input class="input" type="text" placeholder="请输入用户名" @input="onUsernameInput">
     <input class="input" type="password" placeholder="请输入密码" @input="onPasswordInput">
     <button class="button" @click="onLoginClick">登录</button>  
+	 <button class="button2" @click="handleClick">注册</button>  
     <text class="error" v-if="error">{{ error }}</text>  
   </view>  
 </template>  
@@ -31,12 +32,24 @@ export default {
         uni.showToast({  
           title: '登录成功',  
           icon: 'success'  
-        });  
+        });
+		uni.switchTab({
+		  url:  "/pages/home/home"
+		});
+		this.error = '';
+			
+			
         // 登录成功后跳转到其他页面或执行其他操作  
       } else {  
         this.error = '用户名或密码错误';  
       }  
-    }  
+    },
+	handleClick(){
+		uni.navigateTo({
+		  url:  "/pages/register/register"
+		});
+	}
+
   }  
 };  
 </script>  
@@ -66,8 +79,12 @@ export default {
 }  
 .button {  
   width: 300rpx;  
-  height: 50rpx;  
+  height: 100rpx;  
 }  
+.button2{
+  width: 300rpx;
+  height: 100rpx;
+}
 .error {  
   color: red;  
   font-size: 24rpx;  
