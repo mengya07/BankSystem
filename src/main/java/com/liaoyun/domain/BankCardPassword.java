@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountUserPassword {
-
-    private int id;
-    private int userId;
-    private String userName;
-    private String password;
+public class BankCardPassword {
+    int passwordId;
+    int cardId;
+    String hashedPassword;
+    Timestamp createdAt;
 }

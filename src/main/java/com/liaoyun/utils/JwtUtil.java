@@ -18,7 +18,7 @@ import java.util.UUID;
     //有效期为
     public static final Long JWT_TTL = 60 * 60 *1000L;// 60 * 60 *1000 一个小时
     //设置秘钥明文
-    public static final String JWT_KEY = "sangeng";
+    public static final String JWT_KEY = "liaoyun";
     public static String getUUID(){
         String token = UUID.randomUUID().toString().replaceAll("-", "");
         return token;
@@ -51,12 +51,12 @@ import java.util.UUID;
         if(ttlMillis==null){
         ttlMillis=JwtUtil.JWT_TTL;
     }
-        long expMillis = nowMillis + ttlMillis;
+        long expMillis = nowMillis + ttlMillis;//默认过期时间一个小时
         Date expDate = new Date(expMillis);
         return Jwts.builder()
         .setId(uuid) //唯一的ID
         .setSubject(subject) // 主题 可以是JSON数据
-        .setIssuer("sg") // 签发者
+        .setIssuer("pm") // 签发者
         .setIssuedAt(now) // 签发时间
         .signWith(signatureAlgorithm, secretKey) //使用HS256对称加密算法签 名, 第二个参数为秘钥
         .setExpiration(expDate);

@@ -13,12 +13,12 @@ public class TestController {
 
 
     @RequestMapping("/test01")
-    @PreAuthorize(value = "hasAuthority('test')")
+    @PreAuthorize(value = "hasAuthority('user')")
     public String test01(){
         return "test01";
     }
 
     @RequestMapping("/hentai")
-    @PreAuthorize(value = "hasAuthority('user')")
+    @PreAuthorize(value = "hasAuthority('hentai')")
     public String test02(){return "hentai 才能访问的controller"; }
 }

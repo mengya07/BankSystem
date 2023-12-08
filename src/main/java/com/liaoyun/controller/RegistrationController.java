@@ -1,6 +1,5 @@
 package com.liaoyun.controller;
 
-import com.liaoyun.domain.AccountUserInfo;
 import com.liaoyun.domain.RegisterInfo;
 import com.liaoyun.domain.ResponseResult;
 import com.liaoyun.service.RegisterService;
@@ -19,7 +18,7 @@ public class RegistrationController {
     @PostMapping("/register")
     //前端页面把注册信息包装成JSON串给后端服务器
     public ResponseResult register(@RequestBody RegisterInfo registerInfo){
-        //格式错误返回
+        //信息格式错误返回
         ResponseResult result = InfoInspecter.checkInfo(registerInfo);
         if( result != null){
             return result;
