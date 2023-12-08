@@ -35,6 +35,8 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 @Configuration
 @EnableWebSecurity
+//开启后权限拦截生效
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
     @Autowired
@@ -64,6 +66,8 @@ public class WebSecurityConfig {
                 exception.accessDeniedHandler(accDeniedHandler);});
         //允许跨域,withDefaults将设置和MVC一样
         http.cors(withDefaults());
+        //控制單個用戶只能創建一個token
+        http.sessionManagement(maximum->maximum.maximumSessions(1).expiredUrl("/login"));
         return http.build();
     }
 

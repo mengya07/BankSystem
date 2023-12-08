@@ -2,7 +2,6 @@ package com.liaoyun.service.impl;
 
 import com.liaoyun.domain.AccountUserPassword;
 import com.liaoyun.domain.LoginUserDetail;
-import com.liaoyun.domain.User;
 import com.liaoyun.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,12 +20,13 @@ public class UserServiceDetailImpl implements UserDetailsService {
     private UserMapper userMapper;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        //根据用户名把密码查出来，以便后续比对
         AccountUserPassword user = userMapper.selectOne(username);
         if(Objects.isNull(user)){
             throw new RuntimeException("用户名或密码错误");
         }else{
             //查询权限信息
-            String permissions = userMapper.selectPermissionsById(user.getId());
+            String permissions = userMapper.selectPermissionsById(user.getUserId());
             List<String> list = new ArrayList<>(Arrays.asList(permissions));
 
             //封装成UserDetails

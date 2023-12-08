@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.liaoyun.mapper.UserMapper">
-    <insert id="insert">
-        insert into user values (#{id},#{username},#{age},#{address})
-    </insert>
     <insert id="insertUserPassword">
-        insert into app_user_password (username,password) values (#{username},#{password})
+        insert into app_user_password (user_id,user_name,password) values (LAST_INSERT_ID(),#{userName},#{password})
     </insert>
     <insert id="inserterUserInfo">
-        insert into app_user_info values (LAST_INSERT_ID(),#{phoneNumber},#{identityCard},#{permissions})
+        insert into app_user_info (phone_number,Identity_card,Permissions) values (#{phoneNumber},#{identityCard},#{permissions})
     </insert>
-    <select id="findAll" resultType="com.liaoyun.domain.User">
-        select * from user
-    </select>
+    <update id="updateBankCardBalance">
+        update bank_card set balance = #{newBalance} where card_number = #{cardNumber}
+    </update>
     <select id="login" resultType="com.liaoyun.domain.loginUser">
         select id from password_user where username = #{username} and password = #{password}
     </select>
     <select id="selectOne" resultType="com.liaoyun.domain.AccountUserPassword">
-        select * from app_user_password where username=#{userName}
+        select * from app_user_password where user_name=#{username}
     </select>
     <select id="selectPermissionsById" resultType="java.lang.String">
         select permissions from app_user_info where user_id = #{userId}
+    </select>
+    <select id="selectCustomerIdByUserId" resultType="java.lang.Integer">
+        select customer_id from customer as cus INNER JOIN app_user_info as app ON app.Identity_card = cus.Identity_card where app.user_id = #{userId}
+    </select>
+    <select id="selectBalanceByCustomerId" resultType="com.liaoyun.domain.BankCardInfo">
+        select balance from bank_card where customer_id = #{customerId}
+    </select>
+    <select id="selectBankCardsByCustomerId" resultType="com.liaoyun.domain.BankCardInfo">
+        select card_number,balance from bank_card where customer_id = #{customerId}
+    </select>
+    <select id="selectCustomerInfo" resultType="com.liaoyun.domain.CustomerInfo">
+        select name, date_of_birth, address, phone_number, email, identity_card, is_active from customer where customer_id = #{customerId}
+    </select>
+    <select id="selectBalanceByCardNumber" resultType="java.math.BigDecimal">
+        select balance from bank_card wherr card_number = #{cardNumber}
+    </select>
+    <select id="selectCardInfoByCardNumber" resultType="com.liaoyun.domain.BankCardInfo">
+        select customer_id, card_number, card_holder_name ,balance,is_active from bank_card
+        where card_number = #{cardNumber} and card_holder_name = #{name}
     </select>
 </mapper>
