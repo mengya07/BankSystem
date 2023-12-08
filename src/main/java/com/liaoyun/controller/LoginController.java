@@ -3,9 +3,7 @@ package com.liaoyun.controller;
 
 import com.liaoyun.domain.AccountUserPassword;
 import com.liaoyun.domain.ResponseResult;
-import com.liaoyun.domain.User;
 import com.liaoyun.service.LoginService;
-import com.liaoyun.service.impl.LoginServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

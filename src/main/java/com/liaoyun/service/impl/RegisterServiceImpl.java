@@ -1,12 +1,10 @@
 package com.liaoyun.service.impl;
 
-import com.liaoyun.domain.AccountUserInfo;
 import com.liaoyun.domain.RegisterInfo;
 import com.liaoyun.domain.ResponseResult;
 import com.liaoyun.mapper.UserMapper;
 import com.liaoyun.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

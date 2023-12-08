@@ -36,10 +36,17 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String userId;
         try {
             Claims claims = JwtUtil.parseJWT(token);
-             userId = claims.getSubject();
+            userId = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
+        }
+        //验证token是否是最新的token
+        String redisTokenKey = "validToken:"+ userId;
+        String validToken = redisCache.getCacheObject(redisTokenKey);
+        if(!token.equals(validToken)){//判断当前token是否是过期的token
+            filterChain.doFilter(request,response);
+            return;
         }
         //redis中获取用户信息
         String redisKey = "login:" + userId;
@@ -48,13 +55,17 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
              //redis里没有，或者id是不对的
             throw new RuntimeException("用户未登录");
         }
-        //存入SecurityContextHolder
-        //TODO 获取权限信息封装到Authentication
+
+
+        //获取权限信息封装到Authentication
         //选择三个参数的封装方式会吧authenticated设置为true，能通过后面的过滤器
         //loginUserDetail.getAuthorities()将权限信息封装到Authentication中，以便检查是否能访问对应的controller
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                 =  new UsernamePasswordAuthenticationToken(loginUserDetail,null,loginUserDetail.getAuthorities());
+        //存入SecurityContextHolder,这样controller能获取到
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        //将解析出来的UserId放入request域中
+        request.setAttribute("userId",userId);
         //过滤了继续执行
         filterChain.doFilter(request,response);
     }

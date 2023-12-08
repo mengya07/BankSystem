@@ -3,7 +3,6 @@ package com.liaoyun.service.impl;
 import com.liaoyun.domain.AccountUserPassword;
 import com.liaoyun.domain.LoginUserDetail;
 import com.liaoyun.domain.ResponseResult;
-import com.liaoyun.domain.User;
 import com.liaoyun.service.LoginService;
 import com.liaoyun.utils.JwtUtil;
 import com.liaoyun.utils.RedisCache;
@@ -43,8 +42,12 @@ public class LoginServiceImpl implements LoginService {
         String userId = Integer.toString(loginUser.getUser().getUserId());
         //根据userId生成jwt对象
         String jwt = JwtUtil.createJWT(userId);
+        //将该用户redis中的token值更新
+        redisCache.setCacheObject("validToken:"+ userId,jwt);
+        redisCache.expire("validToken:"+ userId,3600);
         //authenticate存入redis
         redisCache.setCacheObject("login:"+userId,loginUser);
+        redisCache.expire("login:"+userId,3600);
         //把token封装成map响应给前端
         HashMap<String,String> map = new HashMap<>();
         map.put("token",jwt);

@@ -1,6 +1,5 @@
 package org.example;
 
-import com.liaoyun.domain.AccountUserInfo;
 import com.liaoyun.utils.RedisCache;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

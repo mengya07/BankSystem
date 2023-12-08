@@ -2,7 +2,6 @@ package com.liaoyun.service.impl;
 
 import com.liaoyun.domain.AccountUserPassword;
 import com.liaoyun.domain.LoginUserDetail;
-import com.liaoyun.domain.User;
 import com.liaoyun.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

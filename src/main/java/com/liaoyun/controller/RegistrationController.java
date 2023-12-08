@@ -1,6 +1,5 @@
 package com.liaoyun.controller;
 
-import com.liaoyun.domain.AccountUserInfo;
 import com.liaoyun.domain.RegisterInfo;
 import com.liaoyun.domain.ResponseResult;
 import com.liaoyun.service.RegisterService;

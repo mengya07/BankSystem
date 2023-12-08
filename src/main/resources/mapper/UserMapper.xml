@@ -7,6 +7,9 @@
     <insert id="inserterUserInfo">
         insert into app_user_info (phone_number,Identity_card,Permissions) values (#{phoneNumber},#{identityCard},#{permissions})
     </insert>
+    <update id="updateBankCardBalance">
+
+    </update>
     <select id="login" resultType="com.liaoyun.domain.loginUser">
         select id from password_user where username = #{username} and password = #{password}
     </select>
@@ -15,5 +18,24 @@
     </select>
     <select id="selectPermissionsById" resultType="java.lang.String">
         select permissions from app_user_info where user_id = #{userId}
+    </select>
+    <select id="selectCustomerIdByUserId" resultType="java.lang.Integer">
+        select customer_id from customer as cus INNER JOIN app_user_info as app ON app.Identity_card = cus.Identity_card where app.user_id = #{userId}
+    </select>
+    <select id="selectBalanceByCustomerId" resultType="com.liaoyun.domain.BankCardInfo">
+        select balance from bank_card where customer_id = #{customerId}
+    </select>
+    <select id="selectBankCardsByCustomerId" resultType="com.liaoyun.domain.BankCardInfo">
+        select card_number,balance from bank_card where customer_id = #{customerId}
+    </select>
+    <select id="selectCustomerInfo" resultType="com.liaoyun.domain.CustomerInfo">
+        select name, date_of_birth, address, phone_number, email, identity_card, is_active from customer where customer_id = #{customerId}
+    </select>
+    <select id="selectBalanceByCardNumber" resultType="java.math.BigDecimal">
+        select balance from bank_card wherr card_number = #{cardNumber}
+    </select>
+    <select id="selectCardInfoByCardNumber" resultType="com.liaoyun.domain.BankCardInfo">
+        select customer_id, card_number, card_holder_name ,balance,is_active from bank_card
+        where card_number = #{cardNumber} and card_holder_name = #{name}
     </select>
 </mapper>
