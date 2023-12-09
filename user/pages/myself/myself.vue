@@ -26,7 +26,7 @@
 			</uv-grid-item>
 			<uv-grid-item @click="clickTransferRecord">
 				<uv-icon :customStyle="{paddingTop:20+'rpx'}" name="/static/icon/icon_transfer.svg" :size="32"></uv-icon>
-				<text class="grid-text" >转账</text>
+				<text class="grid-text" >转账记录</text>
 			</uv-grid-item>
 			<uv-grid-item>
 				<uv-icon :customStyle="{paddingTop:20+'rpx'}" name="grid" :size="32"></uv-icon>
