@@ -21,7 +21,7 @@ public class TransferMoneyController {
     public ResponseResult  TransferMoney(@RequestBody TransferUnit transferUnit, HttpServletRequest request) throws Exception {
         //TODO 验证验证码是否正确
 
-        transferUnit.setCustomerId(tokenToId.toCustomerId(request));
+        transferUnit.setPayerId(tokenToId.toCustomerId(request));
         return transferMoneyService.transferMoney(transferUnit);
     }
 }

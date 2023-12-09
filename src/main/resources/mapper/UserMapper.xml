@@ -7,6 +7,10 @@
     <insert id="inserterUserInfo">
         insert into app_user_info (phone_number,Identity_card,Permissions) values (#{phoneNumber},#{identityCard},#{permissions})
     </insert>
+    <insert id="insertTransferTransaction">
+        insert into transfer_transaction (sender_customer_id,receiver_customer_id,amount,transfer_date)
+        values (#{senderCustomerId},#{receiverCustomerId},#{amount},#{transferDate})
+    </insert>
     <update id="updateBankCardBalance">
         update bank_card set balance = #{newBalance} where card_number = #{cardNumber}
     </update>
