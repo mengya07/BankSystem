@@ -3,7 +3,7 @@
 		"path" : "pages/myself/myself",
 		"style" : 
 		{
-			"navigationBarTitleText" : "此处自定义导航栏",
+			"navigationBarTitleText" : "我的",
 			"navigationBarTextStyle": "black", // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
 			"enablePullDownRefresh" : false
 			//"navigationStyle": "custom" ,// 隐藏系统导航栏
@@ -52,6 +52,22 @@
 		"style" : 
 		{
 			"navigationBarTitleText" : "转账记录",
+			"enablePullDownRefresh" : false
+		}
+	},
+	{
+		"path" : "pages/recordDetail/recordDetail",
+		"style" : 
+		{
+			"navigationBarTitleText" : "明细",
+			"enablePullDownRefresh" : false
+		}
+	},
+	{
+		"path" : "pages/securityAndSettings/securityAndSettings",
+		"style" : 
+		{
+			"navigationBarTitleText" : "安全与设置",
 			"enablePullDownRefresh" : false
 		}
 	}],

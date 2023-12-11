@@ -37,7 +37,7 @@
 		
 		<uv-list class="list" border>
 		    <uv-list-item class="list-item" title="我的账户" border ></uv-list-item>
-		    <uv-list-item class="list-item" title="安全与设置" border></uv-list-item>
+		    <uv-list-item class="list-item" title="安全与设置" border link to="/pages/securityAndSettings/securityAndSettings" @click="($event,1)"></uv-list-item>
 			<uv-list-item class="list-item" title="收支记录" border></uv-list-item>
 			<uv-list-item class="list-item" title="关于我们" border></uv-list-item>
 			<uv-list-item class="list-item" title="隐私政策" border></uv-list-item>
