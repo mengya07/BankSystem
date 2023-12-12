@@ -16,7 +16,7 @@
 		
 		<view class="gird-box">
 		<uv-grid :border="false" :col="4">
-			<uv-grid-item>
+			<uv-grid-item @click="clickAccountView">
 				<uv-icon :customStyle="{paddingTop:20+'rpx'}" name="/static/icon/icon_account.svg" :size="32"></uv-icon>
 				<text class="grid-text" >账户</text>
 			</uv-grid-item>
@@ -56,6 +56,11 @@
 			clickTransferRecord(){
 				uni.navigateTo({
 					url:"/pages/transferRecord/transferRecord"
+				})
+			},
+			clickAccountView(){
+				uni.navigateTo({
+					url:"/pages/accountView/accountView"
 				})
 			}
 		}
