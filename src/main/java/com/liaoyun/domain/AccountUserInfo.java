@@ -15,4 +15,11 @@ public class AccountUserInfo {
     private String identityCard;
 
     private String permissions;
+
+    private byte isBind;
+    public AccountUserInfo (String phoneNumber,String permissions,byte isBind){
+        this.permissions = permissions;
+        this.phoneNumber = phoneNumber;
+        this.isBind = isBind;
+    }
 }

@@ -1,8 +1,10 @@
 package com.liaoyun.service.impl;
 
+import com.liaoyun.aop.InvokeVerifyCode;
 import com.liaoyun.domain.AccountUserPassword;
 import com.liaoyun.domain.LoginUserDetail;
 import com.liaoyun.domain.ResponseResult;
+import com.liaoyun.mapper.UserMapper;
 import com.liaoyun.service.LoginService;
 import com.liaoyun.utils.JwtUtil;
 import com.liaoyun.utils.RedisCache;
@@ -13,8 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -25,7 +26,27 @@ public class LoginServiceImpl implements LoginService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    UserMapper userMapper;
+
+    @Autowired
     private RedisCache redisCache;
+
+    private ResponseResult storeToken(String userId,LoginUserDetail loginUser){
+        //根据userId生成jwt对象
+        String jwt = JwtUtil.createJWT(userId);
+        //将该用户redis中的token值更新
+        redisCache.setCacheObject("validToken:"+ userId,jwt);
+        redisCache.expire("validToken:"+ userId,3600);
+        //authenticate存入redis
+        redisCache.setCacheObject("login:"+userId,loginUser);
+        redisCache.expire("login:"+userId,3600);
+        //把token封装成map响应给前端
+        HashMap<String,String> map = new HashMap<>();
+        map.put("token",jwt);
+        return new ResponseResult(200,"登陆成功",map);
+    }
+
+
     @Override
     public ResponseResult login(AccountUserPassword user) {
         //封装成Authentication对象
@@ -40,18 +61,18 @@ public class LoginServiceImpl implements LoginService {
         //使用userid生成token
         LoginUserDetail loginUser = (LoginUserDetail) authenticate.getPrincipal();
         String userId = Integer.toString(loginUser.getUser().getUserId());
-        //根据userId生成jwt对象
-        String jwt = JwtUtil.createJWT(userId);
-        //将该用户redis中的token值更新
-        redisCache.setCacheObject("validToken:"+ userId,jwt);
-        redisCache.expire("validToken:"+ userId,3600);
-        //authenticate存入redis
-        redisCache.setCacheObject("login:"+userId,loginUser);
-        redisCache.expire("login:"+userId,3600);
-        //把token封装成map响应给前端
-        HashMap<String,String> map = new HashMap<>();
-        map.put("token",jwt);
-        return new ResponseResult(200,"登陆成功",map);
+        return storeToken(userId,loginUser);
+    }
+
+    @Override
+    @InvokeVerifyCode
+    public ResponseResult loginWithVCode(String vCode,String phoneNumber) {
+        AccountUserPassword user = userMapper.selectOne(phoneNumber);
+        //查询权限信息
+        String permissions = userMapper.selectPermissionsById(user.getUserId());
+        List<String> list = new ArrayList<>(Arrays.asList(permissions));
+        LoginUserDetail loginUserDetail = new LoginUserDetail(user,list);
+        return storeToken(Integer.toString(user.getUserId()),loginUserDetail);
     }
 
     @Override

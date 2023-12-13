@@ -8,5 +8,5 @@ import java.math.BigDecimal;
 
 public interface TransferMoneyService {
 
-    ResponseResult transferMoney(TransferUnit transferUnit);
+    ResponseResult transferMoney(String verifyCode,TransferUnit transferUnit);
 }

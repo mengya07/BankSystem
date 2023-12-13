@@ -1,5 +1,8 @@
 package com.liaoyun.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.liaoyun.domain.BankCardInfo;
+import com.liaoyun.domain.DomainWithVerifyCode;
 import com.liaoyun.domain.RegisterInfo;
 import com.liaoyun.domain.ResponseResult;
 import com.liaoyun.service.RegisterService;
@@ -17,16 +20,13 @@ public class RegistrationController {
     RegisterService registerService;
     @PostMapping("/register")
     //前端页面把注册信息包装成JSON串给后端服务器
-    public ResponseResult register(@RequestBody RegisterInfo registerInfo){
+    public ResponseResult register(@RequestBody DomainWithVerifyCode domainWithVerifyCode){
         //信息格式错误返回
-        ResponseResult result = InfoInspecter.checkInfo(registerInfo);
-        if( result != null){
-            return result;
+        String phoneNuber = JSONObject.parseObject(JSONObject.toJSONString(domainWithVerifyCode.getPojo()), String.class);
+        if ( !InfoInspecter.checkPhoneNumber(phoneNuber) ) {
+            return new ResponseResult<>(1,"手机号码不正确");
         }
-        //将密码加密存储到数据库
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String encode = bCryptPasswordEncoder.encode(registerInfo.getAccountUserPassword().getPassword());
-        registerInfo.getAccountUserPassword().setPassword(encode);
-        return registerService.register(registerInfo);
+        //将验证码存入redis
+        return registerService.register(domainWithVerifyCode.getVerifyCode(),phoneNuber);
     }
 }

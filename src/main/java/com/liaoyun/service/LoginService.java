@@ -7,5 +7,7 @@ public interface LoginService {
 
     ResponseResult login(AccountUserPassword user);
 
+    ResponseResult loginWithVCode(String phoneNumber,String vCode);
+
     ResponseResult logout();
 }

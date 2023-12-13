@@ -7,10 +7,20 @@ spring:
     username: root
     password: mysql.20231002
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    date-format: "yyyy-MM-dd"
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.liaoyun.domain
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#mybatis 分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
 

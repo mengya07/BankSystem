@@ -12,15 +12,17 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class TransferTransaction {
     private int transactionId;
-    private int senderCustomerId;
-    private int receiverCustomerId;
+    private int senderCardId;
+    private int receiverCardId;
     private BigDecimal amount;
     private Timestamp transferDate;
-
-    public TransferTransaction(int senderCustomerId, int receiverCustomerId, BigDecimal amount, Timestamp transferDate) {
-        this.senderCustomerId = senderCustomerId;
-        this.receiverCustomerId = receiverCustomerId;
+    private byte status ;
+    public TransferTransaction(int senderCardId, int receiverCardId, BigDecimal amount, Timestamp transferDate,byte status) {
+        this.senderCardId = senderCardId;
+        this.receiverCardId = receiverCardId;
         this.amount = amount;
         this.transferDate = transferDate;
+        this.status = status;
     }
+
 }

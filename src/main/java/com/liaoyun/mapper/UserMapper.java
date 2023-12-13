@@ -12,7 +12,6 @@ import java.util.List;
 @Repository
 public interface UserMapper {
 
-    loginUser login(loginUser user);
 
     //根据用户名查询用户密码
     AccountUserPassword selectOne(String userName);
@@ -34,9 +33,18 @@ public interface UserMapper {
 
     BigDecimal selectBalanceByCardNumber(String cardNumber);
 
-    BankCardInfo selectCardInfoByCardNumber(String name,String cardNumber);
+    BankCardInfo selectCardInfoByCardNumber(String cardNumber);
 
-    void updateBankCardBalance(String cardNumber,BigDecimal newBalance);
+    void updateBankCardBalance(int cardId,BigDecimal newBalance);
 
     int insertTransferTransaction(TransferTransaction transferTransaction);
+
+    List<Integer> selectCardId( int customerId,String cardNumber);
+    List<TransferTransaction> selectTransferRecordPages(TransferRecordQueryConditions queryConditions,List<Integer> idList,int customerId);
+
+    AccountUserPassword selectPasswordByUserId(int userId);
+
+    int updateAppPassword(AccountUserPassword accountUserPassword);
+
+    String selectCardNumberByCardId(int cardId);
 }
