@@ -8,15 +8,15 @@
         insert into app_user_info (phone_number,Identity_card,Permissions) values (#{phoneNumber},#{identityCard},#{permissions})
     </insert>
     <insert id="insertTransferTransaction">
-        insert into transfer_transaction (sender_customer_id,receiver_customer_id,amount,transfer_date)
-        values (#{senderCustomerId},#{receiverCustomerId},#{amount},#{transferDate})
+        insert into transfer_transaction (sender_card_id,receiver_card_id,amount,transfer_date,status)
+        values (#{senderCardId},#{receiverCardId},#{amount},#{transferDate},#{status})
     </insert>
     <update id="updateBankCardBalance">
-        update bank_card set balance = #{newBalance} where card_number = #{cardNumber}
+        update bank_card set balance = #{newBalance} where card_id = #{cardId}
     </update>
-    <select id="login" resultType="com.liaoyun.domain.loginUser">
-        select id from password_user where username = #{username} and password = #{password}
-    </select>
+    <update id="updateAppPassword">
+        update app_user_password set password = #{password} where user_id = #{userId}
+    </update>
     <select id="selectOne" resultType="com.liaoyun.domain.AccountUserPassword">
         select * from app_user_password where user_name=#{username}
     </select>
@@ -30,7 +30,7 @@
         select balance from bank_card where customer_id = #{customerId}
     </select>
     <select id="selectBankCardsByCustomerId" resultType="com.liaoyun.domain.BankCardInfo">
-        select card_number,balance from bank_card where customer_id = #{customerId}
+        select card_id,card_number,balance,is_active from bank_card where customer_id = #{customerId}
     </select>
     <select id="selectCustomerInfo" resultType="com.liaoyun.domain.CustomerInfo">
         select name, date_of_birth, address, phone_number, email, identity_card, is_active from customer where customer_id = #{customerId}
@@ -39,7 +39,41 @@
         select balance from bank_card wherr card_number = #{cardNumber}
     </select>
     <select id="selectCardInfoByCardNumber" resultType="com.liaoyun.domain.BankCardInfo">
-        select customer_id, card_number, card_holder_name ,balance,is_active from bank_card
-        where card_number = #{cardNumber} and card_holder_name = #{name}
+        select card_id,customer_id, card_number, card_holder_name ,balance,is_active from bank_card
+        where card_number = #{cardNumber}
     </select>
+    <select id="selectTransferRecordPages" resultType="com.liaoyun.domain.TransferTransaction">
+        select * from transfer_transaction as tt
+        <if test="queryConditions.payeeLimit">
+            join bank_card as bc on tt.receiver_card_id = bc.card_id
+            join customer as cus on bc.customer_id = cus.customer_id
+        </if>
+        where tt.sender_card_id in
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and tt.transfer_date between #{queryConditions.startDate} and #{queryConditions.endDate}
+        and tt.amount between #{queryConditions.miniAmount} and #{queryConditions.maxAmount}
+        <if test="queryConditions.payeeName != null">
+            and cus.name = #{queryConditions.payeeName}
+        </if>
+        <if test="queryConditions.payeePhoneNumber != null">
+            and cus.phone_number = #{queryConditions.payeePhoneNumber}
+        </if>
+    </select>
+    <select id="selectCardId" resultType="java.lang.Integer">
+        select card_id from customer as cus join bank_card as bc on cus.customer_id = bc.customer_id
+        where cus.customer_id = #{customerId}
+        <if test="cardNumber != null">
+            and bc.card_number = #{cardNumber}
+        </if>
+    </select>
+    <select id="selectPasswordByUserId" resultType="com.liaoyun.domain.AccountUserPassword">
+        select * from app_user_password where user_id = #{userId}
+    </select>
+    <select id="selectCardNumberByCardId" resultType="java.lang.String">
+        select card_number from bank_card where card_id = #{cardId}
+    </select>
+
+
 </mapper>

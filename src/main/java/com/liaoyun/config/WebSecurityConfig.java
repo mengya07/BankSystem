@@ -55,7 +55,7 @@ public class WebSecurityConfig {
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/login","/register").anonymous()
+                        .requestMatchers("/login","/register","/sendsms/nologin","vcodelogin").anonymous()
                         .anyRequest().authenticated()
                 )
                 .logout((logout) -> logout.permitAll());

@@ -65,7 +65,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //存入SecurityContextHolder,这样controller能获取到
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         //将解析出来的UserId放入request域中
-        request.setAttribute("userId",userId);
+        request.setAttribute("userId",Integer.parseInt(userId));
         //过滤了继续执行
         filterChain.doFilter(request,response);
     }

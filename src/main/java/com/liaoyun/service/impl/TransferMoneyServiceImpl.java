@@ -1,5 +1,6 @@
 package com.liaoyun.service.impl;
 
+import com.liaoyun.aop.InvokeVerifyCode;
 import com.liaoyun.domain.BankCardInfo;
 import com.liaoyun.domain.ResponseResult;
 import com.liaoyun.domain.TransferTransaction;
@@ -28,54 +29,55 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
      */
 
 
-    ResponseResult transfer(TransferUnit transferUnit,BigDecimal payerBalance,BankCardInfo bankCardInfo){
+    private ResponseResult transfer(TransferUnit transferUnit,BankCardInfo payerBankCardInfo,BankCardInfo payeeBankCardInfo){
         if(transferUnit.getTransferAmount().compareTo(new BigDecimal(10000))<0){
             //转账金额小于一万
-            BigDecimal newBalance = payerBalance.subtract(transferUnit.getTransferAmount().add(new BigDecimal(5)));
+            BigDecimal newBalance = payerBankCardInfo.getBalance().subtract(transferUnit.getTransferAmount().add(new BigDecimal(5)));
             //修改付款人余额
-            userMapper.updateBankCardBalance(transferUnit.getPayerCardNumber(), newBalance);
-            newBalance = bankCardInfo.getBalance().add(transferUnit.getTransferAmount());
+            userMapper.updateBankCardBalance(payerBankCardInfo.getCardId(), newBalance);
+            newBalance = payeeBankCardInfo.getBalance().add(transferUnit.getTransferAmount());
             //修改收款人余额
-            userMapper.updateBankCardBalance(bankCardInfo.getCardNumber(),newBalance);
-            TransactionRecording(bankCardInfo,transferUnit);
+            userMapper.updateBankCardBalance(payeeBankCardInfo.getCardId(),newBalance);
+            TransactionRecording(payerBankCardInfo,payeeBankCardInfo,transferUnit.getTransferAmount());
             return new ResponseResult<>(200,"转账成功");
         }else if(transferUnit.getTransferAmount().compareTo(new BigDecimal(100000))<0){
             //转账金额大于一万小于十万
-            BigDecimal newBalance = payerBalance.subtract(transferUnit.getTransferAmount().add(new BigDecimal(10)));
+            BigDecimal newBalance = payerBankCardInfo.getBalance().subtract(transferUnit.getTransferAmount().add(new BigDecimal(10)));
             //修改付款人余额
-            userMapper.updateBankCardBalance(transferUnit.getPayerCardNumber(), newBalance);
-            newBalance = bankCardInfo.getBalance().add(transferUnit.getTransferAmount());
+            userMapper.updateBankCardBalance(payerBankCardInfo.getCardId(), newBalance);
+            newBalance = payeeBankCardInfo.getBalance().add(transferUnit.getTransferAmount());
             //修改收款人余额
-            userMapper.updateBankCardBalance(bankCardInfo.getCardNumber(),newBalance);
-            TransactionRecording(bankCardInfo,transferUnit);
+            userMapper.updateBankCardBalance(payeeBankCardInfo.getCardId(),newBalance);
+            TransactionRecording(payerBankCardInfo,payeeBankCardInfo,transferUnit.getTransferAmount());
             return new ResponseResult<>(200,"转账成功");
         }
         return new ResponseResult(4,"转账金额超限");
     }
 
-    void TransactionRecording(BankCardInfo bankCardInfo,TransferUnit transferUnit){
+    private void TransactionRecording(BankCardInfo payerBankCardInfo, BankCardInfo payeeBankCardInfo,BigDecimal Amount){
         TransferTransaction transferTransaction = new TransferTransaction(
-                transferUnit.getPayerId(),bankCardInfo.getCustomerId(),
-                transferUnit.getTransferAmount(), new Timestamp(System.currentTimeMillis()));
+                payerBankCardInfo.getCardId(), payeeBankCardInfo.getCardId(),
+                Amount, new Timestamp(System.currentTimeMillis()), (byte) 1);
         userMapper.insertTransferTransaction(transferTransaction);
     }
     @Override
-    public ResponseResult transferMoney(TransferUnit transferUnit) {
-        //付款人查余额
-        BigDecimal payerBalance = (userMapper.selectBalanceByCustomerId(transferUnit.getPayerId())).getBalance();
-        if(payerBalance.compareTo(transferUnit.getTransferAmount())<0){
+    @InvokeVerifyCode
+    public ResponseResult transferMoney(String verifyCode,TransferUnit transferUnit) {
+        //查询付款人余额和
+        BankCardInfo payerBankCardInfo = userMapper.selectCardInfoByCardNumber(transferUnit.getPayerCardNumber());
+        if(payerBankCardInfo.getBalance().compareTo(transferUnit.getTransferAmount())<0){
             return new ResponseResult<>(1,"余额不足");
         }
         //根据卡号把收款人银行卡信息查出来
-        BankCardInfo bankCardInfo = userMapper.selectCardInfoByCardNumber(transferUnit.getPayeeName(),transferUnit.getPayeeCardNumber());
-        if(Objects.isNull(bankCardInfo)){
+        BankCardInfo payeeBankCardInfo = userMapper.selectCardInfoByCardNumber(transferUnit.getPayeeCardNumber());
+        if(Objects.isNull(payeeBankCardInfo)){
             //没有相关记录，银行卡和姓名不匹配
             return new ResponseResult(2,"收款账户不存在");
         }
-        if(bankCardInfo.getIsActive() == 0){
+        if(payeeBankCardInfo.getIsActive() == 0){
             //卡已停用
             return  new ResponseResult(3,"收款方银行卡已停用");
         }
-        return transfer(transferUnit, payerBalance, bankCardInfo);
+        return transfer(transferUnit, payerBankCardInfo, payeeBankCardInfo);
     }
 }

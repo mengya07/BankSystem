@@ -10,14 +10,15 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerInfo {
-    int customerId;
-    String Name;
-    Date dateOfBirth;
-    String address;
-    String phoneNumber;
-    String email;
-    String identityCard;
-    int userId;
-    byte isActive;
-    Timestamp createdAt;
+    private int customerId;
+    private String surname;
+    private String name;
+    private Date dateOfBirth;
+    private String address;
+    private String phoneNumber;
+    private String email;
+    private String identityCard;
+    private int userId;
+    private byte isActive;
+    private Timestamp createdAt;
 }

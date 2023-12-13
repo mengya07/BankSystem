@@ -13,4 +13,9 @@ public class AccountUserPassword {
     private int userId;
     private String userName;
     private String password;
+
+    public AccountUserPassword(String userName){
+        this.userName = userName;
+    }
+
 }

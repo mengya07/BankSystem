@@ -21,6 +21,7 @@ public class UserServiceDetailImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //根据用户名把密码查出来，以便后续比对
+        //TODO 应该可以改成用户ID？
         AccountUserPassword user = userMapper.selectOne(username);
         if(Objects.isNull(user)){
             throw new RuntimeException("用户名或密码错误");
@@ -28,7 +29,6 @@ public class UserServiceDetailImpl implements UserDetailsService {
             //查询权限信息
             String permissions = userMapper.selectPermissionsById(user.getUserId());
             List<String> list = new ArrayList<>(Arrays.asList(permissions));
-
             //封装成UserDetails
             return new LoginUserDetail(user,list);
         }
