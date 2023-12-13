@@ -10,9 +10,9 @@
 		</view>
         
 		<view style="margin-top: 50rpx; display: flex; flex-direction: column; align-items: center;">
-			<view style="display: flex;justify-content: flex-end;width: 750rpx; margin-right: 40rpx;"><uv-icon name="reload" size="23"></uv-icon></view>
+			<view style="display: flex;justify-content: flex-end;width: 750rpx; margin-right: 100rpx;"><uv-icon name="reload" size="18"></uv-icon></view>
 			
-			<view v-for="(item,index) in card" :key="index" class="card">
+			<view v-for="(item,index) in card" :key="index" class="card" @click="clickCard(index)">
 				<view style="display: flex; height: 50%;align-items: center;">
 					<uv-icon name="/static/icon/icon_card.svg" size=55 style="margin-left: 20rpx;"></uv-icon>
 					<view style="display: flex;flex-direction: column;margin-left: 40rpx;">
@@ -44,12 +44,12 @@
 				isvisible: false,
 				totalAssets: "******",
 				card: [{
-					id:"0",
+					id:"23",
 					account:"6216******5803",
 					class:"Ⅰ类账户",
 					balance:"533.26"
 				},{
-					id:"1",
+					id:"45",
 					account:"1235******5803",
 					class:"ⅠⅠ类账户",
 					balance:"99999999"
@@ -68,6 +68,15 @@
 			clickInvisble(){
 				this.isvisible=!this.isvisible
 				this.totalAssets = "******"
+			},
+			clickCard(index){
+				let that = this
+				uni.navigateTo({
+					url:"/pages/accountDetail/accountDetail",
+					success: function(res){
+						res.eventChannel.emit('acceptDataFromOpenerPage', that.card[index])
+					}
+				})
 			}
 		}
 	}
@@ -80,6 +89,7 @@
 		border-radius: 20rpx;
 		//background: linear-gradient(to right, #EBDDC3, #E8D1B1);
 		background: linear-gradient(to right, #F1E9D6, #E8D1B1);
+		box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
 		.row1{
 			margin-top: 40rpx;
 			margin-left: 60rpx;
@@ -106,9 +116,10 @@
 		flex-direction: column;
 		align-content: space-between;
 		margin-top: 30rpx;
+		box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
 	}
 	.add-box{
-		margin-top: 40rpx;
+		margin-top: 80rpx;
 		height: 100rpx;
 		width: 650rpx;
 		background-color: #FFFFFF;
@@ -119,5 +130,6 @@
 		border-radius: 20rpx;
 		color: #6899EA;
 		font-weight: bold;
+		box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
 	}
 </style>

@@ -76,6 +76,7 @@
 	-webkit-backdrop-filter: blur(16px) saturate(180%);
 	border-radius: 8px;
 	border: 1px solid rgba(209, 213, 219, 0.3);
+	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
 	.avatar{
 		margin-left: 50rpx;
 	}
@@ -88,6 +89,7 @@
 	margin: 10rpx;
 	border-radius: 10rpx;
 	background-color: #FFFFFF;
+	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
 	.grid-text{
 		font-size: 14px;
 		color: "black";
@@ -100,6 +102,7 @@
 	padding-left: 10rpx;
 	padding-right: 10rpx;
 	border-radius: 10px;
+	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
     .list-item{
 		height: 120rpx;
 	}

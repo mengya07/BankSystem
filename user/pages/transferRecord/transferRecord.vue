@@ -47,7 +47,7 @@
 			<view style="margin-top: 30rpx; display: flex; justify-content: space-between;">
 				<view><text style="margin-left: 60rpx;" @click="inputStartMoney">{{moneyStart}}</text></view>
 				<view>-</view>
-				<view><text v-model="dateEnd" type="date" style="margin-right: 60rpx;" @click="inputEndMoney">{{moneyEnd}}</text></view>
+				<view><text style="margin-right: 60rpx;" @click="inputEndMoney">{{moneyEnd}}</text></view>
 			</view>
 			<uv-divider></uv-divider>
 			<view style="font-weight: bold;margin-left: 20rpx; margin-bottom: 20rpx;">收款人</view>
@@ -211,6 +211,7 @@
 	.record-box{
 		margin-top: 20rpx;
 		.record-item{
+			margin: 15rpx;
 			height: 120rpx;
 			border-radius: 10rpx;
 			margin-left: 10rpx;
@@ -218,9 +219,10 @@
 			display: flex;
 			justify-content: space-between;
 			background-color: #FFFFFF;
-			border-style: solid;
-			border-width: 2px;
-			border-color: silver;
+			// border-style: solid;
+			// border-width: 2px;
+			// border-color: silver;
+			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 			padding: 10rpx;
 			.column1{
 				margin-left: 20rpx;

@@ -78,6 +78,14 @@
 			"navigationBarTitleText" : "账户总览",
 			"enablePullDownRefresh" : false
 		}
+	},
+	{
+		"path" : "pages/accountDetail/accountDetail",
+		"style" : 
+		{
+			"navigationBarTitleText" : "账户详细",
+			"enablePullDownRefresh" : false
+		}
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -90,7 +98,7 @@
 	},
 	"tabBar": {
 		"color": "#7A7E83",
-		"selectedColor": "#3c9cff",
+		"selectedColor": "red",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
