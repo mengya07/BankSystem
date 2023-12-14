@@ -29,16 +29,17 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
      */
 
 
-    private ResponseResult transfer(TransferUnit transferUnit,BankCardInfo payerBankCardInfo,BankCardInfo payeeBankCardInfo){
+    private ResponseResult transfer(BankCardInfo payerBankCardInfo,BankCardInfo payeeBankCardInfo,TransferUnit transferUnit,String postscript){
+        //TODO 限额处理
         if(transferUnit.getTransferAmount().compareTo(new BigDecimal(10000))<0){
             //转账金额小于一万
-            BigDecimal newBalance = payerBankCardInfo.getBalance().subtract(transferUnit.getTransferAmount().add(new BigDecimal(5)));
+            BigDecimal newBalance = payerBankCardInfo.getBalance().subtract(transferUnit.getTransferAmount()).add(new BigDecimal(5));
             //修改付款人余额
             userMapper.updateBankCardBalance(payerBankCardInfo.getCardId(), newBalance);
             newBalance = payeeBankCardInfo.getBalance().add(transferUnit.getTransferAmount());
             //修改收款人余额
             userMapper.updateBankCardBalance(payeeBankCardInfo.getCardId(),newBalance);
-            TransactionRecording(payerBankCardInfo,payeeBankCardInfo,transferUnit.getTransferAmount());
+            TransactionRecording(payerBankCardInfo,payeeBankCardInfo,transferUnit,(byte)1);
             return new ResponseResult<>(200,"转账成功");
         }else if(transferUnit.getTransferAmount().compareTo(new BigDecimal(100000))<0){
             //转账金额大于一万小于十万
@@ -48,17 +49,19 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
             newBalance = payeeBankCardInfo.getBalance().add(transferUnit.getTransferAmount());
             //修改收款人余额
             userMapper.updateBankCardBalance(payeeBankCardInfo.getCardId(),newBalance);
-            TransactionRecording(payerBankCardInfo,payeeBankCardInfo,transferUnit.getTransferAmount());
+            TransactionRecording(payerBankCardInfo,payeeBankCardInfo,transferUnit,(byte)1);
             return new ResponseResult<>(200,"转账成功");
         }
         return new ResponseResult(4,"转账金额超限");
     }
 
-    private void TransactionRecording(BankCardInfo payerBankCardInfo, BankCardInfo payeeBankCardInfo,BigDecimal Amount){
+    private void TransactionRecording(BankCardInfo payerBankCardInfo, BankCardInfo payeeBankCardInfo,TransferUnit transferUnit,byte status){
         TransferTransaction transferTransaction = new TransferTransaction(
-                payerBankCardInfo.getCardId(), payeeBankCardInfo.getCardId(),
-                Amount, new Timestamp(System.currentTimeMillis()), (byte) 1);
-        userMapper.insertTransferTransaction(transferTransaction);
+                payerBankCardInfo.getCardId(), payerBankCardInfo.getCardNumber(), payeeBankCardInfo.getCardId(),
+                payeeBankCardInfo.getCardNumber(),transferUnit.getPayeeName() ,transferUnit.getTransferAmount(), new Timestamp(System.currentTimeMillis()), status,transferUnit.getPostscript());
+        if(userMapper.insertTransferTransaction(transferTransaction) != 1){
+            //TODO 抛出错误  记录日志
+        }
     }
     @Override
     @InvokeVerifyCode
@@ -72,12 +75,16 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
         BankCardInfo payeeBankCardInfo = userMapper.selectCardInfoByCardNumber(transferUnit.getPayeeCardNumber());
         if(Objects.isNull(payeeBankCardInfo)){
             //没有相关记录，银行卡和姓名不匹配
+            payeeBankCardInfo = new BankCardInfo(0,transferUnit.getPayeeCardNumber());
+            TransactionRecording(payerBankCardInfo,payeeBankCardInfo,transferUnit,(byte)0);
             return new ResponseResult(2,"收款账户不存在");
         }
         if(payeeBankCardInfo.getIsActive() == 0){
             //卡已停用
+            payeeBankCardInfo = new BankCardInfo(0,transferUnit.getPayeeCardNumber());
+            TransactionRecording(payerBankCardInfo,payeeBankCardInfo,transferUnit,(byte)0);
             return  new ResponseResult(3,"收款方银行卡已停用");
         }
-        return transfer(transferUnit, payerBankCardInfo, payeeBankCardInfo);
+        return transfer(payerBankCardInfo, payeeBankCardInfo,transferUnit,transferUnit.getPostscript());
     }
 }

@@ -39,7 +39,7 @@ public interface UserMapper {
 
     int insertTransferTransaction(TransferTransaction transferTransaction);
 
-    List<Integer> selectCardId( int customerId,String cardNumber);
+    List<Integer> selectCardId( int customerId,int cardId);
     List<TransferTransaction> selectTransferRecordPages(TransferRecordQueryConditions queryConditions,List<Integer> idList,int customerId);
 
     AccountUserPassword selectPasswordByUserId(int userId);
@@ -47,4 +47,18 @@ public interface UserMapper {
     int updateAppPassword(AccountUserPassword accountUserPassword);
 
     String selectCardNumberByCardId(int cardId);
+
+    boolean selectCustomerInfoExists(CustomerInfo customerInfo);
+
+    Boolean selectIdentityExits(String identityCard);
+
+    String selectBankCardPasswordByCardId(int cardId);
+
+    int updateCustomerInfo(CustomerInfo customerInfo);
+
+    int updateAppUserInfo(AccountUserInfo accountUserInfo);
+
+    int updateBankCardStatus(byte isActive, byte isBind,int cardId);
+
+    TransferTransaction selectTransactionDetails(int transactionId);
 }

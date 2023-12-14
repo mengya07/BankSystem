@@ -13,4 +13,6 @@ public interface QueryInfoService {
     ResponseResult queryTransferRecord(int customerId, TransferRecordQueryConditions queryConditions, int pageNum, int pageSize);
 
     ResponseResult queryCardNumberByCardId(String verifyCode,int cardId);
+
+    ResponseResult queryTransactionDetails(int transactionId,int customerId);
 }
