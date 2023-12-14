@@ -22,4 +22,5 @@ public class AccountUserInfo {
         this.phoneNumber = phoneNumber;
         this.isBind = isBind;
     }
+
 }

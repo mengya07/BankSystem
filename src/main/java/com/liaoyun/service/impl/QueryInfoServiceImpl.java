@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class QueryInfoServiceImpl implements QueryInfoService {
@@ -75,7 +72,7 @@ public class QueryInfoServiceImpl implements QueryInfoService {
     @Override
     public ResponseResult queryTransferRecord(int customerId,TransferRecordQueryConditions queryConditions,int pageNum,int pageSize) {
 
-        List<Integer> idList = userMapper.selectCardId(customerId, queryConditions.getCardNumber());
+        List<Integer> idList = userMapper.selectCardId(customerId, queryConditions.getCardId());
         PageHelper.startPage(pageNum,pageSize);
         List<TransferTransaction> transferTransactionList = userMapper.selectTransferRecordPages(queryConditions,idList,customerId);
         PageInfo pageInfo = new PageInfo(transferTransactionList);
@@ -88,5 +85,16 @@ public class QueryInfoServiceImpl implements QueryInfoService {
     public ResponseResult queryCardNumberByCardId(String verifyCode, int cardId) {
         String cardNumber = userMapper.selectCardNumberByCardId(cardId);
         return new ResponseResult(200,"查询银行卡成功",cardNumber);
+    }
+
+    @Override
+    public ResponseResult queryTransactionDetails(int transactionId,int customerId) {
+        TransferTransaction transferTransaction = userMapper.selectTransactionDetails(transactionId);
+        //防止查询非自身的交易记录,错误的交易号会得出非自身的cardId
+        List<Integer> integers = userMapper.selectCardId(customerId, transferTransaction.getSenderCardId());
+        if(integers.size() == 0){
+            return new ResponseResult<>(500,"非法查询");
+        }
+        return new ResponseResult<>(200,"查询成功",transferTransaction);
     }
 }

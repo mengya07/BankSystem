@@ -1,16 +1,17 @@
 package com.liaoyun.service;
 
-import com.liaoyun.domain.BankCardInfo;
-import com.liaoyun.domain.CustomerInfo;
-import com.liaoyun.domain.RegisterInfo;
-import com.liaoyun.domain.ResponseResult;
+import com.liaoyun.domain.*;
 
 public interface RegisterService {
     ResponseResult register(String verifyCode,String phoneNumber);
 
-    ResponseResult identityVerification(CustomerInfo customerInfo);
+    ResponseResult identityVerification(RealNameAuthentication realNameAuthentication, int userId);
 
-    ResponseResult bindBankCard(BankCardInfo bankCardInfo);
+//    ResponseResult bindBankCard(String verifyCode,String phoneNumber,RealNameAuthentication realNameAuthentication,int userId);
+
+    ResponseResult verifyCardAndIdentity(String verifyCode,String phoneNumber,AddBankCardInfo addBankCardInfo,int userId);
+
+    ResponseResult addBankCard(String verifyCode, String phoneNumber, AddBankCardInfo cardNumberAndPassword, int customerId);
 
 
 }

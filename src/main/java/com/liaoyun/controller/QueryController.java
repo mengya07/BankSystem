@@ -59,7 +59,12 @@ public class QueryController {
     @RequestMapping("/query/cardnumber")
     @PreAuthorize(value = "hasAuthority('user')")
     ResponseResult queryCardNumber(@RequestBody DomainWithVerifyCode domainWithVerifyCode){
-        BankCardInfo bankCardInfo = JSONObject.parseObject(JSONObject.toJSONString(domainWithVerifyCode.getPojo()), BankCardInfo.class);
-        return queryInfo.queryCardNumberByCardId(domainWithVerifyCode.getVerifyCode(), bankCardInfo.getCardId());
+        int cardId = JSONObject.parseObject(JSONObject.toJSONString(domainWithVerifyCode.getPojo()), Integer.class);
+        return queryInfo.queryCardNumberByCardId(domainWithVerifyCode.getVerifyCode(), cardId);
+    }
+
+    @RequestMapping("/query/transactionDetails")
+    ResponseResult queryTransactionDetails(@RequestParam Integer transactionId,HttpServletRequest request) throws Exception {
+        return queryInfo.queryTransactionDetails(transactionId,tokenToId.toCustomerId(request));
     }
 }

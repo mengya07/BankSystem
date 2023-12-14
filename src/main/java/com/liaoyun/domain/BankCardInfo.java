@@ -14,9 +14,15 @@ public class BankCardInfo {
     int cardId;
     String cardNumber;
     String cardHolderName;
+    String reservePhoneNumber;
     BigDecimal balance;
     int customerId;
     byte isActive;
-
     Timestamp createdAt;
+    byte isBind;
+
+    public BankCardInfo(int cardId, String cardNumber) {
+        this.cardId = cardId;
+        this.cardNumber = cardNumber;
+    }
 }

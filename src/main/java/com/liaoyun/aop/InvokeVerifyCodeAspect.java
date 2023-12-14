@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 //切面类
@@ -37,12 +38,19 @@ public class InvokeVerifyCodeAspect {
         String methodName = signature.getMethod().getName();
         System.out.println(methodName + " 将被调用");
         //短信验证码验证
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String phoneNumber = authentication.getName();
         Object[] args = joinPoint.getArgs();
-        if(phoneNumber.equals("anonymousUser")){
-            //如果是匿名用户,获取方法参数上的phoneNumber
-            phoneNumber = (String)args[1];
+        String phoneNumber = null;
+        String[] parameterNamesList = signature.getParameterNames();
+        for(int i=0; i<parameterNamesList.length; i++){
+            String paramName = parameterNamesList[i];
+            if(paramName.equals("phoneNumber")){
+                phoneNumber = (String)args[i];
+                break;
+            }
+        }
+        if(phoneNumber == null){
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            phoneNumber= authentication.getName();
         }
         String redisVerifyCode = redisCache.getCacheObject("vCode." + phoneNumber + ":");
         String verifyCode = (String)args[0];

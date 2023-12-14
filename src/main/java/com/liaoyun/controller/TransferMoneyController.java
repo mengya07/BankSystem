@@ -1,5 +1,7 @@
 package com.liaoyun.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.liaoyun.domain.AddBankCardInfo;
 import com.liaoyun.domain.DomainWithVerifyCode;
 import com.liaoyun.domain.ResponseResult;
 import com.liaoyun.domain.TransferUnit;
@@ -19,9 +21,9 @@ public class TransferMoneyController {
     TokenToId tokenToId;
     @PostMapping("/user/transferMoney")
     @PreAuthorize(value = "hasAuthority('user')")
-    public ResponseResult  TransferMoney(@RequestBody TransferUnit transferUnit, HttpServletRequest request) throws Exception {
-
+    public ResponseResult  TransferMoney(@RequestBody DomainWithVerifyCode domainWithVerifyCode, HttpServletRequest request) throws Exception {
+        TransferUnit transferUnit = JSONObject.parseObject(JSONObject.toJSONString(domainWithVerifyCode.getPojo()), TransferUnit.class);
         transferUnit.setPayerId(tokenToId.toCustomerId(request));
-        return transferMoneyService.transferMoney(transferUnit.getVerifyCode(),transferUnit);
+        return transferMoneyService.transferMoney(domainWithVerifyCode.getVerifyCode(),transferUnit);
     }
 }

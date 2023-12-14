@@ -5,17 +5,62 @@
         insert into app_user_password (user_id,user_name,password) values (LAST_INSERT_ID(),#{userName},#{password})
     </insert>
     <insert id="inserterUserInfo">
-        insert into app_user_info (phone_number,Identity_card,Permissions) values (#{phoneNumber},#{identityCard},#{permissions})
+        INSERT INTO app_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phoneNumber != null">phone_number,</if>
+            <if test="identityCard != null">identity_card,</if>
+            <if test="permissions != null">permissions,</if>
+            <if test="is_bind != null">is_bind,</if>
+            <!-- 其他属性 -->
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phoneNumber != null">#{phone_number},</if>
+            <if test="identityCard != null">#{identity_card},</if>
+            <if test="permissions != null">#{permissions},</if>
+            <if test="is_bind != null">#{is_bind},</if>
+            <!-- 其他属性 -->
+        </trim>
     </insert>
     <insert id="insertTransferTransaction">
-        insert into transfer_transaction (sender_card_id,receiver_card_id,amount,transfer_date,status)
-        values (#{senderCardId},#{receiverCardId},#{amount},#{transferDate},#{status})
+        insert into transfer_transaction (sender_card_id,sender_card_number,receiver_card_id,receiver_card_number,receiver_name,amount,transfer_date,status,postscript)
+        values (#{senderCardId},#{senderCardNumber},#{receiverCardId},#{receiverCardNumber},#{receiverName},#{amount},#{transferDate},#{status},#{postscript})
     </insert>
     <update id="updateBankCardBalance">
         update bank_card set balance = #{newBalance} where card_id = #{cardId}
     </update>
     <update id="updateAppPassword">
         update app_user_password set password = #{password} where user_id = #{userId}
+    </update>
+    <update id="updateCustomerInfo">
+        UPDATE customer
+        <set>
+            <if test="surname != null">surname = #{surname},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="userId != -1">user_id = #{userId},</if>
+            <!-- 其他属性 -->
+        </set>
+        WHERE customer_id = #{customerId}
+    </update>
+    <update id="updateAppUserInfo">
+        UPDATE app_user_info
+        <set>
+            <if test="phoneNumber != null">phone_number = #{phoneNumber},</if>
+            <if test="identityCard != null">Identity_card = #{identityCard},</if>
+            <if test="permissions != null">permissions = #{permissions},</if>
+            <if test="isBind != -1">is_bind = #{isBind},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+    <update id="updateBankCardStatus">
+        UPDATE bank_card
+        <set>
+            <if test="isActive != -1">is_active = #{isActive},</if>
+            <if test="isBind != -1">is_bind = #{isBind},</if>
+        </set>
+        WHERE card_id = #{cardId}
     </update>
     <select id="selectOne" resultType="com.liaoyun.domain.AccountUserPassword">
         select * from app_user_password where user_name=#{username}
@@ -30,16 +75,16 @@
         select balance from bank_card where customer_id = #{customerId}
     </select>
     <select id="selectBankCardsByCustomerId" resultType="com.liaoyun.domain.BankCardInfo">
-        select card_id,card_number,balance,is_active from bank_card where customer_id = #{customerId}
+        select card_id,card_number,balance,is_active from bank_card where customer_id = #{customerId} and is_bind = 1;
     </select>
     <select id="selectCustomerInfo" resultType="com.liaoyun.domain.CustomerInfo">
-        select name, date_of_birth, address, phone_number, email, identity_card, is_active from customer where customer_id = #{customerId}
+        select surname,name, date_of_birth, address, phone_number, email, identity_card, is_active from customer where customer_id = #{customerId}
     </select>
     <select id="selectBalanceByCardNumber" resultType="java.math.BigDecimal">
         select balance from bank_card wherr card_number = #{cardNumber}
     </select>
     <select id="selectCardInfoByCardNumber" resultType="com.liaoyun.domain.BankCardInfo">
-        select card_id,customer_id, card_number, card_holder_name ,balance,is_active from bank_card
+        select card_id,customer_id, card_number, reserve_phone_number,card_holder_name ,balance,is_active from bank_card
         where card_number = #{cardNumber}
     </select>
     <select id="selectTransferRecordPages" resultType="com.liaoyun.domain.TransferTransaction">
@@ -64,8 +109,8 @@
     <select id="selectCardId" resultType="java.lang.Integer">
         select card_id from customer as cus join bank_card as bc on cus.customer_id = bc.customer_id
         where cus.customer_id = #{customerId}
-        <if test="cardNumber != null">
-            and bc.card_number = #{cardNumber}
+        <if test="cardId != 0">
+            and bc.card_id = #{cardId}
         </if>
     </select>
     <select id="selectPasswordByUserId" resultType="com.liaoyun.domain.AccountUserPassword">
@@ -73,6 +118,25 @@
     </select>
     <select id="selectCardNumberByCardId" resultType="java.lang.String">
         select card_number from bank_card where card_id = #{cardId}
+    </select>
+    <select id="selectCustomerInfoExists" resultType="java.lang.Boolean">
+    select exists(
+        select customer_id from customer
+        <where>
+            <if test="identityCard != null">
+                identity_card = #{identityCard}
+            </if>
+        </where>
+        )
+    </select>
+    <select id="selectIdentityExits" resultType="java.lang.Boolean">
+        select count(*) from app_user_info where identity_card = #{identityCard}
+    </select>
+    <select id="selectBankCardPasswordByCardId" resultType="java.lang.String">
+        select hashed_password from card_password where card_id = #{cardId}
+    </select>
+    <select id="selectTransactionDetails" resultType="com.liaoyun.domain.TransferTransaction">
+        select * from transfer_transaction where transaction_id = #{transactionId}
     </select>
 
 

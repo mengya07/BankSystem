@@ -74,6 +74,51 @@ public class InfoInspecter {
         else return false;
     }
 
+
+    public static boolean checkBankCard(String cardNumber) {
+        // 去除空格
+        String strippedCardNumber = cardNumber.replaceAll("\\s", "");
+
+        // 检查是否为数字
+        if (!strippedCardNumber.matches("\\d+")) {
+            return false;
+        }
+
+        // 转换为数字数组
+        int[] digits = new int[strippedCardNumber.length()];
+        for (int i = 0; i < strippedCardNumber.length(); i++) {
+            digits[i] = Character.getNumericValue(strippedCardNumber.charAt(i));
+        }
+
+        // 反转数组
+        for (int i = 0, j = digits.length - 1; i < j; i++, j--) {
+            int temp = digits[i];
+            digits[i] = digits[j];
+            digits[j] = temp;
+        }
+
+        // 计算校验和
+        int sum = 0;
+        for (int i = 0; i < digits.length; i++) {
+            int digit = digits[i];
+
+            // 双数位上的数字乘以2
+            if (i % 2 == 1) {
+                digit *= 2;
+
+                // 大于9的数字减去9
+                if (digit > 9) {
+                    digit -= 9;
+                }
+            }
+
+            sum += digit;
+        }
+
+        // 校验和为10的倍数则有效
+        return sum % 10 == 0;
+    }
+
     public static ResponseResult checkInfo(RegisterInfo UserInfo){
         if(!checkPhoneNumber(UserInfo.getAccountUserInfo().getPhoneNumber())){
             return new ResponseResult<>(412,"电话号码格式错误");
@@ -85,10 +130,14 @@ public class InfoInspecter {
         return null;
     }
 
+
+
+
     public static void main(String[] args) {
         System.out.println(checkPhoneNumber(("18178481190")));
         System.out.println(checkPhoneNumber(("15505819189")));
         System.out.println(checkIdentityCard("36253120040112033X"));
-        System.out.println();
+        System.out.println(checkBankCard("6216636109000224342"));
+        System.out.println(checkBankCard("6216636109000220779"));
     }
 }

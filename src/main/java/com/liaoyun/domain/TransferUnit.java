@@ -15,5 +15,5 @@ public class TransferUnit {
     private String payeeName;
     private String payeeCardNumber;
     private BigDecimal transferAmount;
-    private String verifyCode;
+    private String postscript;
 }
