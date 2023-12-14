@@ -11,7 +11,7 @@
 		<view class="record-box">
 			<view v-for="(item,index) in recordItem" :key="index" class="record-item" @click="clickRecord(index)">
 				<view class="column1">
-					{{item.otherName}}
+					{{item.name}}
 				</view>
 				<view class="column2">
 					<view v-if="item.class=='交易成功'" style="display: flex;">
@@ -33,14 +33,14 @@
 			<uv-divider></uv-divider>
 			<view style="font-weight: bold;margin-left: 20rpx; margin-top: 30rpx;">交易日期</view>
 			<view style="margin-top: 30rpx; display: flex; justify-content: space-between;">
-				<view><uni-datetime-picker v-model="dateStart" type="date" style="margin-left: 60rpx;">{{dateStart}}</uni-datetime-picker></view>
+				<view><uni-datetime-picker v-model="dateStart" type="date" @change="dateStartChange" style="margin-left: 60rpx;">{{dateStart}}</uni-datetime-picker></view>
 				<view>-</view>
-				<view><uni-datetime-picker v-model="dateEnd" type="date" style="margin-right: 60rpx;">{{dateEnd}}</uni-datetime-picker></view>
+				<view><uni-datetime-picker v-model="dateEnd" type="date" @change="dateEndChange" style="margin-right: 60rpx;">{{dateEnd}}</uni-datetime-picker></view>
 			</view>
 			<uv-divider></uv-divider>
 			<view style="display: flex;justify-content: space-between;">
 				<view style="margin-left: 20rpx; font-weight: bold;">付款账户</view>
-				<view style="display: flex;" @click="buttonCard"><view>{{card}}</view><uv-icon name="arrow-right"></uv-icon></view>
+				<view style="display: flex;" @click="buttonCard"><view>{{cardText}}</view><uv-icon name="arrow-right"></uv-icon></view>
 				<uv-picker ref="picker" :columns="cardPicker" @confirm="cardConfirm"></uv-picker>
 			</view>
 			<uv-divider></uv-divider>
@@ -63,8 +63,8 @@
 				<button type="primary" class="confirmButton" @click="clickConfirm">确认</button>
 			</view>
 		</uni-popup>
-		<uv-keyboard ref="keyboardStart" mode="number" @change="keyboardStartChange" @backspace="startBackSpace"></uv-keyboard>
-		<uv-keyboard ref="keyboardEnd" mode="number" @change="keyboardEndChange" @backspace="endBackSpace"></uv-keyboard>
+		<uv-keyboard ref="keyboardStart" mode="number" @change="keyboardStartChange" @backspace="startBackSpace" @confirm="startMoneyNorm"></uv-keyboard>
+		<uv-keyboard ref="keyboardEnd" mode="number" @change="keyboardEndChange" @backspace="endBackSpace" @confirm="endMoneyNorm"></uv-keyboard>
 	</view>
 </template>
 
@@ -74,52 +74,78 @@
 			return {
 				textScreenDate:"3个月",
 				show: false,
-				dateStart:new Date().getFullYear() + "-" + "01" + "-" + "01",
-				dateEnd:new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate(),
+				dateStart:"",
+				dateEnd:"",
 				moneyStart:"0.00",
 				moneyEnd:"99999999999.99",
-				card:"全部账户",
+				cardText:"全部账户",
+				cardId:0,
 				payee:"",
 				selectedAll: true,
 				selectedScc: false,
 				selectedFail:false,
-				recordItem:[{
-					id:"4561586478",
-					date:"2023/10/22 14:31:54",
-					amount:"12.1",
-					balance:"1002.65",
-					name:"金正恩",
-					account:"12346846513",
-					otherName:"马化腾",
-					otherAccount:"464861534165",
-					class:"交易成功"
-				},{
-					id:"4561586478",
-					date:"2023/10/22 14:31:54",
-					amount:"12.1",
-					balance:"1002.65",
-					name:"金正恩",
-					account:"12346846513",
-					otherName:"马化腾",
-					otherAccount:"464861534165",
-					class:"交易失败"
-				}],
+				recordItem:[
+				// 	{
+				// 	id:-1,
+				// 	date:"2023/10/22 14:31:54",
+				// 	amount:"12.1",
+				// 	balance:"1002.65",
+				// 	name:"金正恩",
+				// 	account:"12346846513",
+				// 	otherName:"马化腾",
+				// 	otherAccount:"464861534165",
+				// 	class:"交易成功"
+				// }
+				],
 				cardItem:[{
-					id:"",
-					class:"全部账户"
+					account:"",
+					class:"全部账户",
+					id:0
 				},{
-					id:"1212123333",
-					class:"朝鲜人民银行卡"
+					account:"1212123333",
+					class:"朝鲜人民银行卡",
+					id:-1,
 				},{
-					id:"211214444",
-					class:"日本人民银行卡"
+					account:"211214444",
+					class:"日本人民银行卡",
+					id:-1
 				},
 				{
-					id:"3453455122",
-					class:"美国农业银行卡"
+					account:"3453455122",
+					class:"美国农业银行卡",
+					id:-1
 				}],
 				cardPicker:[[]]
 			};
+		},
+		computed:{
+			currentDate: function(){
+				let date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
+				const [year, month, day] = date.split('-')
+				const formattedMonth = month < 10 ? '0' + month : month
+				const formattedDay = day < 10 ? '0' + day : day
+				return `${year}-${formattedMonth}-${formattedDay}`
+			},
+			defaultDateStart: function(){
+				const [year, month, day] = this.currentDate.split('-')
+				const date = new Date(year, month - 1, day); // 注意月份是从0开始的，所以减1
+				const oneWeekAgo = new Date(date.setDate(date.getDate() - 7));  
+				//year: oneWeekAgo.getFullYear()
+				//month: oneWeekAgo.getMonth() + 1 // 返回的时候记得加1  
+				//day: oneWeekAgo.getDate()
+				return oneWeekAgo.getFullYear() + "-" + (oneWeekAgo.getMonth() + 1) + "-" + oneWeekAgo.getDate()
+			},
+			payeeName: function(){
+				return isNaN(this.payee) ? this.payee : null
+			},
+			payeePhone: function(){
+				return isNaN(this.payee) ? null : this.payee
+			},
+			status: function(){
+				if(selectedAll)return "2"
+				else if(selectedScc) return "1"
+				else return "0"
+			}
 		},
 		methods:{
 			clickRecord(index){
@@ -142,14 +168,33 @@
 				this.cardPicker = [[]]
 				let index = 0
 				this.cardItem.forEach(item=>{
-					if(index)this.cardPicker[0].push(item.class+"("+item.id.slice(-4)+")")
+					if(index)this.cardPicker[0].push(item.class+"("+item.account.slice(-4)+")")
 					else this.cardPicker[0].push(item.class)
 					index++
 				})
 				this.$refs.picker.open()
 			},
 			cardConfirm(e){
-				this.card = e.value[0]
+				this.cardText = e.value[0]
+				this.cardId = this.cardItem[e.indexs[0]].id
+			},
+			dateStartChange(e){
+				if(this.dateStart > this.dateEnd){
+					uni.showToast({
+						title:"日期范围有误",
+						icon:"error"
+					})
+					this.dateStart = this.defaultDateStart
+				}
+			},
+			dateEndChange(e){
+				if(this.dateEnd > this.currentDate){
+					uni.showToast({
+						title:"超过当前日期",
+						icon:"error"
+					})
+					this.dateEnd = this.currentDate
+				}
 			},
 			inputStartMoney(){
 				this.$refs.keyboardStart.open()
@@ -157,14 +202,38 @@
 			inputEndMoney(){
 				this.$refs.keyboardEnd.open()
 			},
-			moneyNorm(val){
-				
+			startMoneyNorm(){
+				this.moneyStart = parseFloat(this.moneyStart).toFixed(2)
+			},
+			endMoneyNorm(){
+				this.moneyEnd = parseFloat(this.moneyEnd).toFixed(2)
+			},
+			moneyInPut(obj){
+				if(obj.s==""&&obj.val=='.'){
+					obj.s = "0."
+				}
+				if(obj.s=="0"&&obj.val=='0'){}
+				else{
+					if(obj.s.includes('.')){
+						var match = obj.s.match(/\.\d*$/);   
+						let num = match ? match[0].length - 1 : 0; 
+						if(obj.val=='.'){}
+						else if(num==2){}
+						else obj.s += obj.val
+					}
+					else obj.s += obj.val
+				}
+				return obj.s
 			},
 			keyboardStartChange(val){
-				this.moneyStart +=val
+				let obj = {"s":this.moneyStart,"val":val}
+				this.moneyInPut(obj)
+				this.moneyStart = obj.s
 			},
 			keyboardEndChange(val){
-				this.moneyEnd +=val
+				let obj = {"s":this.moneyEnd,"val":val}
+				this.moneyInPut(obj)
+				this.moneyEnd = obj.s
 			},
 			startBackSpace(){
 				if (this.moneyStart.length) this.moneyStart = this.moneyStart.substr(0, this.moneyStart.length - 1)
@@ -185,12 +254,78 @@
 				this.selectedAll=false;this.selectedScc=false;this.selectedFail=true;
 			},
 			clickReset(){
-				this.$refs.popup.close();
+				//日期重置
+				this.dateStart = this.defaultDateStart
+				this.dateEnd = this.currentDate
+				//金额重置
+				this.moneyStart = "0.00"
+				this.moneyEnd = "99999999999.99"
+				this.selectAll()
 			},
 			clickConfirm(){
-				//保存筛选条件
+				let that = this
 				this.$refs.popup.close();
+                uni.setStorage({
+                	key: 'token',
+                	data: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmYzlkYzA0MWJiMDM0NjFlOWQwNTJlMTNkM2U1Mjk3ZiIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjU2MjgwNSwiZXhwIjoxNzAyNTY2NDA1fQ.aOuyPqIn_UjhP31D6yjN72RCgsCVUIArfacSlKQk684',
+                	success: function () {
+                		console.log('success');
+                	}
+                });
+				uni.getStorage({
+					key: 'token',
+					success: function (res) {
+						console.log(res.data)
+						let _token = res.data
+						uni.request({
+								  url: 'http://vpqs7u.natappfree.cc/query/transferRecord?pageNum=0&pageSize=5',  
+								  method: 'POST',  
+								  header: {  
+									'token': _token
+								  },
+								  data:{
+									"startDate":that.dateStart,
+									"endDate":that.dateEnd,
+									"cardId":that.cardId,
+									"miniAmount":that.moneyStart,
+									"maxAmount":that.moneyEnd,
+									"payeeName":that.payeeName,
+									//"payeePhoneNumber":this.payeePhone,
+									"status":this.status,
+								  },
+								  success: function (res) {
+									console.log(res)
+									// id:-1,
+									// date:"2023/10/22 14:31:54",
+									// amount:"12.1",
+									// balance:"1002.65",
+									// name:"金正恩",
+									// account:"12346846513",
+									// otherName:"马化腾",
+									// otherAccount:"464861534165",
+									// class:"交易成功"
+									res.data.data.list.forEach(item=>{
+										let temp = {"name":"","amount":"","date":"","class":""}
+										temp.name = item.payerName
+										temp.amount = item.transferAmount
+										temp.date = item.transferTime
+										temp.class = item.statusComments
+										that.recordItem.push(temp)
+									})
+								  },  
+								  fail: function (error) {  
+									console.log("寄咯");  
+								  }  
+								})
+					}
+				})
 			}
+		},
+		onLoad() {
+			this.dateEnd = this.currentDate
+			this.dateStart = this.defaultDateStart
+			//查有什么卡
+			//按照默认条件查一次
 		}
 	}
 </script>

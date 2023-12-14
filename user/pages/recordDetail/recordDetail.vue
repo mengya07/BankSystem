@@ -20,11 +20,11 @@
 			<view style="height: 1rpx"></view>
 			<uv-row class="item">
 				<uv-col span="5"><view class="left">收款人名称</view></uv-col>
-				<uv-col span="7"><view class="right">{{record.name}}</view></uv-col>
+				<uv-col span="7"><view class="right">{{record.otherName}}</view></uv-col>
 			</uv-row>
 			<uv-row class="item">
 				<uv-col span="5"><view class="left">收款账号</view></uv-col>
-				<uv-col span="7"><view class="right">{{record.account}}</view></uv-col>
+				<uv-col span="7"><view class="right">{{record.otherAccount}}</view></uv-col>
 			</uv-row>
 			<uv-row class="item">
 				<uv-col span="5"><view class="left">附言</view></uv-col>
@@ -32,7 +32,7 @@
 			</uv-row>
 			<uv-row class="item">
 				<uv-col span="5"><view class="left">付款账户</view></uv-col>
-				<uv-col span="7"><view class="right">{{record.otherName}} {{record.otherAccount}}</view></uv-col>
+				<uv-col span="7"><view class="right">{{record.name}} {{record.account}}</view></uv-col>
 			</uv-row>
 			<uv-row class="item">
 				<uv-col span="5"><view class="left">交易序号</view></uv-col>

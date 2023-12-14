@@ -43,17 +43,19 @@
 			return {
 				isvisible: false,
 				totalAssets: "******",
-				card: [{
-					id:"23",
-					account:"6216******5803",
-					class:"Ⅰ类账户",
-					balance:"533.26"
-				},{
-					id:"45",
-					account:"1235******5803",
-					class:"ⅠⅠ类账户",
-					balance:"99999999"
-				}]
+				card: [
+				// 	{
+				// 	id:"23",
+				// 	account:"6216******5803",
+				// 	class:"Ⅰ类账户",
+				// 	balance:"533.26"
+				// },{
+				// 	id:"45",
+				// 	account:"1235******5803",
+				// 	class:"ⅠⅠ类账户",
+				// 	balance:"99999999"
+				// },
+				]
 			};
 		},
 		methods:{
@@ -78,6 +80,44 @@
 					}
 				})
 			}
+		},
+		onLoad() {
+			let that = this
+			uni.setStorage({
+				key: 'token',
+				data: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhNzY5OWMzMzU5NGI0ZWMzOTNkOWJkOTg4ZDBjZjQ5ZCIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjU2NTQwMywiZXhwIjoxNzAyNTY5MDAzfQ.i6MsZIZnN4odh-PTcZkyhv56VlanF6auGkVUIttta1A',
+				success: function () {
+					console.log('success');
+				}
+			});
+			uni.getStorage({
+				key: 'token',
+				success: function (res) {
+					console.log(res.data)
+					let _token = res.data
+					uni.request({
+						  url: 'http://vpqs7u.natappfree.cc/query/bankCard',  
+						  method: 'GET',  
+						  header: {  
+							'token': _token
+						  },
+						  data:{
+						  },
+						  success: function (res) {
+							console.log(res)
+							res.data.data.forEach(item=>{
+								let temp = {account:"",balance:""}
+								temp.account = item.cardNumber
+								temp.balance = item.balance
+								that.card.push(temp)
+							})
+						  },  
+						  fail: function (error) {  
+							console.log("寄咯");  
+						  }  
+						})
+				}
+			})
 		}
 	}
 </script>
