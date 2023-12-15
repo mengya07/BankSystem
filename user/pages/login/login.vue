@@ -1,6 +1,5 @@
 <template>  
   <view class="container">  
-    <image class="logo" src="/static/logo.png"></image>  
     <text class="title">登录</text>  
     <input class="input" type="text" placeholder="请输入用户名" @input="onUsernameInput">
     <input class="input" type="password" placeholder="请输入密码" @input="onPasswordInput">
