@@ -83,39 +83,43 @@
 		},
 		onLoad() {
 			let that = this
-			uni.setStorage({
-				key: 'token',
-				data: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhNzY5OWMzMzU5NGI0ZWMzOTNkOWJkOTg4ZDBjZjQ5ZCIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjU2NTQwMywiZXhwIjoxNzAyNTY5MDAzfQ.i6MsZIZnN4odh-PTcZkyhv56VlanF6auGkVUIttta1A',
-				success: function () {
-					console.log('success');
-				}
-			});
 			uni.getStorage({
 				key: 'token',
 				success: function (res) {
 					console.log(res.data)
 					let _token = res.data
+					uni.showLoading({
+						title: "",
+						mask: true
+					})
 					uni.request({
-						  url: 'http://vpqs7u.natappfree.cc/query/bankCard',  
-						  method: 'GET',  
-						  header: {  
-							'token': _token
-						  },
-						  data:{
-						  },
-						  success: function (res) {
-							console.log(res)
-							res.data.data.forEach(item=>{
-								let temp = {account:"",balance:""}
-								temp.account = item.cardNumber
-								temp.balance = item.balance
-								that.card.push(temp)
+							  url: 'http://vpqs7u.natappfree.cc/query/bankCard',  
+							  method: 'GET',
+							  header: {  
+								'token': _token
+							  },
+							  data:{
+							  },
+							  success: function (res) {
+								console.log(res)
+								res.data.data.forEach(item=>{
+									let temp = {account:"",id:"",class:"借记卡"}
+									temp.account = item.cardNumber
+									//temp.balance = item.balance
+									//temp.id = item.id
+									that.cardItem.push(temp)
+								})
+								uni.hideLoading()
+							  },  
+							  fail: function (error) {  
+								uni.hideLoading()
+								uni.showToast({
+									title: '错误，稍后再试',
+									icon: 'error',
+									duration: 2000
+								}) 
+							  }  
 							})
-						  },  
-						  fail: function (error) {  
-							console.log("寄咯");  
-						  }  
-						})
 				}
 			})
 		}
