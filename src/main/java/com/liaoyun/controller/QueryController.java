@@ -1,22 +1,15 @@
 package com.liaoyun.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.liaoyun.domain.*;
+import com.liaoyun.domain.requestType.TransferRecordQueryConditions;
 import com.liaoyun.mapper.UserMapper;
 import com.liaoyun.service.QueryInfoService;
-import com.liaoyun.utils.JwtUtil;
 import com.liaoyun.utils.TokenToId;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class QueryController {
@@ -31,10 +24,10 @@ public class QueryController {
     TokenToId tokenToId;
 
 
-    @RequestMapping("/query/balance")
+    @RequestMapping("/query/singleCard")
     @PreAuthorize(value = "hasAuthority('user')")
-    ResponseResult queryBalance(HttpServletRequest request) throws Exception {
-        return queryInfo.queryBalance(tokenToId.toCustomerId( request));
+    ResponseResult querySingleCard(@RequestParam Integer cardId, HttpServletRequest request) throws Exception {
+        return queryInfo.querySingleBankCard(tokenToId.toCustomerId(request),cardId);
     }
 
     @RequestMapping("/query/bankCard")

@@ -1,8 +1,7 @@
 package com.liaoyun.service.impl;
 
 import com.liaoyun.aop.InvokeVerifyCode;
-import com.liaoyun.domain.AccountUserInfo;
-import com.liaoyun.domain.AccountUserPassword;
+import com.liaoyun.domain.dataBaseType.AccountUserPassword;
 import com.liaoyun.domain.ResponseResult;
 import com.liaoyun.mapper.UserMapper;
 import com.liaoyun.service.EditAppInfoService;

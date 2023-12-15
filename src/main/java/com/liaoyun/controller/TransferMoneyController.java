@@ -23,7 +23,7 @@ public class TransferMoneyController {
     @PreAuthorize(value = "hasAuthority('user')")
     public ResponseResult  TransferMoney(@RequestBody DomainWithVerifyCode domainWithVerifyCode, HttpServletRequest request) throws Exception {
         TransferUnit transferUnit = JSONObject.parseObject(JSONObject.toJSONString(domainWithVerifyCode.getPojo()), TransferUnit.class);
-        transferUnit.setPayerId(tokenToId.toCustomerId(request));
+        transferUnit.setSenderCustomerId(tokenToId.toCustomerId(request));
         return transferMoneyService.transferMoney(domainWithVerifyCode.getVerifyCode(),transferUnit);
     }
 }

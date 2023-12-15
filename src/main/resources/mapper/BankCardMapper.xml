@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liaoyun.mapper.BankCardMapper">
+
+    <select id="selectSingleBankCard" resultType="com.liaoyun.domain.dataBaseType.BankCardInfo">
+        select card_id,card_number, balance, is_active, open_account_bank
+        from bank_card
+        where card_id = #{cardId} and customer_id = #{customerId} and is_bind = 1
+    </select>
+    <select id="selectBankCards" resultType="com.liaoyun.domain.dataBaseType.BankCardInfo">
+        select card_id,card_number, balance, is_active
+        from bank_card
+        where customer_id = #{customerId} and is_bind = 1
+    </select>
+    <select id="selectCardInfoByCardNumber" resultType="com.liaoyun.domain.dataBaseType.BankCardInfo">
+        select card_id, balance, card_holder_name, open_account_bank
+        from bank_card
+        where card_number = #{cardNumber}
+    </select>
+</mapper>

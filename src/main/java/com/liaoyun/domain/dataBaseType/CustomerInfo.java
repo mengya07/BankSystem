@@ -1,4 +1,4 @@
-package com.liaoyun.domain;
+package com.liaoyun.domain.dataBaseType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerInfo {
-    private int customerId;
+    private Integer customerId;
     private String surname;
     private String name;
     private Date dateOfBirth;
@@ -18,7 +18,6 @@ public class CustomerInfo {
     private String phoneNumber;
     private String email;
     private String identityCard;
-    private int userId;
     private byte isActive;
     private Timestamp createdAt;
 }
