@@ -9,12 +9,12 @@
    <text class="title"></text>
    <text class="title"></text>
     <text class="title" >登录</text>  
-    <input class="input" type="text" placeholder="  请输入手机号" @input="onUsernameInput">
-    <input class="input" type="password" placeholder="  请输入密码" @input="onPasswordInput">
+    <input class="input"  type="text" maxlength="11"  placeholder="  请输入手机号" @input="onUsernameInput"> 
+    <input class="input" type="password" placeholder="  请输入验证码" @input="onPasswordInput">
+	<button class="button2" type="primary" @click="handleClick">获取验证码</button>
 	<text class="title"></text>
     <button class="button" type="primary" @click="onLoginClick">登录</button>  
 	<text class="title"></text>  
-    <button class="button2" type="primary" @click="handleClick">注册</button>  
     <text class="error" v-if="error">{{ error }}</text>  
 	<uni-fab
 				:pattern="pattern"
@@ -41,6 +41,7 @@ export default {
 	  horizontal: 'left',
 	  vertical: 'bottom',
 	  direction: 'horizontal',
+
 	  pattern: {
 	  					color: '#7A7E83',
 	  					backgroundColor: '#fff',
@@ -52,7 +53,7 @@ export default {
 	  				content: [
 						{
 	  						iconPath: '/static/switch.png',		
-	  						text: '短信登录',
+	  						text: '密码登录',
 	  						active: false
 	  					},
 	  					{
@@ -82,32 +83,17 @@ export default {
     onLoginClick() {  
 		
 		
-      // 模拟登录验证过程，实际开发中需要调用后端接口进行验证  
-     /* if (this.username === 'admin' && this.password === 'password') {  
-        uni.showToast({  
-          title: '登录成功',  
-          icon: 'success'  
-        });
-		uni.switchTab({
-		  url:  "/pages/home/home"
-		});
-		this.error = '';
-		  // 登录成功后跳转到其他页面或执行其他操作  
-      } else {  
-        uni.showToast({
-          title: '请输入正确的手机号和密码',  
-          icon: 'error'  
-        });
-      }  		
-			*/	
+    
+	
 			uni.request({  
-			  url: 'http://6a6vjt.natappfree.cc/login',  
+			  url: 'http://6a6vjt.natappfree.cc/vcodelogin',  
 			  method: 'POST',  
 			  data: {  
-			  "userName": this.username,  "password": this.password  ,
-			// "userName":'13106151700',  "password": '13106151700zhf' ,
+			    "phoneNumber": this.username,  "verifyCode": this.password  ,
+				// "phoneNumber":'13106151700',  "verifyCode": '13106151700zhf' ,
 			  },  
 			  success: (res) => {  
+				  console.log(res);
 			    if (res.data.code === 200) {  
 			      uni.showToast({  
 			        title: '登录成功',  
@@ -116,13 +102,13 @@ export default {
 			     uni.switchTab({  
 			     url: "/pages/home/home"  
 			      });  
-				  uni.setStorageSync({  
+				  uni.setStorageSync({
 				    key: 'token',  
 				    data: data.data.token,  
-				  });  
+				  }); 
 			    } else {  
 			      uni.showToast({
-			        title: '请输入正确的手机号和密码',  
+			        title: '请输入正确的手机号和验证码',  
 			        icon: 'error'  
 			      }); 
 			    }  
@@ -139,9 +125,26 @@ export default {
 			
     },
 	handleClick(){
-		uni.navigateTo({
-		  url:  "/pages/register/register"
-		});
+		if(username.length===11)
+		uni.request({
+		  url: 'http://6a6vjt.natappfree.cc/sendsms/nologin?phoneNumber='+this.username,  
+		  method: 'POST',  
+		  data: {  
+		 
+		  },
+		success: (res) => {
+			uni.showToast({
+			  title: '发送成功',  
+			  icon: ''  
+			});
+			}
+		  })
+		  else{
+			uni.showToast({
+			  title: '请输入正确格式的手机号',  
+			  icon: ''  
+			});  
+		  }
 	},
 	
 	
@@ -150,26 +153,28 @@ export default {
 					console.log(e)
 					if(e.index==0)
 					uni.navigateTo({
-					  url:  "/pages/login-message/login-message"
+					  url:  "/pages/login/login"
 					});
 					if(e.index==1)
 					uni.navigateTo({
 					  url:  "/pages/register/register"
 					});
 					
-					
-			
 				},
 				fabClick() {
 					
 					
 				},
+				
+				
+	
+				
+	 
 
-  }  
+  } 
 };  
 
 </script>  
-  
 <style>  
 .container {  
   width: 100%;  
@@ -203,8 +208,9 @@ export default {
   height: 100rpx;  
 }  
 .button2{
+  font-size: 16px;
   width: 220rpx;
-  height: 100rpx;
+  height: 85rpx;
 }
 .error {  
   color: red;  
