@@ -1,4 +1,4 @@
-package com.liaoyun.domain;
+package com.liaoyun.domain.dataBaseType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,12 +11,13 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BankCardInfo {
-    int cardId;
+    Integer cardId;
     String cardNumber;
     String cardHolderName;
     String reservePhoneNumber;
     BigDecimal balance;
-    int customerId;
+    Integer customerId;
+    Integer openAccountBank;
     byte isActive;
     Timestamp createdAt;
     byte isBind;

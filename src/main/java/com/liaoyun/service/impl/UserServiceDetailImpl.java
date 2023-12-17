@@ -1,6 +1,6 @@
 package com.liaoyun.service.impl;
 
-import com.liaoyun.domain.AccountUserPassword;
+import com.liaoyun.domain.dataBaseType.AccountUserPassword;
 import com.liaoyun.domain.LoginUserDetail;
 import com.liaoyun.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
