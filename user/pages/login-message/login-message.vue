@@ -125,9 +125,9 @@ export default {
 			
     },
 	handleClick(){
-		if(username.length===11)
+		
 		uni.request({
-		  url: 'http://6a6vjt.natappfree.cc/sendsms/nologin?phoneNumber='+this.username,  
+		  url: 'http://c9r4a4.natappfree.cc/sendsms/nologin?phoneNumber=18178481190',//+this.username,  
 		  method: 'POST',  
 		  data: {  
 		 
@@ -139,12 +139,7 @@ export default {
 			});
 			}
 		  })
-		  else{
-			uni.showToast({
-			  title: '请输入正确格式的手机号',  
-			  icon: ''  
-			});  
-		  }
+		 
 	},
 	
 	

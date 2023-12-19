@@ -81,31 +81,12 @@ export default {
     },  
     onLoginClick() {  
 		
-		
-      // 模拟登录验证过程，实际开发中需要调用后端接口进行验证  
-     /* if (this.username === 'admin' && this.password === 'password') {  
-        uni.showToast({  
-          title: '登录成功',  
-          icon: 'success'  
-        });
-		uni.switchTab({
-		  url:  "/pages/home/home"
-		});
-		this.error = '';
-		  // 登录成功后跳转到其他页面或执行其他操作  
-      } else {  
-        uni.showToast({
-          title: '请输入正确的手机号和密码',  
-          icon: 'error'  
-        });
-      }  		
-			*/	
 			uni.request({  
-			  url: 'http://6a6vjt.natappfree.cc/login',  
+			  url: 'http://120.55.37.93:8080/login',  
 			  method: 'POST',  
 			  data: {  
 			  "userName": this.username,  "password": this.password  ,
-			// "userName":'13106151700',  "password": '13106151700zhf' ,
+			//"userName":'18629153578',  "password": '18629153578ljf' ,
 			  },  
 			  success: (res) => {  
 			    if (res.data.code === 200) {  
@@ -116,10 +97,24 @@ export default {
 			     uni.switchTab({  
 			     url: "/pages/home/home"  
 			      });  
-				  uni.setStorageSync({  
-				    key: 'token',  
-				    data: data.data.token,  
-				  });  
+				  uni.setStorageSync('token',res.data.data.token);  
+				  uni.setStorageSync('userName',this.username); 
+				  uni.request({
+				    url: 'http://120.55.37.93:80/query/bankCard',  
+				    method: 'GET',  
+				    data: {},  
+				    header: {  
+				      "token": 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiNTE1MTEwYjc2ZDI0NDAyOGQxY2FjODc1MWM1N2FhNiIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjk3Mzc1MiwiZXhwIjoxNzAzMDYwMTUyfQ.EJRhB4xFsTmUd_qTT_0BjwvMrtiHog-OLHbG71wNPHI',  
+				    },  
+				    success: (res) => {  
+				      uni.setStorageSync('tranferCardId',this.datas[0].cardId);
+				    },  
+				    fail: (error) => {  
+				      console.log(error);  
+				    }  
+				  });  //请求初始卡id
+				  
+				  console.log(res);
 			    } else {  
 			      uni.showToast({
 			        title: '请输入正确的手机号和密码',  
@@ -155,10 +150,7 @@ export default {
 					if(e.index==1)
 					uni.navigateTo({
 					  url:  "/pages/register/register"
-					});
-					
-					
-			
+					});		
 				},
 				fabClick() {
 					
