@@ -28,7 +28,7 @@
 			</uv-row>
 			<uv-row class="item">
 				<uv-col span="5"><view class="left">附言</view></uv-col>
-				<uv-col span="7"><view class="right">待加入</view></uv-col>
+				<uv-col span="7"><view class="right">{{record.postscript}}</view></uv-col>
 			</uv-row>
 			<uv-row class="item">
 				<uv-col span="5"><view class="left">付款账户</view></uv-col>
@@ -49,35 +49,69 @@
 </template>
 
 <script>
+import { string } from '../../uni_modules/uv-ui-tools/libs/function/test';
 	export default {
 		data() {
 			return {
+				transactionId:"",
 				record:{
 					id:"",
 					date:"",
 					amount:"",
-					balance:"",
+					//balance:"",
 					name:"",
 					account:"",
 					otherName:"",
 					otherAccount:"",
-					class:""
+					class:"",
+					postscript:""
 				}
 			};
 		},
 		onLoad(option) {
 			let that = this
 			const eventChannel = this.getOpenerEventChannel();
-			eventChannel.on('acceptDataFromOpenerPage', function(data) {
-				that.record.id = data.id
-				that.record.date = data.date
-				that.record.amount = data.amount
-				that.record.balance = data.balance
-				that.record.name = data.name
-				that.record.account = data.account
-				that.record.otherName = data.otherName
-				that.record.otherAccount = data.otherAccount
-				that.record.class = data.class
+			eventChannel.on('transferDetail', function(data) {
+				that.transactionId = data
+				uni.getStorage({
+					key: 'token',
+					success: function (res) {
+						let _token = res.data
+						uni.showLoading({
+							title: "",
+							mask: true
+						})
+						uni.request({
+								  url: 'http://x38h8d.natappfree.cc/query/transferRecordDetail?transactionId=' + that.transactionId,  
+								  method: 'GET',
+								  header: {  
+									'token': _token,
+								  },
+								  success: function (res) {
+									res = res.data.data
+									that.record.id = res.transactionId
+									that.record.date = res.transferTime
+									that.record.amount = parseFloat(res.amount).toFixed(2)
+									that.record.name = res.receiverName
+									that.record.account = res.receiverCardNumber
+									that.record.otherName = res.senderName
+									that.record.otherAccount = res.senderCardNumber
+									that.record.postscript = res.postscript
+									that.record.class = res.status ==1 ? "交易成功" : "交易失败"
+
+									uni.hideLoading()
+								  },  
+								  fail: function (error) {  
+									uni.hideLoading()
+									uni.showToast({
+										title: '错误，稍后再试',
+										icon: 'error',
+										duration: 2000
+									}) 
+								  }  
+								})
+					}
+				})
 			})
 		}
 	}

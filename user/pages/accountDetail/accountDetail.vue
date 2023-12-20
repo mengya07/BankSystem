@@ -18,12 +18,13 @@
 		
 		<uni-popup ref="popup" type="center" :isMaskClick="false">
 			<view style="display: flex;justify-content: flex-end;background-color: #FFFFFF;"><uv-icon name="close" size="14" style="margin-right: 5rpx;" @click="this.$refs.popup.close()"></uv-icon></view>
-			<view style="width: 600rpx; height: 300rpx; display: flex; flex-direction: column; align-items: center; background-color: #FFFFFF;">
+			<view style="width: 600rpx; height: 350rpx; display: flex; flex-direction: column; align-items: center; background-color: #FFFFFF;">
 				<view>手机交易码</view>
 				<uv-line margin="10rpx"></uv-line>
+				<view style="margin-top: 20rpx;">正在向尾号{{phoneTail}}的手机发送验证码</view>
 				<uv-code-input mode="line" size="28" @finish="codeInputFinish" style="margin-top: 40rpx;"></uv-code-input>
 				<uv-code ref="uCode" @change="codeChange" seconds="60"></uv-code>
-				<button @click="getCode" style="border-radius: 10rpx; width: 300rpx; height: 60rpx; font-size: 0.8em; margin-top: 40rpx;">{{codeTips}}</button>
+				<button @click="getCode" style="border-radius: 10rpx; width: 300rpx; height: 60rpx; font-size: 0.8em; margin-top: 40rpx; background-color: red; color: #FFFFFF;">{{codeTips}}</button>
 			</view>
 		</uni-popup>
 		
@@ -35,7 +36,7 @@
 		</view>
 		
 		<view class="record-box">
-
+			
 		</view>
 		
 		
@@ -57,6 +58,20 @@
 				},
 				recordItem:[]
 			};
+		},
+		computed:{
+			phoneTail: function(){
+				let that = this
+				let temp = ""
+				uni.getStorage({
+					key:'userName',
+					success(res) {
+						console.log(res)
+						temp =  res.data.slice(-4)
+					}
+				})
+				return temp
+			}
 		},
 		methods:{
 			codeChange(text){
