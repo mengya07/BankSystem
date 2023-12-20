@@ -1,4 +1,4 @@
-package com.liaoyun.domain;
+package com.liaoyun.domain.requestType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

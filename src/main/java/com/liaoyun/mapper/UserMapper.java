@@ -1,6 +1,9 @@
 package com.liaoyun.mapper;
 
-import com.liaoyun.domain.*;
+import com.liaoyun.domain.dataBaseType.*;
+import com.liaoyun.domain.requestType.TransferRecordQueryConditions;
+import com.liaoyun.domain.responseType.SimpleTransferTransaction;
+import com.liaoyun.domain.responseType.TransactionRecordDetails;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -33,14 +36,13 @@ public interface UserMapper {
 
     BigDecimal selectBalanceByCardNumber(String cardNumber);
 
-    BankCardInfo selectCardInfoByCardNumber(String cardNumber);
 
     void updateBankCardBalance(int cardId,BigDecimal newBalance);
 
     int insertTransferTransaction(TransferTransaction transferTransaction);
 
     List<Integer> selectCardId( int customerId,int cardId);
-    List<TransferTransaction> selectTransferRecordPages(TransferRecordQueryConditions queryConditions,List<Integer> idList,int customerId);
+    List<SimpleTransferTransaction> selectTransferRecordPages(TransferRecordQueryConditions queryConditions, List<Integer> idList, int customerId);
 
     AccountUserPassword selectPasswordByUserId(int userId);
 
@@ -60,5 +62,5 @@ public interface UserMapper {
 
     int updateBankCardStatus(byte isActive, byte isBind,int cardId);
 
-    TransferTransaction selectTransactionDetails(int transactionId);
+    TransactionRecordDetails selectTransactionDetails(int transactionId);
 }

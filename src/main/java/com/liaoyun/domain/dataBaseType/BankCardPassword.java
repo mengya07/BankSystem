@@ -1,4 +1,4 @@
-package com.liaoyun.domain;
+package com.liaoyun.domain.dataBaseType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +10,8 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BankCardPassword {
-    int passwordId;
-    int cardId;
+    Integer passwordId;
+    Integer cardId;
     String hashedPassword;
     Timestamp createdAt;
 }

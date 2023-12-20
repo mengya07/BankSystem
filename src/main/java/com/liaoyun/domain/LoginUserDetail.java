@@ -1,6 +1,7 @@
 package com.liaoyun.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.liaoyun.domain.dataBaseType.AccountUserPassword;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

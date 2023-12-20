@@ -2,6 +2,10 @@ package com.liaoyun.service.impl;
 
 import com.liaoyun.aop.InvokeVerifyCode;
 import com.liaoyun.domain.*;
+import com.liaoyun.domain.dataBaseType.AccountUserInfo;
+import com.liaoyun.domain.dataBaseType.AccountUserPassword;
+import com.liaoyun.domain.dataBaseType.BankCardInfo;
+import com.liaoyun.domain.dataBaseType.CustomerInfo;
 import com.liaoyun.mapper.UserMapper;
 import com.liaoyun.service.CheckBankCardService;
 import com.liaoyun.service.LoginService;
@@ -41,7 +45,7 @@ public class RegisterServiceImpl implements RegisterService {
         }
 
         //注册用户
-        userMapper.inserterUserInfo(new AccountUserInfo(0,phoneNumber,null,"unbinduser",(byte) 0));
+        userMapper.inserterUserInfo(new AccountUserInfo(0,phoneNumber,null,null,"unbinduser",(byte) 0));
         userMapper.insertUserPassword(new AccountUserPassword(phoneNumber));
 
         return new ResponseResult<>(100,"账户创建成功");
@@ -109,10 +113,10 @@ public class RegisterServiceImpl implements RegisterService {
         }
         int record = 0;
         record = record + userMapper.updateAppUserInfo(new AccountUserInfo(userId,null,realNameAuthentication.getIdentityCard(),
-                "user", (byte) 1));
+                realNameAuthentication.getCustomerId(),"user", (byte) 1));
         //根据customerId更新用户对应的app的userid，完成银行账户和app账号的关联
         record = record + userMapper.updateCustomerInfo(new CustomerInfo(realNameAuthentication.getCustomerId(),  null,  null,  null,
-                 null,  null, null,  null,userId, (byte) -1,null));
+                 null,  null, null,  null, (byte) -1,null));
         record = record + userMapper.updateBankCardStatus( (byte) -1, (byte) 1,realNameAuthentication.getCardId());
         if(record != 3){
             //TODO 记录日志

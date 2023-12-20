@@ -1,4 +1,4 @@
-package com.liaoyun.domain;
+package com.liaoyun.domain.dataBaseType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountUserInfo {
-    private int userId;
+    private Integer userId;
 
     private String phoneNumber;
 
     private String identityCard;
+
+    private Integer customerId;
 
     private String permissions;
 

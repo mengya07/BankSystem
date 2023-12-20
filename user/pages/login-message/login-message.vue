@@ -9,12 +9,12 @@
    <text class="title"></text>
    <text class="title"></text>
     <text class="title" >登录</text>  
-    <input class="input" type="text" placeholder="  请输入手机号" @input="onUsernameInput">
-    <input class="input" type="password" placeholder="  请输入密码" @input="onPasswordInput">
+    <input class="input"  type="text" maxlength="11"  placeholder="  请输入手机号" @input="onUsernameInput"> 
+    <input class="input" type="password" placeholder="  请输入验证码" @input="onPasswordInput">
+	<button class="button2" type="primary" @click="handleClick">获取验证码</button>
 	<text class="title"></text>
     <button class="button" type="primary" @click="onLoginClick">登录</button>  
 	<text class="title"></text>  
-    <button class="button2" type="primary" @click="handleClick">注册</button>  
     <text class="error" v-if="error">{{ error }}</text>  
 	<uni-fab
 				:pattern="pattern"
@@ -41,6 +41,7 @@ export default {
 	  horizontal: 'left',
 	  vertical: 'bottom',
 	  direction: 'horizontal',
+
 	  pattern: {
 	  					color: '#7A7E83',
 	  					backgroundColor: '#fff',
@@ -52,7 +53,7 @@ export default {
 	  				content: [
 						{
 	  						iconPath: '/static/switch.png',		
-	  						text: '短信登录',
+	  						text: '密码登录',
 	  						active: false
 	  					},
 	  					{
@@ -81,14 +82,18 @@ export default {
     },  
     onLoginClick() {  
 		
+		
+    
+	
 			uni.request({  
-			  url: 'http://120.55.37.93:8080/login',  
+			  url: 'http://6a6vjt.natappfree.cc/vcodelogin',  
 			  method: 'POST',  
 			  data: {  
-			  "userName": this.username,  "password": this.password  ,
-			//"userName":'18629153578',  "password": '18629153578ljf' ,
+			    "phoneNumber": this.username,  "verifyCode": this.password  ,
+				// "phoneNumber":'13106151700',  "verifyCode": '13106151700zhf' ,
 			  },  
 			  success: (res) => {  
+				  console.log(res);
 			    if (res.data.code === 200) {  
 			      uni.showToast({  
 			        title: '登录成功',  
@@ -97,27 +102,13 @@ export default {
 			     uni.switchTab({  
 			     url: "/pages/home/home"  
 			      });  
-				  uni.setStorageSync('token',res.data.data.token);  
-				  uni.setStorageSync('userName',this.username); 
-				  uni.request({
-				    url: 'http://120.55.37.93:80/query/bankCard',  
-				    method: 'GET',  
-				    data: {},  
-				    header: {  
-				      "token": 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiNTE1MTEwYjc2ZDI0NDAyOGQxY2FjODc1MWM1N2FhNiIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjk3Mzc1MiwiZXhwIjoxNzAzMDYwMTUyfQ.EJRhB4xFsTmUd_qTT_0BjwvMrtiHog-OLHbG71wNPHI',  
-				    },  
-				    success: (res) => {  
-				      uni.setStorageSync('tranferCardId',this.datas[0].cardId);
-				    },  
-				    fail: (error) => {  
-				      console.log(error);  
-				    }  
-				  });  //请求初始卡id
-				  
-				  console.log(res);
+				  uni.setStorageSync({
+				    key: 'token',  
+				    data: data.data.token,  
+				  }); 
 			    } else {  
 			      uni.showToast({
-			        title: '请输入正确的手机号和密码',  
+			        title: '请输入正确的手机号和验证码',  
 			        icon: 'error'  
 			      }); 
 			    }  
@@ -134,9 +125,21 @@ export default {
 			
     },
 	handleClick(){
-		uni.navigateTo({
-		  url:  "/pages/register/register"
-		});
+		
+		uni.request({
+		  url: 'http://c9r4a4.natappfree.cc/sendsms/nologin?phoneNumber=18178481190',//+this.username,  
+		  method: 'POST',  
+		  data: {  
+		 
+		  },
+		success: (res) => {
+			uni.showToast({
+			  title: '发送成功',  
+			  icon: ''  
+			});
+			}
+		  })
+		 
 	},
 	
 	
@@ -145,23 +148,28 @@ export default {
 					console.log(e)
 					if(e.index==0)
 					uni.navigateTo({
-					  url:  "/pages/login-message/login-message"
+					  url:  "/pages/login/login"
 					});
 					if(e.index==1)
 					uni.navigateTo({
 					  url:  "/pages/register/register"
-					});		
+					});
+					
 				},
 				fabClick() {
 					
 					
 				},
+				
+				
+	
+				
+	 
 
-  }  
+  } 
 };  
 
 </script>  
-  
 <style>  
 .container {  
   width: 100%;  
@@ -195,8 +203,9 @@ export default {
   height: 100rpx;  
 }  
 .button2{
+  font-size: 16px;
   width: 220rpx;
-  height: 100rpx;
+  height: 85rpx;
 }
 .error {  
   color: red;  

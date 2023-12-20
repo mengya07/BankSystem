@@ -62,37 +62,38 @@
         </set>
         WHERE card_id = #{cardId}
     </update>
-    <select id="selectOne" resultType="com.liaoyun.domain.AccountUserPassword">
+    <select id="selectOne" resultType="com.liaoyun.domain.dataBaseType.AccountUserPassword">
         select * from app_user_password where user_name=#{username}
     </select>
     <select id="selectPermissionsById" resultType="java.lang.String">
         select permissions from app_user_info where user_id = #{userId}
     </select>
     <select id="selectCustomerIdByUserId" resultType="java.lang.Integer">
-        select customer_id from customer as cus INNER JOIN app_user_info as app ON app.Identity_card = cus.Identity_card where app.user_id = #{userId}
+        select customer_id from app_user_info where user_id = #{userId}
     </select>
-    <select id="selectBalanceByCustomerId" resultType="com.liaoyun.domain.BankCardInfo">
+    <select id="selectBalanceByCustomerId" resultType="com.liaoyun.domain.dataBaseType.BankCardInfo">
         select balance from bank_card where customer_id = #{customerId}
     </select>
-    <select id="selectBankCardsByCustomerId" resultType="com.liaoyun.domain.BankCardInfo">
+    <select id="selectBankCardsByCustomerId" resultType="com.liaoyun.domain.dataBaseType.BankCardInfo">
         select card_id,card_number,balance,is_active from bank_card where customer_id = #{customerId} and is_bind = 1;
     </select>
-    <select id="selectCustomerInfo" resultType="com.liaoyun.domain.CustomerInfo">
+    <select id="selectCustomerInfo" resultType="com.liaoyun.domain.dataBaseType.CustomerInfo">
         select surname,name, date_of_birth, address, phone_number, email, identity_card, is_active from customer where customer_id = #{customerId}
     </select>
     <select id="selectBalanceByCardNumber" resultType="java.math.BigDecimal">
         select balance from bank_card wherr card_number = #{cardNumber}
     </select>
-    <select id="selectCardInfoByCardNumber" resultType="com.liaoyun.domain.BankCardInfo">
+    <select id="selectCardInfoByCardNumber" resultType="com.liaoyun.domain.dataBaseType.BankCardInfo">
         select card_id,customer_id, card_number, reserve_phone_number,card_holder_name ,balance,is_active from bank_card
         where card_number = #{cardNumber}
     </select>
-    <select id="selectTransferRecordPages" resultType="com.liaoyun.domain.TransferTransaction">
-        select * from transfer_transaction as tt
-        <if test="queryConditions.payeeLimit">
-            join bank_card as bc on tt.receiver_card_id = bc.card_id
-            join customer as cus on bc.customer_id = cus.customer_id
-        </if>
+    <select id="selectTransferRecordPages" resultType="com.liaoyun.domain.responseType.SimpleTransferTransaction">
+        select tt.transaction_id as transactionId, bc.card_holder_name as payerName ,bc.card_number as payerCardNumber,
+               tt.amount as transferAmount,tt.status as status,tt.transfer_date as transferTime from transfer_transaction as tt
+        join bank_card as bc on tt.sender_card_id = bc.card_id
+<!--        <if test="queryConditions.payeeLimit">-->
+<!--            join bank_card as bc2 on tt.receiver_card_id = bc2.card_id-->
+<!--        </if>-->
         where tt.sender_card_id in
         <foreach collection="idList" item="id" open="(" separator="," close=")">
             #{id}
@@ -100,11 +101,12 @@
         and tt.transfer_date between #{queryConditions.startDate} and #{queryConditions.endDate}
         and tt.amount between #{queryConditions.miniAmount} and #{queryConditions.maxAmount}
         <if test="queryConditions.payeeName != null">
-            and cus.name = #{queryConditions.payeeName}
+            and receiver_name = #{queryConditions.payeeName}
         </if>
-        <if test="queryConditions.payeePhoneNumber != null">
-            and cus.phone_number = #{queryConditions.payeePhoneNumber}
-        </if>
+<!--        <if test="queryConditions.payeePhoneNumber != null">-->
+<!--            and bc2.reserve_phone_number = #{queryConditions.payeePhoneNumber}-->
+<!--        </if>-->
+
     </select>
     <select id="selectCardId" resultType="java.lang.Integer">
         select card_id from customer as cus join bank_card as bc on cus.customer_id = bc.customer_id
@@ -113,7 +115,7 @@
             and bc.card_id = #{cardId}
         </if>
     </select>
-    <select id="selectPasswordByUserId" resultType="com.liaoyun.domain.AccountUserPassword">
+    <select id="selectPasswordByUserId" resultType="com.liaoyun.domain.dataBaseType.AccountUserPassword">
         select * from app_user_password where user_id = #{userId}
     </select>
     <select id="selectCardNumberByCardId" resultType="java.lang.String">
@@ -135,8 +137,13 @@
     <select id="selectBankCardPasswordByCardId" resultType="java.lang.String">
         select hashed_password from card_password where card_id = #{cardId}
     </select>
-    <select id="selectTransactionDetails" resultType="com.liaoyun.domain.TransferTransaction">
-        select * from transfer_transaction where transaction_id = #{transactionId}
+    <select id="selectTransactionDetails" resultType="com.liaoyun.domain.responseType.TransactionRecordDetails">
+        select tt.sender_card_id as senderCardId, bc.card_holder_name as payerName, bc.card_number as payerCardNumber,
+        tt.receiver_name as payeeName, tt.receiver_card_number as payeeCardNumber, tt.amount as transferAmount,
+        tt.postscript as postscript, tt.transaction_id as serialNumber, tt.status as status,tt.transfer_date as transferTime
+        from transfer_transaction as tt
+        join bank_card as bc on tt.sender_card_id = bc.card_id
+        where transaction_id = #{transactionId}
     </select>
 
 

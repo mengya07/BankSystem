@@ -1,7 +1,7 @@
 package com.liaoyun.controller;
 
 
-import com.liaoyun.domain.AccountUserPassword;
+import com.liaoyun.domain.dataBaseType.AccountUserPassword;
 import com.liaoyun.domain.MobilePhoneCode;
 import com.liaoyun.domain.ResponseResult;
 import com.liaoyun.service.LoginService;
