@@ -134,6 +134,7 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 				const formattedDay = day < 10 ? '0' + day : day
 				return `${year}-${formattedMonth}-${formattedDay}`
 			},
+			
 			defaultDateStart: function(){
 				const [year, month, day] = this.currentDate.split('-')
 				const date = new Date(year, month - 1, day); // 注意月份是从0开始的，所以减1
@@ -143,6 +144,7 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 				//day: oneWeekAgo.getDate()
 				return oneWeekAgo.getFullYear() + "-" + (oneWeekAgo.getMonth() + 1) + "-" + oneWeekAgo.getDate()
 			},
+			
 			payeeName: function(){
 				return isNaN(this.payee) ? this.payee : null
 			},

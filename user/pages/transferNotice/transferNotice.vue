@@ -115,40 +115,44 @@
 		
 		onLoad() {	
 			let that = this
-			uni.getStorage({
+			uni.setStorage({
 				key: 'token',
-				success: function (res) {
-					console.log(res.data)
-					let _token = res.data
-					uni.request({
-							  url: 'http://vpqs7u.natappfree.cc/query/transferRecord?pageNum=0&pageSize=5',  
-							  method: 'POST',  
-							  header: {  
-								'token': _token
-							  },
-							  data:{
+				data: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhNmYxMWMxN2ZmYzc0ZGQwYWFiMzI0ZjlmZDUyOTEzZSIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjc5MjU2MywiZXhwIjoxNzAyNzk2MTYzfQ.7dYaX8L5KN33KqYkZJDla5UIqqt3B-r8W0O0g2w-gPg'
+			})
+			// uni.getStorage({
+			// 	key: 'token',
+			// 	success: function (res) {
+			// 		console.log(res.data)
+			// 		let _token = res.data
+			// 		uni.request({
+			// 				  url: 'http://vpqs7u.natappfree.cc/query/transferRecord?pageNum=0&pageSize=5',  
+			// 				  method: 'POST',  
+			// 				  header: {  
+			// 					'token': _token
+			// 				  },
+			// 				  data:{
 								
-							  },
-							  success: function (res) {
-								console.log(res)
-								res.data.data.list.forEach(item=>{
-									let temp = {"tailNumber":"","transferDate":"","transferNum":"","otherAccount":""}
-									temp.tailNumber = item.payerName
-									temp.transferDate = item.transferAmount
-									temp.date = item.transferTime
-									temp.class = item.statusComments
-									that.transferRecodes.push(temp)
-								})
-							  },  
-							  fail: function (error) {  
-								console.log("寄咯");  
-							  }  
-							})
-				},
-				fail: function(error) {
-				            console.log("获取token失败", error);
-				        }
-			});
+			// 				  },
+			// 				  success: function (res) {
+			// 					console.log(res)
+			// 					res.data.data.list.forEach(item=>{
+			// 						let temp = {"tailNumber":"","transferDate":"","transferNum":"","otherAccount":""}
+			// 						temp.tailNumber = item.payerName
+			// 						temp.transferDate = item.transferAmount
+			// 						temp.date = item.transferTime
+			// 						temp.class = item.statusComments
+			// 						that.transferRecodes.push(temp)
+			// 					})
+			// 				  },  
+			// 				  fail: function (error) {  
+			// 					console.log("寄咯");  
+			// 				  }  
+			// 				})
+			// 	},
+			// 	fail: function(error) {
+			// 	            console.log("获取token失败", error);
+			// 	        }
+			// });
 			
 		},
 	};	
