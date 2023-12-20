@@ -10,6 +10,7 @@
 export default {  
   data() {  
     return {  
+	  that:'',	
       datas: [{  
         balance: '',  
         cardId: '',  
@@ -22,7 +23,7 @@ export default {
 	  handleCardClick(index) {  
 	      // 在这里处理卡片点击事件，card 参数是当前点击的卡片数据 
 		  uni.setStorageSync('tranferCardId',this.datas[index].cardId);
-		  uni.navigateTo({
+		  uni.navigateBack({
 		  	url:'/pages/transfer/transfer'
 		  });
 	      console.log('Card clicked:'+ this.datas[index].cardId);  
@@ -30,17 +31,18 @@ export default {
 	    }
 	  
   },
-  onLoad() {  
+  onLoad() { 
+	let that = this;
     uni.request({  
-      url: 'http://120.55.37.93:80/query/bankCard',  
+      url: 'https://120.55.37.93/query/bankCard',  
       method: 'GET',  
       data: {},  
       header: {  
-        "token": 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiNTE1MTEwYjc2ZDI0NDAyOGQxY2FjODc1MWM1N2FhNiIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjk3Mzc1MiwiZXhwIjoxNzAzMDYwMTUyfQ.EJRhB4xFsTmUd_qTT_0BjwvMrtiHog-OLHbG71wNPHI',  
+        "token":  uni.getStorageSync('token'),  
       },  
       success: (res) => {  
-        this.datas = res.data.data; // 修改这里的赋值方式，使用 this.datas 来引用组件的 data 属性  
-        console.log(this.datas); // 使用 this.datas 来打印组件的 data 属性  
+        that.datas = res.data.data; // 修改这里的赋值方式，使用 this.datas 来引用组件的 data 属性  
+        console.log(that.datas); // 使用 this.datas 来打印组件的 data 属性  
         console.log(res);  
       },  
       fail: (error) => {  

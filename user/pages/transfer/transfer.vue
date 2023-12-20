@@ -2,11 +2,13 @@
   <view class="container">  
     <text class="transferNumber" @click="choose">付款账户：{{cardNumber}}</text>  
     <uni-section title="">  
-      <view class="example">  
-        <view class="form-group">  
-          <label>可用余额：{{balance}}</label>  
-          <button class="mini-button" type="primary" size="mini" @click="allIn">全部转出</button>  
+	
+	    <view style="display: flex; justify-content: flex-end;">  
+          <text class="balance">可用余额：{{balance2}}</text>  
+          <button class="mini-button" type="warn" size="mini" @click="allIn">全部转出</button>  
         </view>  
+	
+      <view class="example">  	  
         <!-- 自定义表单校验 -->  
         <uni-forms ref="customForm" :rules="customRules" :modelValue="customFormData">  
           <uni-forms-item label="转账金额" required name="money">  
@@ -22,7 +24,7 @@
             <uni-easyinput v-model="customFormData.write" placeholder="请输入附言" />  
           </uni-forms-item>  
         </uni-forms>  
-        <button class="next" type="primary" @click="submit('customForm')">提交</button>  
+        <button class="next" type="warn" @click="submit('customForm')">提交</button>  
       </view>  
     </uni-section>  
   </view>  
@@ -34,6 +36,8 @@
 				balance: '',	
 				cardNumber: '',
 				cardId: '',
+				that:'',
+	            balance2: '',
 				// 自定义表单数据
 				customFormData: {
 					money: '',
@@ -67,7 +71,7 @@
 							errorMessage: '收款账号不能为空'
 						},
 						{
-							format: "number",
+							format: "string",
 							errorMessage: '请输入正确的收款账号'
 						}]
 					},
@@ -142,21 +146,25 @@
 				   let cardNumber;
 				   const cardId=uni.getStorageSync('tranferCardId');	
 				   console.log( );
+				   let that = this;
 				   uni.request({  	
-				     url: 'http://120.55.37.93:80/query/singleCard?cardId='+cardId,  
+				     url: 'https://120.55.37.93/query/singleCard?cardId='+cardId,  
 	
 					 header:{
-						 "token": 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiNTE1MTEwYjc2ZDI0NDAyOGQxY2FjODc1MWM1N2FhNiIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjk3Mzc1MiwiZXhwIjoxNzAzMDYwMTUyfQ.EJRhB4xFsTmUd_qTT_0BjwvMrtiHog-OLHbG71wNPHI',
+						 "token": uni.getStorageSync('token'),
 					 },
 				     success: (res) => {  
 					 //  console.log(res);
 					   balance=res.data.data.balance;
 					   cardNumber=res.data.data.cardNumber;
-					   this.balance = balance;   
-					   this.cardNumber = cardNumber;  
+					   that.balance = balance;   
+					   that.cardNumber = cardNumber;  
+					   let value=that.balance.toFixed(2);
+					   that.balance2=value;	
 					
 				     }  	
-				   });  						
+				   }); 		
+					  
 				 },
 				 
 					 
@@ -188,12 +196,31 @@
 		align-items: center;
 		height: 35px;
 		margin-right: 10px;
-	} 
+		 border-radius: 30rpx; 
+	}
 	.mini-button {
+		display: flex;
 		align-items: center;
-		height: 29px;
-		margin-left: 175px;
+		font-size: 10px;
+		width:77px;
+		height: 23px;
+		margin-right: 10px;
 	} 
+	.balance
+	{
+		font-size: 16px;
+		width: 400px;
+		font-weight: bold;
+		
+	}
+	.transferNumber
+	{
+		font-weight: bold;
+	}
+	.next
+	{
+		 border-radius: 30rpx; 
+	}
 	
 </style>
 
