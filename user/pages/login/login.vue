@@ -1,20 +1,28 @@
 <template>  
   <view class="container">  
-   <text class="title"></text>
-   <text class="title"></text>
-   <text class="title"></text>
-   <text class="title"></text>
-   <text class="title"></text>
-   <text class="title"></text>
-   <text class="title"></text>
-   <text class="title"></text>
-    <text class="title" >登录</text>  
-    <input class="input" type="text" placeholder="  请输入手机号" @input="onUsernameInput">
-    <input class="input" type="password" placeholder="  请输入密码" @input="onPasswordInput">
+  <text class="title"></text>
+  <text class="title"></text>
+  <text class="title"></text>
+  <text class="title"></text>
+  <text class="title"></text>
+  <text class="title"></text>
+  <text class="title"></text>
+  <text class="title"></text>
+   <text class="title" >登录</text>  
+   
+		<uv-form >
+		  <uv-form-item label="+86" :border-bottom= 'true'>
+			  <input class="input" type="text" placeholder="  请输入手机号" @input="onUsernameInput">
+		  </uv-form-item>
+		  <uv-form-item :border-bottom= 'true'>
+			  <input class="input" type="password" placeholder="  请输入密码" @input="onPasswordInput">
+		  </uv-form-item>
+		</uv-form>
+
+
 	<text class="title"></text>
-    <button class="button" type="primary" @click="onLoginClick">登录</button>  
-	<text class="title"></text>  
-    <button class="button2" type="primary" @click="handleClick">注册</button>  
+    <button class="button" type="warn" @click="onLoginClick">登录</button>  
+	<text class="title"></text>   
     <text class="error" v-if="error">{{ error }}</text>  
 	<uni-fab
 				:pattern="pattern"
@@ -41,11 +49,12 @@ export default {
 	  horizontal: 'left',
 	  vertical: 'bottom',
 	  direction: 'horizontal',
+	  that:'',
 	  pattern: {
 	  					color: '#7A7E83',
 	  					backgroundColor: '#fff',
 	  					selectedColor: '#007AFF',
-	  					buttonColor: '#007AFF',
+	  					buttonColor: '#ff0000',
 	  					iconColor: '#fff'
 	  				},
 	  				is_color_type: false,
@@ -60,18 +69,17 @@ export default {
 	  						text: '找回密码',
 	  						active: false
 	  					},
+						{
+							iconPath: '/static/register.png',
+							text: '注册',
+							active: false
+						},
 	  					
 				  ]
 
     }
   },
-		onBackPress() {
-			if (this.$refs.fab.isShow) {
-				this.$refs.fab.close()
-				return true
-			}
-			return false
-		},  
+	
   methods: {  
     onUsernameInput(event) {  
       this.username = event.detail.value;  
@@ -80,12 +88,12 @@ export default {
       this.password = event.detail.value;  
     },  
     onLoginClick() {  
-		
+			let that = this;
 			uni.request({  
-			  url: 'http://120.55.37.93:8080/login',  
+			  url: 'https://120.55.37.93/login',  
 			  method: 'POST',  
 			  data: {  
-			  "userName": this.username,  "password": this.password  ,
+			  "userName": that.username,  "password": that.password  ,
 			//"userName":'18629153578',  "password": '18629153578ljf' ,
 			  },  
 			  success: (res) => {  
@@ -93,34 +101,57 @@ export default {
 			      uni.showToast({  
 			        title: '登录成功',  
 			        icon: 'success'  
-			      });  
-			     uni.switchTab({  
-			     url: "/pages/home/home"  
-			      });  
-				  uni.setStorageSync('token',res.data.data.token);  
-				  uni.setStorageSync('userName',this.username); 
+			      }); 
+				  getApp().globalData.islogin = true;
+				  uni.setStorageSync('token',res.data.data.token);  //存token
+				  uni.setStorageSync('userName',that.username); //存手机号
 				  uni.request({
-				    url: 'http://120.55.37.93:80/query/bankCard',  
+				    url: 'https://120.55.37.93/query/bankCard',  
 				    method: 'GET',  
 				    data: {},  
 				    header: {  
-				      "token": 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiNTE1MTEwYjc2ZDI0NDAyOGQxY2FjODc1MWM1N2FhNiIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjk3Mzc1MiwiZXhwIjoxNzAzMDYwMTUyfQ.EJRhB4xFsTmUd_qTT_0BjwvMrtiHog-OLHbG71wNPHI',  
+				      "token": res.data.data.token,  
 				    },  
 				    success: (res) => {  
-				      uni.setStorageSync('tranferCardId',this.datas[0].cardId);
+				      uni.setStorageSync('tranferCardId',res.data.data[0].cardId);
 				    },  
 				    fail: (error) => {  
 				      console.log(error);  
 				    }  
 				  });  //请求初始卡id
+				  uni.request({
+				    url: 'https://120.55.37.93/query/customerInfo',  
+				    method: 'GET',  
+				    data: {},  
+				    header: {  
+				      "token": res.data.data.token,  
+				    },  
+				    success: (res) => {  
+				      uni.setStorageSync('name',res.data.data.surname+res.data.data.name);//存姓名
+				    },  
+				    fail: (error) => {  
+				      console.log(error);  
+				    }  
+				  }); 
 				  
-				  console.log(res);
+				  
+				  
+				  
+				     uni.switchTab({  
+			     url: "/pages/home/home"  
+			      });  
+				  
+				  
 			    } else {  
 			      uni.showToast({
 			        title: '请输入正确的手机号和密码',  
 			        icon: 'error'  
 			      }); 
+				  
 			    }  
+				
+				console.log(res);
+				
 			  },  
 			  fail: (error) => {  
 			    if (error.data.code === 300) {  
@@ -133,11 +164,7 @@ export default {
 			});
 			
     },
-	handleClick(){
-		uni.navigateTo({
-		  url:  "/pages/register/register"
-		});
-	},
+	
 	
 	
 	
@@ -149,8 +176,12 @@ export default {
 					});
 					if(e.index==1)
 					uni.navigateTo({
-					  url:  "/pages/register/register"
-					});		
+					  url:  "/pages/findOne/findOne"
+					});	
+					if(e.index==2)
+					uni.navigateTo({
+						url:  "/pages/register/register"
+					});	
 				},
 				fabClick() {
 					
@@ -177,26 +208,26 @@ export default {
   margin-bottom: 50rpx;  
 }  
 .title {  
-  color: blue;
+  color: black;
   font-weight: bold;
   font-size: 50rpx;  
   margin-bottom: 20rpx;
   
 }  
 .input {  
-  width: 500rpx;  
-  height: 80rpx;  
+  width: 500rpx;   
   margin-bottom: 20rpx; 
   border-collapse: collapse;
-  border: 1px solid silver;
 }  
 .button {  
-  width: 220rpx;  
-  height: 100rpx;  
+  width: 520rpx;  
+  height: 100rpx;
+  border-radius: 30rpx; 
 }  
 .button2{
   width: 220rpx;
   height: 100rpx;
+ 
 }
 .error {  
   color: red;  

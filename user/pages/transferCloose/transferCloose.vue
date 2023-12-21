@@ -1,7 +1,14 @@
+
+
+
 <template>  
   <view>      
-       <uni-card class="card" v-for="(card, index) in datas" :key="index"  @click="handleCardClick(index)">  
-	   <text>{{card.cardNumber}}</text>
+       <uni-card class="card"  v-for="(card, index) in datas" :key="index"  @click="handleCardClick(index)">
+	  
+	   <view style="display: flex;">
+		   <image src= '/static/card.png' class="icc"></image>
+		   <text class="cardNumber">{{card.cardNumber}}</text>
+	   </view>
        </uni-card>    
   </view>  
 </template>  
@@ -10,11 +17,12 @@
 export default {  
   data() {  
     return {  
+	  that:'',	
       datas: [{  
         balance: '',  
         cardId: '',  
         cardNumber: "",  
-        isActive: ''  
+        isActive: '',
       }]  
     };  
   },  
@@ -30,17 +38,18 @@ export default {
 	    }
 	  
   },
-  onLoad() {  
+  onLoad() { 
+	let that = this;
     uni.request({  
-      url: 'http://120.55.37.93:80/query/bankCard',  
+      url: 'https://120.55.37.93/query/bankCard',  
       method: 'GET',  
       data: {},  
       header: {  
-        "token": 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiNTE1MTEwYjc2ZDI0NDAyOGQxY2FjODc1MWM1N2FhNiIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjk3Mzc1MiwiZXhwIjoxNzAzMDYwMTUyfQ.EJRhB4xFsTmUd_qTT_0BjwvMrtiHog-OLHbG71wNPHI',  
+        "token":  uni.getStorageSync('token'),  
       },  
       success: (res) => {  
-        this.datas = res.data.data; // 修改这里的赋值方式，使用 this.datas 来引用组件的 data 属性  
-        console.log(this.datas); // 使用 this.datas 来打印组件的 data 属性  
+        that.datas = res.data.data; // 修改这里的赋值方式，使用 this.datas 来引用组件的 data 属性  
+        console.log(that.datas); // 使用 this.datas 来打印组件的 data 属性  
         console.log(res);  
       },  
       fail: (error) => {  
@@ -86,5 +95,14 @@ export default {
   margin-right: 10px;  
   margin-bottom: 10px; 
 } 
+.icc{
+  width: 50px;
+  height: 30px;   
+}
+.cardNumber{
+  text-align: center;
+  margin-top: 10rpx;
+  margin-left: 70rpx;
+}
 
 </style>

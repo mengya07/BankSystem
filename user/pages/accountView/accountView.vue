@@ -30,7 +30,7 @@
 			</view>		
 		</view>
 		
-		<view class="add-box">
+		<view class="add-box" @click="clickBindCard">
 			<view>+手动添加卡/账户</view>
 		</view>
 		
@@ -44,17 +44,6 @@
 				isvisible: false,
 				totalAssets: "******",
 				card: [
-				// 	{
-				// 	id:"23",
-				// 	account:"6216******5803",
-				// 	class:"Ⅰ类账户",
-				// 	balance:"533.26"
-				// },{
-				// 	id:"45",
-				// 	account:"1235******5803",
-				// 	class:"ⅠⅠ类账户",
-				// 	balance:"99999999"
-				// },
 				]
 			};
 		},
@@ -65,7 +54,7 @@
 			    this.card.forEach(item=>{
 					sum+=Number(item.balance)
 				})
-				this.totalAssets = sum.toString()
+				this.totalAssets = parseFloat(sum.toString()).toFixed(2)
 			},
 			clickInvisble(){
 				this.isvisible=!this.isvisible
@@ -76,8 +65,13 @@
 				uni.navigateTo({
 					url:"/pages/accountDetail/accountDetail",
 					success: function(res){
-						res.eventChannel.emit('acceptDataFromOpenerPage', that.card[index])
+						res.eventChannel.emit('card', that.card[index])
 					}
+				})
+			},
+			clickBindCard(){
+				uni.navigateTo({
+					url:"/pages/bindIdCard/bindIdCard",
 				})
 			}
 		},
@@ -86,14 +80,13 @@
 			uni.getStorage({
 				key: 'token',
 				success: function (res) {
-					console.log(res.data)
 					let _token = res.data
 					uni.showLoading({
 						title: "",
 						mask: true
 					})
 					uni.request({
-							  url: 'http://vpqs7u.natappfree.cc/query/bankCard',  
+							  url: 'https://120.55.37.93/query/bankCard',  
 							  method: 'GET',
 							  header: {  
 								'token': _token
@@ -101,14 +94,15 @@
 							  data:{
 							  },
 							  success: function (res) {
-								console.log(res)
-								res.data.data.forEach(item=>{
-									let temp = {account:"",id:"",class:"借记卡"}
-									temp.account = item.cardNumber
-									//temp.balance = item.balance
-									//temp.id = item.id
-									that.cardItem.push(temp)
-								})
+								  if(res.data.code ==200){
+									  res.data.data.forEach(item=>{
+									  	let temp = {account:"",id:"",class:"借记卡",balance:""}
+									  	temp.account = item.cardNumber
+									  	temp.id = item.cardId
+									  	temp.balance = parseFloat(item.balance).toFixed(2)
+									  	that.card.push(temp)
+									  })
+								  }
 								uni.hideLoading()
 							  },  
 							  fail: function (error) {  
