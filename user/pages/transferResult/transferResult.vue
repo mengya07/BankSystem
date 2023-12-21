@@ -8,6 +8,7 @@
 						<template v-slot:cover>
 							<view class="custom-cover">
 								<view class="cover-content">
+								<image src="../../static/Yes.png" style="margin-top: 30rpx; margin-bottom: 50rpx; height: 150rpx;width: 150rpx; margin-left: 300rpx;"><br></image>
 								<text class="success">{{transferData.Amount.toFixed(2)}}元交易成功<br></text>
 								<text class="message">预计10秒内到账，具体时间取决于对方银行</text>
 								</view>
@@ -16,7 +17,7 @@
 						<uni-list>
 							<uni-list-item title="付款后可用余额">
 								<template v-slot:footer>
-									<text class="reslutNumber">{{temp}}</text>
+									<text class="reslutNumber">{{this.transferRes.balance}}</text>
 								</template>
 							</uni-list-item>
 							<uni-list-item title="付款账户" >
@@ -46,7 +47,7 @@
 							</uni-list-item>
 							<uni-list-item title="交易序号" >
 								<template v-slot:footer>
-									<text class="reslutNumber">{{temp}}</text>
+									<text class="reslutNumber">{{this.transferRes.transactionId}}</text>
 								</template>
 							</uni-list-item>
 						</uni-list>			                
@@ -68,6 +69,7 @@
 				temp:'12343',
 				transferData: '',
 				transferNumberOut: '',
+				transferRes: '',
 			}
 		},
 		methods: {
@@ -86,6 +88,14 @@
 				} else {  
 				    console.log('transfernot found in storage'); // 否则输出错误消息或进行其他处理  
 				};
+				
+				const value3 = uni.getStorageSync('transferRes');
+				if (value3 !== undefined) { // 检查值是否存在  
+				    this.transferRes = value3; // 如果存在，设置到组件的数据属性中  
+					console.log(this.transferRes);
+				} else {  
+				    console.log('transfernot found in storage'); // 否则输出错误消息或进行其他处理  
+				};
 
 				
 			},
@@ -100,6 +110,7 @@
 		},
 		onLoad(){
 			 this.getDataFromStorage();  
+		
 		}
 	}
 </script>
@@ -147,7 +158,8 @@
 		font-size: 35rpx;
 		font-weight: 700;
 		text-align: center;
-		margin-left: 220rpx;
+		margin-left: -180rpx;
+
 	}
 
 </style>

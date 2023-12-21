@@ -13,11 +13,13 @@
 				<view>手机交易码</view>
 				<uv-line margin="10rpx"></uv-line>
 				<view style="margin-top: 20rpx;">已发送至尾号{{phoneTail}}的手机</view>
-				<uv-code-input mode="line" size="28" @finish="codeInputFinish" style="margin-top: 40rpx;"></uv-code-input>
+				<uv-code-input  mode="line" size="28" @finish="codeInputFinish" style="margin-top: 40rpx;"></uv-code-input>
 				<uv-code ref="uCode" @change="codeChange" seconds="60">    </uv-code>
 				<button @click="getCode" style="border-radius: 10rpx; width: 300rpx; height: 60rpx; font-size: 0.8em; margin-top: 40rpx; background-color: red; color: #FFFFFF;">{{codeTips}}</button>				
 			</view>
 		</uni-popup>		
+				
+				
 				
 		<uni-section title="">
 					<uni-card :isFull="true">
@@ -181,6 +183,8 @@ export default {
 									console.log(res);
 									 if(res.data.code=="200"){
 										console.log(res); 
+										uni.setStorageSync('transferRes',res.data.data);
+										console.log(res.data.data.balance);
 										uni.navigateTo({
 											url:'/pages/transferResult/transferResult'
 										});

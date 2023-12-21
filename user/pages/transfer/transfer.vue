@@ -87,9 +87,10 @@
 		   
 		methods: {
 					choose() {
-						uni.navigateTo({
+						uni.redirectTo({
 							url: '/pages/transferCloose/transferCloose'
-						})
+						});
+
 					},
 					allIn() {
 						this.customFormData.money=this.balance;
@@ -121,7 +122,7 @@
 							};  
 							  
 							uni.setStorageSync('transfer', transferData);//把数据存入缓存
-							uni.setStorageSync('transferNumberOut', this.cardNumber);
+							
 							
 							
 							
@@ -159,9 +160,10 @@
 					   cardNumber=res.data.data.cardNumber;
 					   that.balance = balance;   
 					   that.cardNumber = cardNumber;  
+					   uni.setStorageSync('transferNumberOut', this.cardNumber);
+					   console.log(this.cardNumber);
 					   let value=that.balance.toFixed(2);
 					   that.balance2=value;	
-					
 				     }  	
 				   }); 		
 					  

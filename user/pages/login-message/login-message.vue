@@ -18,6 +18,7 @@
 	 <uv-form-item border-bottom= 'true'>
     <input class="input" type="password" placeholder="  请输入验证码" @input="onPasswordInput">
 	</uv-form-item>
+	
 	</uv-form>
 	<button class="button2" type="warn" @click="handleClick">获取验证码</button>
 	<text class="title"></text>
@@ -58,8 +59,8 @@ export default {
 	  					buttonColor: '#ff0000',
 	  					iconColor: '#fff'
 	  				},
-	  				is_color_type: false,
-	  				content: [
+	  	is_color_type: false,
+	  	content: [
 						{
 	  						iconPath: '/static/switch.png',		
 	  						text: '密码登录',
@@ -76,7 +77,8 @@ export default {
 							active: false
 						},
 	  					
-				  ]
+				  ],
+				
 
     }
   },
@@ -113,7 +115,7 @@ export default {
 			        title: '登录成功',  
 			        icon: 'success'  
 			      });  
-			     
+			      getApp().globalData.islogin = true;
 				  uni.setStorageSync('userName',that.username); //存手机号
 				  uni.setStorageSync('token',res.data.data.token); //存token
 				  
@@ -172,7 +174,7 @@ export default {
 	handleClick(){
 		
 		uni.request({
-		  url: 'https://120.55.37.93/sendsms/nologin?phoneNumber=18178481190',//+that.username,  
+		  url: 'https://120.55.37.93/sendsms/nologin?phoneNumber='+that.username,  
 		  method: 'POST',  
 		  data: {  
 		 
