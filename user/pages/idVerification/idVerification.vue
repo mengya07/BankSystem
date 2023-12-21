@@ -11,8 +11,8 @@
 		<input class="xing"  v-model="surname" maxlength="10" placeholder="请输入姓" />
 		<input class="ming" v-model="name" maxlength="10" placeholder="请输入名" />
 		<view>
-			<input class="idtype" @click="clickbuttom" v-model="ID_type" placeholder="请选择证件类型"></input>
-			<u-picker :show="showpick" :columns="columns" @cancel="cancel" @confirm="confirm" @change="change"></u-picker>
+			<input class="idtype" @click="clickbuttom" v-model="ID_type" placeholder="请输入证件类型"></input>
+			<!-- <u-picker :show="showpick" :columns="columns" @cancel="cancel" @confirm="confirm" @change="change"></u-picker> -->
 		</view>
 		
 		<input class="sfz" @click="showkey" v-model="ID" maxlength="19" placeholder="请输入证件号码" />

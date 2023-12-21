@@ -6,7 +6,7 @@
 
 		<input class="kahao"  @click="showkey1" v-model="ID_card" maxlength="19" placeholder="请输入银行卡号" />
 		<input class="yhang" @click="bankclick" v-model="institute" maxlength="10" placeholder="请选择银行" />
-		<u-picker :show="showpick" :columns="columns" @cancel="cancel" @confirm="confirm" ></u-picker>
+	<!-- 	<u-picker :show="showpick" :columns="columns" @cancel="cancel" @confirm="confirm" ></u-picker> -->
 		<input class="mima"  @click="showkey2" v-model="password" type="password" maxlength="6" placeholder="请输入取款密码" />
 		<view class="zhichi">
 1.支持中行借记卡、信用卡。
@@ -115,6 +115,7 @@
 showkey1(){
 	if(this.show2){
 		this.show2=false
+		
 }
 this.show1=true
 },
