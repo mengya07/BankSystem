@@ -3,7 +3,7 @@
 
 <template>  
   <view>      
-       <uni-card class="card"  v-for="(card, index) in datas" :key="index"  @click="handleCardClick(index)" :thumbnail="avatar">
+       <uni-card class="card"  v-for="(card, index) in datas" :key="index"  @click="handleCardClick(index)">
 	  
 	   <view style="display: flex;">
 		   <image src= '/static/card.png' class="icc"></image>
@@ -23,7 +23,6 @@ export default {
         cardId: '',  
         cardNumber: "",  
         isActive: '',
-		avatar: '/static/card.png'
       }]  
     };  
   },  

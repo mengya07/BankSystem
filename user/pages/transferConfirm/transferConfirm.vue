@@ -1,9 +1,9 @@
 <template>
 	<view>
-		<uni-section>
+		<uni-section title="">
 					<uni-card  :isFull="true" >
 						<text>转账金额（人民币元)<br></text>
-						<text class="aaaa">{{transferData.Amount}} <br></text>
+						<text class="aaaa">{{this.transferMoney}} <br></text>
 					</uni-card>
 		</uni-section>
 		
@@ -19,15 +19,15 @@
 			</view>
 		</uni-popup>		
 				
-		<uni-section>
+		<uni-section title="">
 					<uni-card :isFull="true">
 						<view>
 						<text class="uni-bodyy">收款人姓名</text>
-						<text class="uni-ininin">{{transferData.receiverName}}<br></text>
+						<text class="uni-ininin">{{this.transferData.receiverName}}<br></text>
 						</view>
 						<view>
 						<text class="uni-body">收款账号</text>
-						<text class="uni-ininin">{{transferData.receiverCardNumber}}<br></text>
+						<text class="uni-ininin">{{this.transferData.receiverCardNumber}}<br></text>
 						</view>
 						<view>
 						<text class="uni-body">收款银行</text>
@@ -63,9 +63,22 @@ export default {
 			transferMessage: '',
 			token: '',
 			phoneNumber: '',
-			phoneTail: '',
         }  
     },  
+	computed:{
+		phoneTail: function(){
+			let that = this
+			let temp = ""
+			uni.getStorage({
+				key:'userName',
+				success(res) {
+					console.log(res)
+					temp =  res.data.slice(-4)
+				}
+			})
+			return temp
+		}
+	},
     methods: {  
     
         getDataFromStorage() {  
@@ -95,14 +108,7 @@ export default {
 			 } else {  
 			     console.log('transfernot found in storage'); // 否则输出错误消息或进行其他处理  
 			 };  
-			 const value5 = uni.getStorageSync('token');
-			 if (value5 !== undefined) { // 检查值是否存在  
-			     this.phoneNumber = value5; // 如果存在，设置到组件的数据属性中  
-			 } else {  
-			     console.log('transfernot found in storage'); // 否则输出错误消息或进行其他处理  
-			 };  
-			 this.phoneTail=phoneNumber.substring(phoneNumber.length - 4); 
-			
+		 
         },
 		
 		
@@ -207,7 +213,7 @@ export default {
 	},
     onLoad() { 
         this.getDataFromStorage();  
-		let value=transferData.Amount;
+		let value=this.transferData.Amount;
 		this.transferMoney=value.toFixed(2);	
     }
 } 
