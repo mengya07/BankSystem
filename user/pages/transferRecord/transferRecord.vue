@@ -8,11 +8,12 @@
 			</view>
 		</view>
 		
-		<scroll-view v-if="recordItem.length > 0" scroll-y="true" @scrolltolower="loadMore()" :style="{ height: getScrollHeight + 'rpx' }">
+		<scroll-view v-if="recordItem.length > 0" scroll-y="true" @scrolltolower="loadMore()" :style="{ height: getScrollHeight() + 'rpx' }">
 		<view class="record-box">
 			<view v-for="(item,index) in recordItem" :key="index" class="record-item" @click="clickRecord(index)">
 				<view class="column1">
-					{{item.name}}
+					<view>{{item.name}}</view>
+					<view style="margin-top: 10rpx; color: #A8A8A8; font-size: 0.8em;">尾号({{item.payerCardNumber}})</view>
 				</view>
 				<view class="column2">
 					<view v-if="item.class=='交易成功'" style="display: flex;">
@@ -23,8 +24,8 @@
 						<uv-icon name="/static/icon/icon_fail.svg"></uv-icon>
 						<view>{{item.class}}</view>
 					</view>
-					<view>{{item.date}}</view>
-					<view>人民币元 {{item.amount}}</view>
+					<view style="color: #A8A8A8;">{{item.date}}</view>
+					<view style="font-weight: bold;">人民币元 {{item.amount}}</view>
 				</view>
 			</view>
 		</view>
@@ -58,7 +59,7 @@
 			</view>
 			<uv-divider></uv-divider>
 			<view style="font-weight: bold;margin-left: 20rpx; margin-bottom: 20rpx;">收款人</view>
-			<uv-input placeholder="请输入收款人姓名/账号/手机号" border="bottom" inputAlign="center" v-model="payee" clearable @input="inputPayee"></uv-input>
+			<uv-input placeholder="请输入收款人姓名/账号" border="bottom" inputAlign="center" v-model="payee" clearable @input="inputPayee"></uv-input>
 			<view style="font-weight: bold;margin-left: 20rpx; margin-top: 30rpx;">交易状态</view>
 			<view style="display: flex;justify-content: space-between; margin-top: 30rpx;">
 				<view><button  :class="selectedAll?'bottom-selected':'bottom-unselected'" @click="selectAll" style="margin-left: 20rpx;">全部</button></view>
@@ -80,8 +81,9 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 	export default {
 		data() {
 			return {
-				pageNum:0,
-				pageSize:15,
+				pageNum:1,
+				pageSize:5,
+				totalPage:1,
 				show: false,
 				selectedDate:1, //约定1为近一周，2为一个月，3为三个月
 				dateStart:"",
@@ -89,52 +91,31 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 				moneyStart:"0.00",
 				moneyEnd:"99999999999.99",
 				cardText:"全部账户",
-				cardId:0,
-				payee:"",
+				cardId:null,
+				payee:null,
 				selectedAll: true,
 				selectedScc: false,
 				selectedFail:false,
 				recordItem:[
-					{
-					id:-1,
-					date:"2023/10/22 14:31:54",
-					amount:"12.1",
-					balance:"1002.65",
-					name:"金正恩",
-					account:"12346846513",
-					otherName:"马化腾",
-					otherAccount:"464861534165",
-					class:"交易成功"
-				},
-				{
-					id:-1,
-					date:"2023/10/22",
-					amount:"199999999",
-					balance:"1002.65",
-					name:"金正恩",
-					account:"12346846513",
-					otherName:"马化腾",
-					otherAccount:"464861534165",
-					class:"交易成功"
-				}
+					
 				],
 				cardItem:[{
 					account:"",
 					class:"全部账户",
-					id:0
+					id:null
 				}],
 				cardPicker:[[]]
 			};
 		},
 		computed:{
 			currentDate: function(){
-				let date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
-				const [year, month, day] = date.split('-')
-				const formattedMonth = month < 10 ? '0' + month : month
-				const formattedDay = day < 10 ? '0' + day : day
-				return `${year}-${formattedMonth}-${formattedDay}`
+				//let date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
+				// const [year, month, day] = date.split('-')
+				// const formattedMonth = month < 10 ? '0' + month : month
+				// const formattedDay = day < 10 ? '0' + day : day
+				// return `${year}-${formattedMonth}-${formattedDay}`
+				return this.formattedDate(new Date().getFullYear(),new Date().getMonth() + 1,new Date().getDate())
 			},
-			
 			defaultDateStart: function(){
 				const [year, month, day] = this.currentDate.split('-')
 				const date = new Date(year, month - 1, day); // 注意月份是从0开始的，所以减1
@@ -142,9 +123,8 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 				//year: oneWeekAgo.getFullYear()
 				//month: oneWeekAgo.getMonth() + 1 // 返回的时候记得加1  
 				//day: oneWeekAgo.getDate()
-				return oneWeekAgo.getFullYear() + "-" + (oneWeekAgo.getMonth() + 1) + "-" + oneWeekAgo.getDate()
+				return this.formattedDate(oneWeekAgo.getFullYear(),oneWeekAgo.getMonth() + 1,oneWeekAgo.getDate())
 			},
-			
 			payeeName: function(){
 				return isNaN(this.payee) ? this.payee : null
 			},
@@ -152,9 +132,9 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 				return isNaN(this.payee) ? null : this.payee
 			},
 			status: function(){
-				if(selectedAll)return "2"
-				else if(selectedScc) return "1"
-				else return "0"
+				if(this.selectedAll)return "0"
+				else if(this.selectedScc) return "1"
+				else return "2"
 			}
 		},
 		methods:{
@@ -166,45 +146,48 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 			  return winHeight - 20
 			},
 			loadMore(){
-				this.page++
-				console.log(this.page)
-				this.requestTransferRecord()
+				if(this.pageNum < this.totalPage){
+					this.pageNum++
+					this.requestTransferRecord()
+				}
 			},
 			requestTransferRecord(){
 				let that = this
 				uni.getStorage({
 					key: 'token',
 					success: function (res) {
-						console.log(res.data)
 						let _token = res.data
 						uni.showLoading({
 							title: "",
 							mask: true
 						})
 						uni.request({
-								  url: 'http://vpqs7u.natappfree.cc/query/transferRecord?pageNum='+ that.pageNum + '&pageSize=' + that.pageSize,  
+								  url: 'http://x38h8d.natappfree.cc/query/transferRecord?pageNum='+ that.pageNum + '&pageSize=' + that.pageSize,  
 								  method: 'POST',  
 								  header: {  
 									'token': _token
 								  },
 								  data:{
-									"startDate":that.dateStart,
-									"endDate":that.dateEnd,
+									"startTime":that.dateStart + " 00:00:00",
+									"endTime":that.dateEnd + " 00:00:00",
 									"cardId":that.cardId,
 									"miniAmount":that.moneyStart,
 									"maxAmount":that.moneyEnd,
 									"payeeName":that.payeeName,
-									//"payeePhoneNumber":this.payeePhone,
-									"status":this.status,
+									"payeePhoneNumber":this.payeePhone,
+									"status":that.status,
 								  },
 								  success: function (res) {
-									console.log(res)
+									//如果什么都没有的话 大家啊上课的垃圾啊索拉卡登记啊索拉卡登记啊卢萨卡登记拉卡手机打拉卡萨
+									that.totalPage = res.data.data.totalPage
 									res.data.data.list.forEach(item=>{
-										let temp = {"name":"","amount":"","date":"","class":""}
+										let temp = {"name":"","amount":"","date":"","class":"","id":"","payerCardNumber":""}
 										temp.name = item.payerName
-										temp.amount = item.transferAmount
+										temp.amount = parseFloat(item.transferAmount).toFixed(2)
 										temp.date = item.transferTime
 										temp.class = item.statusComments
+										temp.id = item.transactionId
+										temp.payerCardNumber = item.payerCardNumber
 										that.recordItem.push(temp)
 									})
 									uni.hideLoading()
@@ -226,14 +209,13 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 				uni.getStorage({
 					key: 'token',
 					success: function (res) {
-						console.log(res.data)
 						let _token = res.data
 						uni.showLoading({
 							title: "",
 							mask: true
 						})
 						uni.request({
-								  url: 'http://vpqs7u.natappfree.cc/query/bankCard',  
+								  url: 'http://x38h8d.natappfree.cc/query/bankCard',  
 								  method: 'GET',
 								  header: {  
 									'token': _token
@@ -241,12 +223,10 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 								  data:{
 								  },
 								  success: function (res) {
-									console.log(res)
 									res.data.data.forEach(item=>{
 										let temp = {account:"",id:"",class:"借记卡"}
 										temp.account = item.cardNumber
-										//temp.balance = item.balance
-										//temp.id = item.id
+										temp.id = item.id
 										that.cardItem.push(temp)
 									})
 									uni.hideLoading()
@@ -266,9 +246,9 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 			clickRecord(index){
 				let that = this
 				uni.navigateTo({
-					url:"/pages/recordDetail/recordDetail",
+					url:"/pages/transferDetail/transferDetail",
 					success: function(res){
-						res.eventChannel.emit('acceptDataFromOpenerPage', that.recordItem[index])
+						res.eventChannel.emit('transferDetail', that.recordItem[index].id)
 					}
 				})
 			},
@@ -278,6 +258,11 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 			},
 			cancel(){
 				this.$refs.popup.close()
+			},
+			formattedDate(year,month,day){
+				const formattedMonth = month < 10 ? '0' + month : month
+				const formattedDay = day < 10 ? '0' + day : day
+				return `${year}-${formattedMonth}-${formattedDay}`
 			},
 			clickOneWeek(){
 				this.selectedDate = 1
@@ -327,6 +312,13 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 				if(this.dateEnd > this.currentDate){
 					uni.showToast({
 						title:"超过当前日期",
+						icon:"error"
+					})
+					this.dateEnd = this.currentDate
+				}
+				if(this.dateStart > this.dateEnd){
+					uni.showToast({
+						title:"日期范围有误",
 						icon:"error"
 					})
 					this.dateEnd = this.currentDate
@@ -393,25 +385,33 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 				//日期重置
 				this.dateStart = this.defaultDateStart
 				this.dateEnd = this.currentDate
+				this.selectedDate = 1
 				//金额重置
 				this.moneyStart = "0.00"
 				this.moneyEnd = "99999999999.99"
+				//收款人姓名手机号重置
+				this.payee = null
+				//交易状态重置
 				this.selectAll()
-				this.selectedDate = 1
 			},
 			clickConfirm(){
 				let that = this
+				this.pageNum = 1
+				this.recordItem = []
 				this.requestTransferRecord()
 				this.$refs.popup.close();
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			this.dateEnd = this.currentDate
 			this.dateStart = this.defaultDateStart
+			let that = this
+			
+			this.cardId = option.cardId
 			//查有什么卡
-			this.requestCard()
+			that.requestCard()
 			//按照默认条件查一次
-			this.requestTransferRecord()
+			that.requestTransferRecord()
 		}
 	}
 </script>

@@ -44,17 +44,6 @@
 				isvisible: false,
 				totalAssets: "******",
 				card: [
-				// 	{
-				// 	id:"23",
-				// 	account:"6216******5803",
-				// 	class:"Ⅰ类账户",
-				// 	balance:"533.26"
-				// },{
-				// 	id:"45",
-				// 	account:"1235******5803",
-				// 	class:"ⅠⅠ类账户",
-				// 	balance:"99999999"
-				// },
 				]
 			};
 		},
@@ -65,7 +54,7 @@
 			    this.card.forEach(item=>{
 					sum+=Number(item.balance)
 				})
-				this.totalAssets = sum.toString()
+				this.totalAssets = parseFloat(sum.toString()).toFixed(2)
 			},
 			clickInvisble(){
 				this.isvisible=!this.isvisible
@@ -76,7 +65,7 @@
 				uni.navigateTo({
 					url:"/pages/accountDetail/accountDetail",
 					success: function(res){
-						res.eventChannel.emit('acceptDataFromOpenerPage', that.card[index])
+						res.eventChannel.emit('card', that.card[index])
 					}
 				})
 			}
@@ -86,14 +75,13 @@
 			uni.getStorage({
 				key: 'token',
 				success: function (res) {
-					console.log(res.data)
 					let _token = res.data
 					uni.showLoading({
 						title: "",
 						mask: true
 					})
 					uni.request({
-							  url: 'http://vpqs7u.natappfree.cc/query/bankCard',  
+							  url: 'https://120.55.37.93/query/bankCard',  
 							  method: 'GET',
 							  header: {  
 								'token': _token
@@ -101,13 +89,12 @@
 							  data:{
 							  },
 							  success: function (res) {
-								console.log(res)
 								res.data.data.forEach(item=>{
-									let temp = {account:"",id:"",class:"借记卡"}
+									let temp = {account:"",id:"",class:"借记卡",balance:""}
 									temp.account = item.cardNumber
-									//temp.balance = item.balance
-									//temp.id = item.id
-									that.cardItem.push(temp)
+									temp.id = item.cardId
+									temp.balance = parseFloat(item.balance).toFixed(2)
+									that.card.push(temp)
 								})
 								uni.hideLoading()
 							  },  
