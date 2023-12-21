@@ -27,7 +27,7 @@
 			<view style="margin-top: 50rpx;">
 				<text style="margin-left: 20rpx;">付款账户</text> 
 				<text style="margin-left: 20rpx;">{{cardNum}}</text>
-				<text style="color: blue; margin-left: 20rpx;">更改</text>
+				<text style="color: blue; margin-left: 20rpx;" @click="modefiy">更改</text>
 			</view>
 			<view style="margin-top: 10rpx;">
 				<text style="margin-left: 20rpx;">可用余额：</text> 
@@ -87,6 +87,14 @@ import confirmModifyPersonalInformationVue from '../confirmModifyPersonalInforma
 			}
 		},
 		methods: {
+			modefiy(){
+				uni.navigateTo({
+					url:"/pages/selectCard/selectCard",
+					success: function(res){
+						
+					}
+				});
+			},
 			confirmTransfer() {
 				this.$refs.popup.open()
 				let that=this
@@ -200,10 +208,6 @@ import confirmModifyPersonalInformationVue from '../confirmModifyPersonalInforma
 				success: function (res) {
 					that.user=res.data
 				}	
-			})
-			uni.setStorage({
-				key: 'token',
-				data: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjOTIwMjRmM2I2NzA0MGRjYmRlNDVkMDk4NDg3ZWY1NSIsInN1YiI6IjkiLCJpc3MiOiJwbSIsImlhdCI6MTcwMzE1NTkyNCwiZXhwIjoxNzAzMjQyMzI0fQ.bmOIuoyy057YFMC6Wh1kUJJKhaTEhoZ-Azsy8oHsvok'
 			})
 			uni.getStorage({
 				key: 'token',

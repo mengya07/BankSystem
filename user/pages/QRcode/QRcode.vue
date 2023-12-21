@@ -137,49 +137,6 @@ import UQRCode from '../../uni_modules/Sansnn-uQRCode/js_sdk/uqrcode/uqrcode.js'
 		},
 		methods: {
 			transfer() {
-				let that=this
-				uni.scanCode({
-					success: function(res) {
-						if(res.scanType === "QR_CODE"){
-							uni.request({
-								  url: 'https://120.55.37.93/TDCode/verify?orderId='+that.orderId,  
-								  method: 'GET',  
-								  header: {  
-									'token': that.token_,
-								  },
-								  data: {
-									
-								  },
-								  success: function (res) {
-									console.log(res)
-									uni.setStorage({
-										key: 'payeeName',
-										data: res.data.data.payeeName
-									})
-									uni.setStorage({
-										key: 'payeeCardNumber',
-										data: res.data.data.payeeCardNumber
-									})
-									uni.getStorage({
-										key: 'payeeName',
-										success: function (res) {
-											console.log(res)
-										}	
-									})
-								  },  
-								  fail: function (error) {  
-									console.log("寄咯");  
-								  }  
-								})
-								uni.navigateTo({
-									url:"/pages/codeTransfer/codeTransfer",
-									success: function(res){
-										
-									}
-								});
-						}
-					}
-				})
 				
 				
 				

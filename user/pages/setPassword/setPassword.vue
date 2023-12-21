@@ -18,8 +18,8 @@
 		</view>
 		<view class="wrong" v-if="fla">密码输入不一致，请重新输入</view>
 		<button class="xbu" @click="clickSetpassword">下一步</button>
-		<u-keyboard
-		ref="uKeyboard"
+		<!-- <uv-keyboard
+		ref="uKeyboard1"
 		 mode="number"  
 		 @change="valchange" 
 		 @backspace="backspace" 
@@ -30,9 +30,9 @@
 		:overlay="false"
 		:random="true"
 		tips="安全键盘"
-		></u-keyboard>
-		<u-keyboard
-		ref="uKeyboard"
+		></uv-keyboard>
+		<uv-keyboard
+		ref="uKeyboard2"
 		 mode="number"  
 		 @change="valchange1" 
 		 @backspace="backspace1" 
@@ -43,7 +43,7 @@
 		:overlay="false"
 		:random="true"
 		tips="安全键盘"
-		></u-keyboard>
+		></uv-keyboard> -->
 	</view>
 </template>
 
@@ -61,20 +61,32 @@
 		methods:{
 			clickSetpassword:function(event){
 				if(this.value1===this.value2){
-					this.fla=true;
-				uni.request({
-					url:'https://120.55.37.93',
-					method:'POST',
-					data:{
-						value1:this.value1
-					},
-					success:function(res){
-						console.log(res);
-					},
-					fail:function(err){
-						console.log(err);
+					this.fla=false;
+					let res=/^[0-9]{6}$/
+					if(res.test(this.value1))
+					{
+						uni.request({
+							url:'https://120.55.37.93',
+							method:'POST',
+							data:{
+								value1:this.value1
+							},
+							success:function(res){
+								console.log(res);
+							},
+							fail:function(err){
+								console.log(err);
+							}
+						})
 					}
-				})
+					else{
+						uni.showModal({
+							title:"请输入六位数字密码"
+						})
+						this.value1="";
+						this.value2="";
+					}
+				
 				
 				}else{
 					this.value1="";
