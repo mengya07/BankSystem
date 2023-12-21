@@ -11,8 +11,8 @@
 		<input class="xing"  v-model="surname" maxlength="10" placeholder="请输入姓" />
 		<input class="ming" v-model="name" maxlength="10" placeholder="请输入名" />
 		<view>
-			<input class="idtype" @click="clickbuttom" v-model="ID_type" placeholder="请选择证件类型"></input>
-			<u-picker :show="showpick" :columns="columns" @cancel="cancel" @confirm="confirm" @change="change"></u-picker>
+			<input class="idtype" @click="clickbuttom" v-model="ID_type" placeholder="请输入证件类型" />
+			<uv-picker ref="picker" :columns="columns" @cancel="cancel" @confirm="confirm" @change="change"></uv-picker>
 		</view>
 		
 		<input class="sfz" @click="showkey" v-model="ID" maxlength="19" placeholder="请输入证件号码" />
@@ -41,8 +41,9 @@
 		></u-keyboard>
 		</view>
 </template>
+
 <script>
-import test from '../../../uni_modules/uview-ui/libs/function/test'
+//import test from '../../../uni_modules/uview-ui/libs/function/test'
 	export default{	
 		data() {
 				return {
@@ -127,7 +128,7 @@ import test from '../../../uni_modules/uview-ui/libs/function/test'
 			}
 			},
 			clickbuttom(){
-				this.showpick=true
+				this.$refs.picker.open();
 			},
 			handleChange(e) {
 						if(this.ifchecked){
@@ -141,7 +142,7 @@ import test from '../../../uni_modules/uview-ui/libs/function/test'
 					},
 					valchange(val){
 						this.ID+=val
-						uni.hideKeyboard();
+						//uni.hideKeyboard();
 					},
 					backspace(){
 						if(this.ID.length) this.ID = this.ID.substr(0, this.ID.length - 1);
