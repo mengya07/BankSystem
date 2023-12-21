@@ -200,6 +200,15 @@ export default {
 										  
 										 
 									 }
+									 else if(res.data.code=="3"){
+									 										 								 										 
+									 	  uni.showToast({
+									 	    title:"转账金额已达上限",
+									 		icon:"none"
+									 	  })
+									 	  uni.navigateBack();
+									 										 
+									 										}
 									 else {
 										 
 										 
@@ -207,9 +216,8 @@ export default {
 										 	title:"请输入正确的转账信息",
 										 	icon:"none"
 										 })
-										  
+										  uni.navigateBack();
 										 
-										  
 										}
 								  },  
 								  fail: function (error) {

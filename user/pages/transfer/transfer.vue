@@ -107,12 +107,7 @@
 						this.$refs[ref].validate().then(res => {
 							
 						    console.log('success', res);
-						
-							uni.showToast({
-								title: `校验通过`
-							});
-							
-							
+												
 		
 							let transferData = {  
 							  Amount: res.money,  

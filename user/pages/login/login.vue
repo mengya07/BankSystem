@@ -79,13 +79,7 @@ export default {
 
     }
   },
-		onBackPress() {
-			if (this.$refs.fab.isShow) {
-				this.$refs.fab.close()
-				return true
-			}
-			return false
-		},  
+	
   methods: {  
     onUsernameInput(event) {  
       this.username = event.detail.value;  
