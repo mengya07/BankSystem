@@ -28,17 +28,17 @@
         </view> 
     </view>
     <button :disabled="isCode" class="btn" type="warn" @click="submitFun()">确定</button>
-	<u-keyboard
+	<uv-keyboard
 	ref="uKeyboard"
 	 mode="number"  
 	 @change="valchange" 
 	 @backspace="backspace" 
-	 :show="show1" 
+	  
 	 @cancel="Clickclose"
 	@confirm="clickconfirm" 
 	dotDisabled
 	:overlay="false"
-	></u-keyboard>
+	></uv-keyboard>
  </view>
  </template>
  
@@ -137,7 +137,7 @@
               * */ 
              codefocusFun(index){ 
                  this.focus = true 
-				 this.show1=true
+				 this.$refs.uKeyboard.open();
              },
                          /**
               * DESC: 按钮点击事件
@@ -168,7 +168,7 @@
                
              },
 			 showkey1(){
-			 this.show1=true
+			 this.$refs.uKeyboard.open();
 			 },
 			 valchange(val){
 				 if(this.code.length<=5)
@@ -184,10 +184,10 @@
 			 if(this.code.length!=6)this.isCode=true
 			 },
 			 Clickclose(){
-			 this.show1=false
+			 this.$refs.uKeyboard.close();
 			 },
 			 	clickconfirm(){
-			 		this.show1=false
+			 		this.$refs.uKeyboard.close();
 			 	},
          }
      }

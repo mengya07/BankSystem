@@ -2,12 +2,6 @@
   <view class="container">  
   <text class="title"></text>
   <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
    <text class="title" >登录</text>  
    
 		<uv-form >
@@ -102,7 +96,7 @@ export default {
 			        title: '登录成功',  
 			        icon: 'success'  
 			      }); 
-				  getApp().globalData.islogin = true;
+				  // uni.setStorageSync('islogin',true);
 				  uni.setStorageSync('token',res.data.data.token);  //存token
 				  uni.setStorageSync('userName',that.username); //存手机号
 				  uni.request({
@@ -133,10 +127,7 @@ export default {
 				      console.log(error);  
 				    }  
 				  }); 
-				  
-				  
-				  
-				  
+				  			  
 				     uni.switchTab({  
 			     url: "/pages/home/home"  
 			      });  

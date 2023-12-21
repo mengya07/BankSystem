@@ -87,7 +87,7 @@
 		   
 		methods: {
 					choose() {
-						uni.redirectTo({
+						uni.navigateTo({
 							url: '/pages/transferCloose/transferCloose'
 						});
 
@@ -117,8 +117,6 @@
 							};  
 							  
 							uni.setStorageSync('transfer', transferData);//把数据存入缓存
-							
-							
 							
 							
 							const temp=uni.getStorageSync('transfer');	

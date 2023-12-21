@@ -4,12 +4,12 @@
 		<view class="status" :style="{position:headerPosition}"></view>
 		<!-- 漂浮头部 -->
 		<view class="header" :style="{position:headerPosition}">
-			<view v-if="state" class="menu">
+			<view class="menu">
 				<image mode="widthFix" src="../../static/icon/icon_exit.svg" @click="clickExit"></image>
 			</view>
-			<view v-else class="menu">
+<!-- 			<view v-else class="menu">
 				<image mode="widthFix" src="../../static/icon/icon_login.svg" @click="clickLogin"></image>
-			</view>
+			</view> -->
 			<view class="input">
 				<view class="icon search"></view>
 				<input placeholder="搜索一下" @click="toSearch()" />
@@ -48,17 +48,16 @@
 			</view>
 		</view>
 		
-		<view class="pick">
+<!-- 		<view class="pick">
 			<view class="box">
 				<view style="height: 900rpx;"></view>
 			</view>
-		</view>
+		</view> -->
 		<!-- 推荐商品 -->
-<!-- 		<view class="pick">
+		<view class="pick">
 			<view class="box">
 				<view class="title">
-					<view class="big">推荐商品</view>
-					<view class="small">好货推荐 低价精选</view>
+					<view class="big">推荐</view>
 				</view>
 				<view class="product-list">
 					<view v-for="product in pickList" :key="product.goods_id" @tap="toPick(product)">
@@ -68,7 +67,7 @@
 					</view>
 				</view>
 			</view>
-		</view> -->
+		</view>
 		<!-- 广告横幅 -->
 		<view class="banner">
 			<image mode="widthFix" src="../../static/HM-shophome/banner.jpg"></image>
@@ -79,7 +78,7 @@
 export default {
 	data() {
 		return {
-			state:false,
+			// state:false,
 			//轮播
 			swiperList:[
 				{sid:0,src:'自定义src0',img:'../../static/HM-shophome/swiper-img/0.jpg'},
@@ -97,7 +96,7 @@ export default {
 					{ cat_id: 4, img: '../../static/icon/icon_home_transactionRecord.svg', title: '交易明细',url:"/pages/transactionRecord/transactionRecord" },
 					{ cat_id: 5, img: '../../static/icon/icon_home_RAE.svg', title: '月度收支',url:"/pages/monthIE/monthIE"},
 					{ cat_id: 6, img: '../../static/icon/icon_home_safetySettings.svg', title: '安全中心' ,url:"/pages/securityAndSettings/securityAndSettings"},
-					{ cat_id: 7, img: '../../static/icon/icon_home_code.svg', title: '收付款' ,url:""},
+					{ cat_id: 7, img: '../../static/icon/icon_home_code.svg', title: '收付款' ,url:"/pages/QRcode/QRcode"},
 					{ cat_id: 8, img: '../../static/icon/icon_home_scan.svg', title: '扫一扫' ,url:""},
 					{ cat_id: 9, img: '../../static/icon/icon_home_transactionSettings.svg', title: '限额' ,url:""}
 				],
@@ -144,7 +143,6 @@ export default {
 		
 	},
 	activated(){
-		this.state = getApp().globalData.islogin
 	},
 	// onPageScroll(e){
 	// 	//兼容iOS端下拉时顶部漂移
@@ -177,33 +175,79 @@ export default {
 	// },
 	onLoad() {},
 	methods: {
-		islogin(){
-			return getApp().globalData.islogin
-		},
-		clickLogin(){
-			uni.navigateTo({
-				url:"/pages/login/login"
-			})
-		},
+		// islogin(){
+		// 	return getApp().globalData.islogin
+		// },
+		// clickLogin(){
+		// 	uni.navigateTo({
+		// 		url:"/pages/login/login"
+		// 	})
+		// },
 		clickExit(){
 			let that = this
 			uni.showModal({
 				content: "请确认是否退出当前登录账号？",
 				success(res) {
 					if(res.confirm){
-						getApp().globalData.islogin = false
-						that.state = false
+						// getApp().globalData.islogin = false
+						// that.state = false
 					}
 				}
 			})
 		},
 		//扫一扫
 		scan(){
-			uni.scanCode({
-				success:(res)=>{
-					uni.showToast({title: '条码内容：' + res.result});
+			let that=this
+			let token_ =''
+			uni.getStorage({
+				key:'token',
+				success(res) {
+					token_ = res.data
 				}
-			});
+			})
+			uni.scanCode({
+				success: function(res) {
+					if(res.scanType === "QR_CODE"){
+						uni.request({
+							  url: 'https://120.55.37.93/TDCode/verify?orderId='+res.data,  
+							  method: 'GET',  
+							  header: {  
+								'token': token_
+							  },
+							  data: {
+								
+							  },
+							  success: function (res) {
+								console.log(res)
+								uni.setStorage({
+									key: 'payeeName',
+									data: res.data.data.payeeName
+								})
+								uni.setStorage({
+									key: 'payeeCardNumber',
+									data: res.data.data.payeeCardNumber
+								})
+								
+								uni.getStorage({
+									key: 'payeeName',
+									success: function (res) {
+										console.log(res)
+									}	
+								})
+							  },  
+							  fail: function (error) {  
+								console.log("寄咯");  
+							  }  
+							})
+							uni.navigateTo({
+								url:"/pages/codeTransfer/codeTransfer",
+								success: function(res){
+									
+								}
+							});
+					}
+				}
+			})
 		},
 		//搜索跳转
 		toSearch(){
@@ -215,15 +259,15 @@ export default {
 		},
 		//分类跳转
 		toCategory(e){
-			if(this.islogin()){
+			// if(this.islogin()){
 				uni.navigateTo({
 					url:e.url
 				})
-			}else{
-				uni.navigateTo({
-					url:"/pages/login/login"
-				})
-			}
+			// }else{
+			// 	uni.navigateTo({
+			// 		url:"/pages/login/login"
+			// 	})
+			// }
 		},
 		//推荐商品跳转
 		toPick(e){
