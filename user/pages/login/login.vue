@@ -2,12 +2,6 @@
   <view class="container">  
   <text class="title"></text>
   <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
-  <text class="title"></text>
    <text class="title" >登录</text>  
    
 		<uv-form >
