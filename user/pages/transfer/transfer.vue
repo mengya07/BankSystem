@@ -131,7 +131,7 @@
 							console.log(temp);		
 																																																		
 																																																		
-							uni.navigateTo({
+							uni.redirectTo({
 								url:'/pages/transferConfirm/transferConfirm'
 							})																																											
 																																																		
