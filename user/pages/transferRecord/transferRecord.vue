@@ -178,6 +178,7 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 									"status":that.status,
 								  },
 								  success: function (res) {
+									  console.log(res)
 									if(res.data.code == 200)
 									{
 										 console.log(res)
@@ -233,6 +234,11 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 											temp.id = item.id
 											that.cardItem.push(temp)
 										})
+										
+										//！！！！！！！！！！！！！！！！！
+										that.requestTransferRecord()
+										
+										
 									}
 									uni.hideLoading()
 								  },  
@@ -408,6 +414,7 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 			}
 		},
 		onLoad(option) {
+			console.log(option)
 			this.dateEnd = this.currentDate
 			this.dateStart = this.defaultDateStart
 			let that = this
@@ -416,7 +423,7 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 			//查有什么卡
 			that.requestCard()
 			//按照默认条件查一次
-			that.requestTransferRecord()
+			//that.requestTransferRecord()
 		}
 	}
 </script>

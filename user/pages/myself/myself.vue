@@ -4,12 +4,12 @@
 	    <view class="status" :style="{position:headerPosition}"></view>
 	    <!-- 漂浮头部 -->
 	    <view class="header" :style="{position:headerPosition}">
-	    	<view v-if="islogin" class="menu">
+	    	<view class="menu">
 	    		<image mode="widthFix" src="../../static/icon/icon_login.svg" @click="clickExit"></image>
 	    	</view>
-	    	<view v-else class="menu">
+<!-- 	    	<view v-else class="menu">
 	    		<image mode="widthFix" src="../../static/icon/icon_exit.svg" @click="clickLogin"></image>
-	    	</view>
+	    	</view> -->
 	    	<view class="input">
 	    		<view class="icon search"></view>
 	    		<input placeholder="搜索一下" @click="toSearch()" />
@@ -94,7 +94,7 @@
 				})
 			},
 			clickExit(){
-				getApp().globalData.islogin = false
+				// getApp().globalData.islogin = false
 			},
 			//扫一扫
 			scan(){
@@ -109,49 +109,49 @@
 				uni.showToast({title: "建议跳转到新页面做搜索功能"});
 			},
 			clickTransferRecord(){
-				if(this.islogin){
+				// if(this.islogin){
 					uni.navigateTo({
 						url:"/pages/transferRecord/transferRecord"
 					})
-				}else{
-					uni.navigateTo({
-						url:"/pages/login/login"
-					})
-				}
+				// }else{
+				// 	uni.navigateTo({
+				// 		url:"/pages/login/login"
+				// 	})
+				// }
 			},
 			clickAccountView(){
-				if(this.islogin){
+				// if(this.islogin){
 					uni.navigateTo({
 						url:"/pages/accountView/accountView"
 					})
-				}else{
-					uni.navigateTo({
-						url:"/pages/login/login"
-					})
-				}
+				// }else{
+				// 	uni.navigateTo({
+				// 		url:"/pages/login/login"
+				// 	})
+				// }
 			},
 			clickTransactionRecord(){
-				if(this.islogin){
+				// if(this.islogin){
 					uni.navigateTo({
 						url:"/pages/transactionRecord/transactionRecord"
 					})
-				}else{
-					uni.navigateTo({
-						url:"/pages/login/login"
-					})
-				}
+				// }else{
+				// 	uni.navigateTo({
+				// 		url:"/pages/login/login"
+				// 	})
+				// }
 			},
 		},
-		//测试用，写token
 		computed:{
-			islogin: function(){
-				return getApp().globalData.islogin
-			},
+			// islogin: function(){
+			// 	return getApp().globalData.islogin
+			// },
 			name: function(){
 				let temp = ""
 				uni.getStorage({
 					key:'name',
 					success(res) {
+						console.log(res)
 						temp = res.data
 					}
 				})
@@ -170,10 +170,7 @@
 			}
 		},
 		onLoad() {
-			uni.setStorage({
-				key: 'token',
-				data: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJlYWE5MDBjYTdkNTU0NzFiYTliOTU3OWZkZDViNzI2YSIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMzA2MDIyOSwiZXhwIjoxNzAzMTQ2NjI5fQ.Dor6B5SEGHl02OmNWkjFq0n7eVWi487Zc5cNeAGkXAI'
-			})
+
 		}
 	}
 </script>

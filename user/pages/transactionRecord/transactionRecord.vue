@@ -223,6 +223,7 @@
 										})
 										that.cardId = that.cardItem[0].id
 										that.cardAccountText = that.cardItem[0].account
+										that.requestTransactionRecord()
 									}
 									
 									uni.hideLoading()
@@ -407,7 +408,7 @@
 			this.dateEnd = this.currentDate
 			this.dateStart = this.defaultDateStart
 			this.requestCard()
-			this.requestTransactionRecord()
+			//this.requestTransactionRecord()
 		}
 	}
 </script>
