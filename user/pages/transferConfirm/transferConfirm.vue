@@ -207,9 +207,8 @@ export default {
 										 	title:"请输入正确的转账信息",
 										 	icon:"none"
 										 })
-										  
+										  uni.navigateBack();
 										 
-										  
 										}
 								  },  
 								  fail: function (error) {

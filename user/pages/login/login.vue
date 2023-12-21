@@ -78,7 +78,8 @@ export default {
 				  ]
 
     }
-  },  
+  },
+	
   methods: {  
     onUsernameInput(event) {  
       this.username = event.detail.value;  
