@@ -133,10 +133,7 @@ export default {
 				      console.log(error);  
 				    }  
 				  }); 
-				  
-				  
-				  
-				  
+				  			  
 				     uni.switchTab({  
 			     url: "/pages/home/home"  
 			      });  
