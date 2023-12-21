@@ -60,6 +60,7 @@
 			this.transactionId = option.transactionId
 			
 			let that = this
+			console.log("jiaoyi"+ that.transactionId)
 			uni.getStorage({
 				key: 'token',
 				success: function (res) {
@@ -68,27 +69,33 @@
 						title: "",
 						mask: true
 					})
+					setTimeout(function () {
+						uni.hideLoading();
+					}, 1000);
 					uni.request({
-							  url: 'http://x38h8d.natappfree.cc/query/transactionDetail?transactionId=' + that.transactionId,  
+							  url: 'https://120.55.37.93/query/transactionDetail?transactionId=' + that.transactionId,  
 							  method: 'GET',
 							  header: {  
 								'token': _token
 							  },
 							  success: function (res) {
-								that.record.transactionAccount = res.data.data.transactionAccount
-								that.record.balance = res.data.data.balance
-								that.record.counterpartyName = res.data.data.counterpartyName
-								that.record.counterpartyAccount = res.data.data.counterpartyAccount
-								that.record.amount = res.data.data.amount
-								that.record.postscript = res.data.data.postscript
-								that.record.status = res.data.data.status
-								that.record.statusComments = res.data.data.statusComments
-								that.record.transactionId = res.data.data.transactionId
-								that.record.transferTime = res.data.data.transferTime
-								uni.hideLoading()
+								  if(res.data.code ==200){
+									  console.log(res)
+									  that.record.transactionAccount = res.data.data.transactionAccount
+									  that.record.balance = res.data.data.balance
+									  that.record.counterpartyName = res.data.data.counterpartyName
+									  that.record.counterpartyAccount = res.data.data.counterpartyAccount
+									  that.record.amount = res.data.data.amount
+									  that.record.postscript = res.data.data.postscript
+									  that.record.status = res.data.data.status
+									  that.record.statusComments = res.data.data.statusComments
+									  that.record.transactionId = res.data.data.transactionId
+									  that.record.transferTime = res.data.data.transferTime
+								  }
+								 uni.hideLoading()
 							  },  
 							  fail: function (error) {  
-								uni.hideLoading()
+								 uni.hideLoading()
 								uni.showToast({
 									title: '错误，稍后再试',
 									icon: 'error',

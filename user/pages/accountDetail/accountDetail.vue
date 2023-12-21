@@ -89,7 +89,7 @@
 		            			mask: true
 		            		})
 		            		uni.request({
-		            				  url: 'http://x38h8d.natappfree.cc/sendsms/login',  
+		            				  url: 'https://120.55.37.93/sendsms/login',  
 		            				  method: 'GET',  
 		            				  header: {  
 		            					'token': _token
@@ -125,7 +125,7 @@
 				    			mask: true
 				    		})
 				    		uni.request({
-				    				  url: 'http://x38h8d.natappfree.cc/query/cardNumber',  
+				    				  url: 'https://120.55.37.93/query/cardNumber',  
 				    				  method: 'POST',  
 				    				  header: {  
 				    					'token': _token

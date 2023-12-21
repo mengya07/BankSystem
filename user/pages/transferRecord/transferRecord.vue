@@ -162,14 +162,14 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 							mask: true
 						})
 						uni.request({
-								  url: 'http://x38h8d.natappfree.cc/query/transferRecord?pageNum='+ that.pageNum + '&pageSize=' + that.pageSize,  
+								  url: 'https://120.55.37.93/query/transferRecord?pageNum='+ that.pageNum + '&pageSize=' + that.pageSize,  
 								  method: 'POST',  
 								  header: {  
 									'token': _token
 								  },
 								  data:{
 									"startTime":that.dateStart + " 00:00:00",
-									"endTime":that.dateEnd + " 00:00:00",
+									"endTime":that.dateEnd + " 23:59:59",
 									"cardId":that.cardId,
 									"miniAmount":that.moneyStart,
 									"maxAmount":that.moneyEnd,
@@ -178,18 +178,21 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 									"status":that.status,
 								  },
 								  success: function (res) {
-									//如果什么都没有的话 大家啊上课的垃圾啊索拉卡登记啊索拉卡登记啊卢萨卡登记拉卡手机打拉卡萨
-									that.totalPage = res.data.data.totalPage
-									res.data.data.list.forEach(item=>{
-										let temp = {"name":"","amount":"","date":"","class":"","id":"","payerCardNumber":""}
-										temp.name = item.payerName
-										temp.amount = parseFloat(item.transferAmount).toFixed(2)
-										temp.date = item.transferTime
-										temp.class = item.statusComments
-										temp.id = item.transactionId
-										temp.payerCardNumber = item.payerCardNumber
-										that.recordItem.push(temp)
-									})
+									if(res.data.code == 200)
+									{
+										 console.log(res)
+										 that.totalPage = res.data.data.totalPage
+										 res.data.data.list.forEach(item=>{
+											let temp = {"name":"","amount":"","date":"","class":"","id":"","payerCardNumber":""}
+											temp.name = item.payerName
+											temp.amount = parseFloat(item.transferAmount).toFixed(2)
+											temp.date = item.transferTime
+											temp.class = item.statusComments
+											temp.id = item.transactionId
+											temp.payerCardNumber = item.payerCardNumber
+											that.recordItem.push(temp)
+										 })	
+									}
 									uni.hideLoading()
 								  },  
 								  fail: function (error) {
@@ -215,7 +218,7 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 							mask: true
 						})
 						uni.request({
-								  url: 'http://x38h8d.natappfree.cc/query/bankCard',  
+								  url: 'https://120.55.37.93/query/bankCard',  
 								  method: 'GET',
 								  header: {  
 									'token': _token
@@ -223,12 +226,14 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 								  data:{
 								  },
 								  success: function (res) {
-									res.data.data.forEach(item=>{
-										let temp = {account:"",id:"",class:"借记卡"}
-										temp.account = item.cardNumber
-										temp.id = item.id
-										that.cardItem.push(temp)
-									})
+									if(res.data.code == 200){
+										res.data.data.forEach(item=>{
+											let temp = {account:"",id:"",class:"借记卡"}
+											temp.account = item.cardNumber
+											temp.id = item.id
+											that.cardItem.push(temp)
+										})
+									}
 									uni.hideLoading()
 								  },  
 								  fail: function (error) {  

@@ -82,22 +82,24 @@ import { string } from '../../uni_modules/uv-ui-tools/libs/function/test';
 							mask: true
 						})
 						uni.request({
-								  url: 'http://x38h8d.natappfree.cc/query/transferRecordDetail?transactionId=' + that.transactionId,  
+								  url: 'https://120.55.37.93/query/transferRecordDetail?transactionId=' + that.transactionId,  
 								  method: 'GET',
 								  header: {  
 									'token': _token,
 								  },
 								  success: function (res) {
-									res = res.data.data
-									that.record.id = res.transactionId
-									that.record.date = res.transferTime
-									that.record.amount = parseFloat(res.amount).toFixed(2)
-									that.record.name = res.receiverName
-									that.record.account = res.receiverCardNumber
-									that.record.otherName = res.senderName
-									that.record.otherAccount = res.senderCardNumber
-									that.record.postscript = res.postscript
-									that.record.class = res.status ==1 ? "交易成功" : "交易失败"
+									  if(res.data.code == 200){
+										  res = res.data.data
+										  that.record.id = res.transactionId
+										  that.record.date = res.transferTime
+										  that.record.amount = parseFloat(res.amount).toFixed(2)
+										  that.record.name = res.receiverName
+										  that.record.account = res.receiverCardNumber
+										  that.record.otherName = res.senderName
+										  that.record.otherAccount = res.senderCardNumber
+										  that.record.postscript = res.postscript
+										  that.record.class = res.status ==1 ? "交易成功" : "交易失败"
+									  }
 
 									uni.hideLoading()
 								  },  

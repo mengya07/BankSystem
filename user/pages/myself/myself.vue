@@ -5,10 +5,10 @@
 	    <!-- 漂浮头部 -->
 	    <view class="header" :style="{position:headerPosition}">
 	    	<view v-if="islogin" class="menu">
-	    		<image mode="widthFix" src="../../static/icon/icon_login.svg"></image>
+	    		<image mode="widthFix" src="../../static/icon/icon_login.svg" @click="clickExit"></image>
 	    	</view>
 	    	<view v-else class="menu">
-	    		<image mode="widthFix" src="../../static/icon/icon_exit.svg"></image>
+	    		<image mode="widthFix" src="../../static/icon/icon_exit.svg" @click="clickLogin"></image>
 	    	</view>
 	    	<view class="input">
 	    		<view class="icon search"></view>
@@ -88,6 +88,14 @@
 			};
 		},
 		methods:{
+			clickLogin(){
+				uni.navigateTo({
+					url:"/pages/login/login"
+				})
+			},
+			clickExit(){
+				getApp().globalData.islogin = false
+			},
 			//扫一扫
 			scan(){
 				uni.scanCode({
@@ -101,19 +109,37 @@
 				uni.showToast({title: "建议跳转到新页面做搜索功能"});
 			},
 			clickTransferRecord(){
-				uni.navigateTo({
-					url:"/pages/transferRecord/transferRecord"
-				})
+				if(this.islogin){
+					uni.navigateTo({
+						url:"/pages/transferRecord/transferRecord"
+					})
+				}else{
+					uni.navigateTo({
+						url:"/pages/login/login"
+					})
+				}
 			},
 			clickAccountView(){
-				uni.navigateTo({
-					url:"/pages/accountView/accountView"
-				})
+				if(this.islogin){
+					uni.navigateTo({
+						url:"/pages/accountView/accountView"
+					})
+				}else{
+					uni.navigateTo({
+						url:"/pages/login/login"
+					})
+				}
 			},
 			clickTransactionRecord(){
-				uni.navigateTo({
-					url:"/pages/transactionRecord/transactionRecord"
-				})
+				if(this.islogin){
+					uni.navigateTo({
+						url:"/pages/transactionRecord/transactionRecord"
+					})
+				}else{
+					uni.navigateTo({
+						url:"/pages/login/login"
+					})
+				}
 			},
 		},
 		//测试用，写token

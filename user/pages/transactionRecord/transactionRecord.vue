@@ -150,14 +150,14 @@
 							mask: true
 						})
 						uni.request({
-								  url: 'http://x38h8d.natappfree.cc/query/transactionRecord?pageNum='+ that.pageNum + '&pageSize=' + that.pageSize,  
+								  url: 'https://120.55.37.93/query/transactionRecord?pageNum='+ that.pageNum + '&pageSize=' + that.pageSize,  
 								  method: 'POST',  
 								  header: {  
 									'token': _token
 								  },
 								  data:{
 									"startTime":that.dateStart + " 00:00:00",
-									"endTime":that.dateEnd + " 00:00:00",
+									"endTime":that.dateEnd + " 23:59:59",
 									"cardId":that.cardId,
 									"miniAmount":that.moneyStart,
 									"maxAmount":that.moneyEnd,
@@ -166,16 +166,21 @@
 									"status":that.status,
 								  },
 								  success: function (res) {
-									that.totalPage = res.data.data.totalPage
-									res.data.data.list.forEach(item=>{
-									let temp = {"counterpartyName": "","transactionId": null,"balance": null,"amount": -648,"status": 0,"statusComments": "转账支出"}
-									temp.counterpartyName = item.counterpartyName
-									temp.balance = parseFloat(item.balance).toFixed(2)
-									temp.transactionId = item.transactionId
-									temp.statusComments = item.statusComments
-									temp.amount = item.amount
-									that.recordItem.push(temp)
-									})
+									  console.log(res)
+									  if(res.data.code == 200){
+										  console.log(res)
+										  that.totalPage = res.data.data.totalPage
+										  res.data.data.list.forEach(item=>{
+										  let temp = {"counterpartyName": "","transactionId": null,"balance": null,"amount": -648,"status": 0,"statusComments": "转账支出"}
+										  temp.counterpartyName = item.counterpartyName
+										  temp.balance = parseFloat(item.balance).toFixed(2)
+										  temp.transactionId = item.transactionId
+										  temp.statusComments = item.statusComments
+										  temp.amount = parseFloat(item.amount).toFixed(2)
+										  that.recordItem.push(temp)
+										  })
+									  }
+									  
 									uni.hideLoading()
 								  },  
 								  fail: function (error) {
@@ -201,7 +206,7 @@
 							mask: true
 						})
 						uni.request({
-								  url: 'http://x38h8d.natappfree.cc/query/bankCard',  
+								  url: 'https://120.55.37.93/query/bankCard',  
 								  method: 'GET',
 								  header: {  
 									'token': _token
@@ -209,14 +214,17 @@
 								  data:{
 								  },
 								  success: function (res) {
-									res.data.data.forEach(item=>{
-										let temp = {account:"",id:"",class:"借记卡"}
-										temp.account = item.cardNumber
-										temp.id = item.id
-										that.cardItem.push(temp)
-									})
-									that.cardId = that.cardItem[0].id
-									that.cardAccountText = that.cardItem[0].account
+									if(res.data.code ==200){
+										res.data.data.forEach(item=>{
+											let temp = {account:"",id:"",class:"借记卡"}
+											temp.account = item.cardNumber
+											temp.id = item.id
+											that.cardItem.push(temp)
+										})
+										that.cardId = that.cardItem[0].id
+										that.cardAccountText = that.cardItem[0].account
+									}
+									
 									uni.hideLoading()
 								  },  
 								  fail: function (error) {  

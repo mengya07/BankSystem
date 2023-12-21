@@ -4,11 +4,11 @@
 		<view class="status" :style="{position:headerPosition}"></view>
 		<!-- 漂浮头部 -->
 		<view class="header" :style="{position:headerPosition}">
-			<view v-if="islogin" class="menu">
-				<image mode="widthFix" src="../../static/icon/icon_login.svg"></image>
+			<view v-if="state" class="menu">
+				<image mode="widthFix" src="../../static/icon/icon_exit.svg" @click="clickExit"></image>
 			</view>
 			<view v-else class="menu">
-				<image mode="widthFix" src="../../static/icon/icon_exit.svg"></image>
+				<image mode="widthFix" src="../../static/icon/icon_login.svg" @click="clickLogin"></image>
 			</view>
 			<view class="input">
 				<view class="icon search"></view>
@@ -79,6 +79,7 @@
 export default {
 	data() {
 		return {
+			state:false,
 			//轮播
 			swiperList:[
 				{sid:0,src:'自定义src0',img:'../../static/HM-shophome/swiper-img/0.jpg'},
@@ -137,13 +138,14 @@ export default {
 		};
 	},
 	computed:{
-		islogin: function(){
-			return getApp().globalData.islogin
-		}
+		
 	},
 	onReady() {
 		
-	}, 
+	},
+	activated(){
+		this.state = getApp().globalData.islogin
+	},
 	// onPageScroll(e){
 	// 	//兼容iOS端下拉时顶部漂移
 	// 	if(e.scrollTop>=0){
@@ -175,6 +177,26 @@ export default {
 	// },
 	onLoad() {},
 	methods: {
+		islogin(){
+			return getApp().globalData.islogin
+		},
+		clickLogin(){
+			uni.navigateTo({
+				url:"/pages/login/login"
+			})
+		},
+		clickExit(){
+			let that = this
+			uni.showModal({
+				content: "请确认是否退出当前登录账号？",
+				success(res) {
+					if(res.confirm){
+						getApp().globalData.islogin = false
+						that.state = false
+					}
+				}
+			})
+		},
 		//扫一扫
 		scan(){
 			uni.scanCode({
@@ -193,9 +215,15 @@ export default {
 		},
 		//分类跳转
 		toCategory(e){
-			uni.navigateTo({
-				url:e.url
-			})
+			if(this.islogin()){
+				uni.navigateTo({
+					url:e.url
+				})
+			}else{
+				uni.navigateTo({
+					url:"/pages/login/login"
+				})
+			}
 		},
 		//推荐商品跳转
 		toPick(e){

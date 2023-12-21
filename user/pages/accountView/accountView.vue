@@ -30,7 +30,7 @@
 			</view>		
 		</view>
 		
-		<view class="add-box">
+		<view class="add-box" @click="clickBindCard">
 			<view>+手动添加卡/账户</view>
 		</view>
 		
@@ -68,6 +68,11 @@
 						res.eventChannel.emit('card', that.card[index])
 					}
 				})
+			},
+			clickBindCard(){
+				uni.navigateTo({
+					url:"/pages/bindIdCard/bindIdCard",
+				})
 			}
 		},
 		onLoad() {
@@ -89,13 +94,15 @@
 							  data:{
 							  },
 							  success: function (res) {
-								res.data.data.forEach(item=>{
-									let temp = {account:"",id:"",class:"借记卡",balance:""}
-									temp.account = item.cardNumber
-									temp.id = item.cardId
-									temp.balance = parseFloat(item.balance).toFixed(2)
-									that.card.push(temp)
-								})
+								  if(res.data.code ==200){
+									  res.data.data.forEach(item=>{
+									  	let temp = {account:"",id:"",class:"借记卡",balance:""}
+									  	temp.account = item.cardNumber
+									  	temp.id = item.cardId
+									  	temp.balance = parseFloat(item.balance).toFixed(2)
+									  	that.card.push(temp)
+									  })
+								  }
 								uni.hideLoading()
 							  },  
 							  fail: function (error) {  

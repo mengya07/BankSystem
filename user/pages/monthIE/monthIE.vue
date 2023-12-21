@@ -124,14 +124,16 @@
 								'token': _token
 							  },
 							  success: function (res) {
+								  if(res.data.code ==200){
+									  res.data.data.forEach(item=>{
+									  	let temp = {yearMonth:"",outcome:"",income:""}
+									  	temp.yearMonth = item.yearMonth
+									  	temp.outcome = item.outcome
+									  	temp.income= item.income
+									  	that.record.push(temp)
+									  })
+								  }
 								  
-								res.data.data.forEach(item=>{
-									let temp = {yearMonth:"",outcome:"",income:""}
-									temp.yearMonth = item.yearMonth
-									temp.outcome = item.outcome
-									temp.income= item.income
-									that.record.push(temp)
-								})
 								uni.hideLoading()
 							  },  
 							  fail: function (error) {  
