@@ -102,7 +102,7 @@ export default {
 			        title: '登录成功',  
 			        icon: 'success'  
 			      }); 
-				  getApp().globalData.islogin = true;
+				  // uni.setStorageSync('islogin',true);
 				  uni.setStorageSync('token',res.data.data.token);  //存token
 				  uni.setStorageSync('userName',that.username); //存手机号
 				  uni.request({
