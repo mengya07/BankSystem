@@ -2,15 +2,14 @@
 	<view>
 		<view>
 		
-		<uni-section>
+		<uni-section title="">
 				<text class="title1">操作结果</text>
-					<uni-card padding="0" isFull="true" spacing="0">
+					<uni-card padding="0" :isFull='true' spacing="0">
 						<template v-slot:cover>
 							<view class="custom-cover">
-							
 								<view class="cover-content">
-								<text>{{transferData.Amount.toFixed(2)}}元交易成功<br></text>
-								<text>预计10秒内到账，具体时间取决于对方银行</text>
+								<text class="success">{{transferData.Amount.toFixed(2)}}元交易成功<br></text>
+								<text class="message">预计10秒内到账，具体时间取决于对方银行</text>
 								</view>
 							</view>
 						</template>
@@ -54,7 +53,7 @@
 					</uni-card>
 				</uni-section>
 				
-				<uni-card isFull="true" @click= "backHome" >
+				<uni-card :isFull='true' @click= "backHome" >
 				<text class="back">首页</text>
 				</uni-card>
 				</view>
@@ -128,7 +127,27 @@
 	}
 	.cover-content
 	{
+	
+		align-items: center;
+		justify-content: center;
 		font-size: 15px;
+	}
+	.reslutNumber
+	{
+		font-weight: 700;
+	}
+	.message
+	{
+		font-weight: 100;
+		text-align: center;
+		margin-left: 90rpx;
+	}
+	.success
+	{
+		font-size: 35rpx;
+		font-weight: 700;
+		text-align: center;
+		margin-left: 220rpx;
 	}
 
 </style>

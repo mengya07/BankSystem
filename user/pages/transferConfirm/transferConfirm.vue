@@ -62,6 +62,8 @@ export default {
 			transferMoney: '',
 			transferMessage: '',
 			token: '',
+			phoneNumber: '',
+			phoneTail: '',
         }  
     },  
     methods: {  
@@ -93,6 +95,13 @@ export default {
 			 } else {  
 			     console.log('transfernot found in storage'); // 否则输出错误消息或进行其他处理  
 			 };  
+			 const value5 = uni.getStorageSync('token');
+			 if (value5 !== undefined) { // 检查值是否存在  
+			     this.phoneNumber = value5; // 如果存在，设置到组件的数据属性中  
+			 } else {  
+			     console.log('transfernot found in storage'); // 否则输出错误消息或进行其他处理  
+			 };  
+			 this.phoneTail=phoneNumber.substring(phoneNumber.length - 4); 
 			
         },
 		

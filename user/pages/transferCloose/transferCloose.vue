@@ -1,7 +1,14 @@
+
+
+
 <template>  
   <view>      
-       <uni-card class="card" v-for="(card, index) in datas" :key="index"  @click="handleCardClick(index)">  
-	   <text>{{card.cardNumber}}</text>
+       <uni-card class="card"  v-for="(card, index) in datas" :key="index"  @click="handleCardClick(index)" :thumbnail="avatar">
+	  
+	   <view style="display: flex;">
+		   <image src= '/static/card.png' class="icc"></image>
+		   <text class="cardNumber">{{card.cardNumber}}</text>
+	   </view>
        </uni-card>    
   </view>  
 </template>  
@@ -15,7 +22,8 @@ export default {
         balance: '',  
         cardId: '',  
         cardNumber: "",  
-        isActive: ''  
+        isActive: '',
+		avatar: '/static/card.png'
       }]  
     };  
   },  
@@ -88,5 +96,14 @@ export default {
   margin-right: 10px;  
   margin-bottom: 10px; 
 } 
+.icc{
+  width: 50px;
+  height: 30px;   
+}
+.cardNumber{
+  text-align: center;
+  margin-top: 10rpx;
+  margin-left: 70rpx;
+}
 
 </style>

@@ -11,11 +11,11 @@
     <text class="title" >登录</text>  
 	<uv-form >
 		
-	<uv-form-item label="+86" border-bottom="true">	
+	<uv-form-item label="+86" border-bottom= 'true'>	
     <input class="input"  type="text" maxlength="11"  placeholder="  请输入手机号" @input="onUsernameInput"> 
 	</uv-form-item>
 	
-	 <uv-form-item border-bottom="true">
+	 <uv-form-item border-bottom= 'true'>
     <input class="input" type="password" placeholder="  请输入验证码" @input="onPasswordInput">
 	</uv-form-item>
 	</uv-form>

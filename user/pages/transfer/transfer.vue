@@ -11,17 +11,17 @@
       <view class="example">  	  
         <!-- 自定义表单校验 -->  
         <uni-forms ref="customForm" :rules="customRules" :modelValue="customFormData">  
-          <uni-forms-item label="转账金额" required name="money">  
-            <uni-easyinput v-model="customFormData.money" placeholder="请输入转账金额" />  
+          <uni-forms-item label="转账金额" required name="money" label-width="40" >  
+            <uni-easyinput v-model="customFormData.money"  style="margin-left: 29rpx; width: 510rpx;" placeholder="请输入转账金额" />  
           </uni-forms-item>  
-          <uni-forms-item label="收款人姓名" required name="name">  
-            <uni-easyinput v-model="customFormData.name" placeholder="请输入收款人姓名" />  
+          <uni-forms-item label="收款人姓名" required name="name" label-width="40">  
+            <uni-easyinput v-model="customFormData.name"     placeholder="请输入收款人姓名" />  
           </uni-forms-item>  
-          <uni-forms-item label="收款账号" required name="moneyid">  
-            <uni-easyinput v-model="customFormData.moneyid" placeholder="请输入收款账号" />  
+          <uni-forms-item label="收款账号" required name="moneyid" label-width="40">  
+            <uni-easyinput v-model="customFormData.moneyid" style="margin-left: 29rpx; width: 510rpx;"   placeholder="请输入收款账号" />  
           </uni-forms-item>  
-          <uni-forms-item label="附言" name="write">  
-            <uni-easyinput v-model="customFormData.write" placeholder="请输入附言" />  
+          <uni-forms-item label="附言" name="write" label-width="40" style="margin-left: 14rpx;">  
+            <uni-easyinput v-model="customFormData.write" style="margin-left: 85rpx; width: 510rpx;"   placeholder="请输入附言" />  
           </uni-forms-item>  
         </uni-forms>  
         <button class="next" type="warn" @click="submit('customForm')">提交</button>  
@@ -201,7 +201,7 @@
 	.mini-button {
 		display: flex;
 		align-items: center;
-		font-size: 10px;
+		font-size: 19rpx;
 		width:77px;
 		height: 23px;
 		margin-right: 10px;

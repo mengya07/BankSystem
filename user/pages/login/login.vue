@@ -11,10 +11,10 @@
    <text class="title" >登录</text>  
    
 		<uv-form >
-		  <uv-form-item label="+86" border-bottom="true">
+		  <uv-form-item label="+86" :border-bottom= 'true'>
 			  <input class="input" type="text" placeholder="  请输入手机号" @input="onUsernameInput">
 		  </uv-form-item>
-		  <uv-form-item border-bottom="true">
+		  <uv-form-item :border-bottom= 'true'>
 			  <input class="input" type="password" placeholder="  请输入密码" @input="onPasswordInput">
 		  </uv-form-item>
 		</uv-form>
@@ -107,12 +107,10 @@ export default {
 			      uni.showToast({  
 			        title: '登录成功',  
 			        icon: 'success'  
-			      });  
-			  
+			      }); 
+				  getApp().globalData.islogin = true;
 				  uni.setStorageSync('token',res.data.data.token);  //存token
 				  uni.setStorageSync('userName',that.username); //存手机号
-				  
-				  
 				  uni.request({
 				    url: 'https://120.55.37.93/query/bankCard',  
 				    method: 'GET',  
