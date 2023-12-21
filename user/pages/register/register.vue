@@ -164,6 +164,12 @@
 								  success: function (res) {
 									 
 									console.log(res)
+									uni.navigateTo({
+										url:"/pages/login/login",
+										success: function(res){
+											
+										}
+									});
 								  },  
 								  fail: function (error) {  
 									console.log("寄咯");  

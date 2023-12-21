@@ -1,8 +1,5 @@
 <template>
 	<view style="margin-left: 20rpx; margin-top: 20rpx;">
-		<view style="margin-right: 20rpx; text-align: right;">
-			<text style="margin-right: 20rpx; font-weight: bold;; text-align: right;" @click="modifyPI">修改</text>
-		</view>
 		<text>基本信息</text>
 		<uv-form :model="model1" :rules="rule1" ref="form1" style="background: white; margin-right: 20rpx;">
 			<uv-form-item label="电子银行客户序号" label-width="150rpx" prop="userInfo.number" :borderBottom="true">
@@ -80,7 +77,21 @@
 			</uv-form-item>
 		</uv-form>
 	</view>
+	<view>
+		<button style="color: white; background-color: blue;" @click="confirmModify">确认</button>
+	</view>
 	
+	<uni-popup ref="popup" type="center" :isMaskClick="false">
+		<view style="display: flex;justify-content: flex-end;background-color: #FFFFFF;"><uv-icon name="close" size="14" style="margin-right: 5rpx;" @click="this.$refs.popup.close()"></uv-icon></view>
+		<view style="width: 600rpx; height: 350rpx; display: flex; flex-direction: column; align-items: center; background-color: #FFFFFF;">
+			<view>手机交易码</view>
+			<uv-line margin="10rpx"></uv-line>
+			<view style="margin-top: 20rpx;">正在向尾号{{phoneTail}}的手机发送验证码</view>
+			<uv-code-input mode="line" size="28" @finish="codeInputFinish" style="margin-top: 40rpx;"></uv-code-input>
+			<uv-code ref="uCode" @change="codeChange" seconds="60"></uv-code>
+			<button @click="getCode" style="border-radius: 10rpx; width: 300rpx; height: 60rpx; font-size: 0.8em; margin-top: 40rpx; background-color: red; color: #FFFFFF;">{{codeTips}}</button>
+		</view>
+	</uni-popup>
 </template>
 
 <script>
@@ -125,7 +136,7 @@
 					phonenumber: '',
 					
 				},
-				
+				codeTips:"",
 				rule1: {
 					'userInfo.num': {
 						tpye: 'number',
@@ -155,55 +166,45 @@
 				
 			}
 		},
+		computed: {
+			phoneTail: function(){
+				let that = this
+				let temp = ""
+				uni.getStorage({
+					key:'userName',
+					success(res) {
+						console.log(res)
+						temp =  res.data.slice(-4)
+					}
+				})
+				return temp
+			}
+		},
 		onReady() {
 			// 如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则
 			this.$refs.form1.setRules(this.rule1)
 			// 获取数据
 			let that = this
-			uni.setStorage({
-				key: 'token',
-				data: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjMDAyYjY5MzkwMGE0ZTUwOTUxYzE4YjUxYmZlNDE5ZCIsInN1YiI6IjkiLCJpc3MiOiJwbSIsImlhdCI6MTcwMzE0MzEwNCwiZXhwIjoxNzAzMjI5NTA0fQ.cDcqrghrqMM7oRepfHFjlkFktC1ubEQelp4-0euPG3E'
-			})
-			uni.getStorage({
-				key: 'token',
-				success: function (res) {
-					let _token = res.data
-					uni.request({
-							  url: 'http://120.55.37.93:80/query/customerInfo',  
-							  method: 'GET',  
-							  header: {  
-								'token': _token
-							  },
-							  data:{
-								
-							  },
-							  success: function (res) {
-								  console.log(res)
-								that.model1.userInfo.num = res.data.data.customerId
-								that.model1.userInfo.name = res.data.data.surname + res.data.data.name
-								that.model1.userInfo.ename = res.data.data.spellName
-								that.model1.userInfo.cardNumber = res.data.data.identityCard
-								that.model1.userInfo.nation = res.data.data.nationality
-								that.model1.userInfo.sex = res.data.data.sex
-								that.model1.userInfo.bornTime = res.data.data.dateOfBirth
-								that.model1.userInfo.bornPlace = res.data.data.placeOfBirth	
-								that.model1.addressInfo.region=res.data.data.provincesCity
-								that.model1.addressInfo.detailAddress = res.data.data.detailedAddress
-								that.model1.addressInfo.zipCode = res.data.data.postalCode
-								that.model1.workInfo.profession = res.data.data.profession
-								that.model1.workInfo.workPlaceName = res.data.data.workOfUnit
-								that.model1.workInfo.sector = res.data.data.industryOfTheOrganization
-								that.model1.workInfo.salaryInterval = res.data.data.incomeRange
-								that.model1.phonenumber = res.data.data.phoneNumber
-							  },  
-							  fail: function (error) {  
-								console.log("寄咯");  
-							  }  
-							})
-				},
-				fail: function(error) {
-				            console.log("获取token失败", error);
-				        }
+			const eventChannel = this.getOpenerEventChannel();
+			eventChannel.on('newpersonalInformation', (data) => {
+				console.log(data)
+							that.model1.userInfo.num = data.num
+							that.model1.userInfo.name = data.name
+							that.model1.userInfo.ename = data.ename
+							that.model1.userInfo.cardNumber = data.cardNumber
+							that.model1.userInfo.nation = data.nation
+							that.model1.userInfo.sex = data.sex
+							that.model1.userInfo.bornTime = data.bornTime
+							that.model1.userInfo.bornPlace = data.bornPlace
+							that.model1.addressInfo.region = data.region
+							that.model1.addressInfo.detailAddress = data.detailAddress
+							that.model1.addressInfo.zipCode = data.zipCode
+							that.model1.workInfo.profession = data.profession
+							that.model1.workInfo.workPlaceName = data.workPlaceName
+							that.model1.workInfo.sector = data.sector
+							that.model1.workInfo.salaryInterval = data.salaryInterval
+							that.model1.phonenumber = data.phonenumber
+					
 			});
 		},
 		methods: {
@@ -221,31 +222,86 @@
 					console.log('关闭');
 			},
 			
-			modifyPI() {
+			
+			confirmModify() {
+				this.$refs.popup.open()
+			},
+			codeInputFinish(e) {
 				let that = this
-				uni.navigateTo({
-					url:"/pages/modifyPersonalInformation/modifyPersonalInformation",
-					success: function(res){
-						res.eventChannel.emit('personalInformation',{
-						'num' : that.model1.userInfo.num, 
-						'name' : that.model1.userInfo.name ,
-						'ename' : that.model1.userInfo.ename ,
-						'cardNumber' : that.model1.userInfo.cardNumber ,
-						'nation' : that.model1.userInfo.nation ,
-						'sex' : that.model1.userInfo.sex ,
-						'bornTime' : that.model1.userInfo.bornTime ,
-						'bornPlace' : that.model1.userInfo.bornPlace ,
-						'region' : that.model1.addressInfo.region ,
-						'detailAddress' : that.model1.addressInfo.detailAddress ,
-						'zipCode' : that.model1.addressInfo.zipCode ,
-						'profession' : that.model1.workInfo.profession ,
-						'workPlaceName' : that.model1.workInfo.workPlaceName ,
-						'sector' : that.model1.workInfo.sector ,
-						'salaryInterval' : that.model1.workInfo.salaryInterval ,
-						'phonenumber' : that.model1.phonenumber,
+				uni.getStorage({
+					key: 'token',
+					success: function (res) {
+						let _token = res.data
+						uni.showLoading({
+							title: "",
+							mask: true
 						})
+						uni.request({
+								  url: 'https://120.55.37.93/query/cardNumber',  
+								  method: 'POST',  
+								  header: {  
+									'token': _token
+								  },
+								  data: {
+									
+									'verifyCode' : String(e)
+								  },
+								  success: function (res) {
+									uni.hideLoading()
+									uni.navigateTo({
+										url:"/pages/modifyCodePResult/modifyCodePResult",
+										success: function(res){
+											
+											
+										}
+									});
+								  },  
+								  fail: function (error) {
+									uni.hideLoading()  
+									uni.showToast({
+										title: '错误，稍后再试',
+										icon: 'error',
+										duration: 2000
+									})
+								  }  
+								})
 					}
-				});
+				})
+			},
+			getCode() {
+				if(this.$refs.uCode.canGetCode) {
+						            let that = this
+						            uni.getStorage({
+						            	key: 'token',
+						            	success: function (res) {
+						            		let _token = res.data
+						            		uni.showLoading({
+						            			title: "正在获取验证码",
+						            			mask: true
+						            		})
+						            		uni.request({
+						            				  url: 'http://x38h8d.natappfree.cc/sendsms/login',  
+						            				  method: 'GET',  
+						            				  header: {  
+						            					'token': _token
+						            				  },
+						            				  success: function (res) {
+						            					uni.hideLoading()
+														that.$refs.uCode.start()
+						            				  },  
+						            				  fail: function (error) {
+						            					uni.hideLoading()  
+						            				  }  
+						            				})
+						            	}
+						            })
+									   this.$refs.uCode.start()
+								} else {
+									this.$u.toast('倒计时结束后再发送');
+								}
+			},
+			codeChange(text) {
+				this.codeTips = text
 			},
 		}
 	}
