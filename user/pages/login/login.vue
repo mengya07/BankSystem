@@ -82,7 +82,7 @@ export default {
 		onBackPress() {
 			if (this.$refs.fab.isShow) {
 				this.$refs.fab.close()
-				return true
+				return false
 			}
 			return false
 		},  
