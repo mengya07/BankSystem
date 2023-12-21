@@ -190,21 +190,25 @@ export default {
 										});
 									
 									 }
-									 else if(res.data.code=="300")
+									 else if(res.data.code=="110")
 									 {
-										 uni.showToast({
-										 	title:"请输入正确的转账信息",
-										 	icon:"none"
-										 })
-									 }
-									 else {
-										  
-										  
+										
 										  uni.showToast({
 										  	title:"验证码错误",
 										  	icon:"none"
 										  })
 										  
+										 
+									 }
+									 else {
+										 
+										 
+										   uni.showToast({
+										 	title:"请输入正确的转账信息",
+										 	icon:"none"
+										 })
+										  
+										 
 										  
 										}
 								  },  
