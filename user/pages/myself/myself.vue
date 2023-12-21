@@ -151,6 +151,7 @@
 				uni.getStorage({
 					key:'name',
 					success(res) {
+						console.log(res)
 						temp = res.data
 					}
 				})
