@@ -1,5 +1,5 @@
 <template>
-	<view class="title">
+	<!-- <view class="title">
 	
 		<view class="info">
 			填写身份信息
@@ -39,10 +39,10 @@
 		dotDisabled
 		:overlay="false"
 		></u-keyboard>
-		</view>
+		</view> -->
 </template>
 <script>
-import test from '../../../uni_modules/uview-ui/libs/function/test'
+// import test from '../../../uni_modules/uview-ui/libs/function/test'
 	export default{	
 		data() {
 				return {
