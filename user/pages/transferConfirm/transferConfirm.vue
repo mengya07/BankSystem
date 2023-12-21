@@ -200,6 +200,15 @@ export default {
 										  
 										 
 									 }
+									 else if(res.data.code=="3"){
+									 										 								 										 
+									 	  uni.showToast({
+									 	    title:"转账金额已达上限",
+									 		icon:"none"
+									 	  })
+									 	  uni.navigateBack();
+									 										 
+									 										}
 									 else {
 										 
 										 
