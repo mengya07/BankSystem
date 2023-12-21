@@ -6,7 +6,7 @@
 
 		<input class="kahao"  @click="showkey1" v-model="ID_card" maxlength="19" placeholder="请输入银行卡号" />
 		<input class="yhang" @click="bankclick" v-model="institute" maxlength="10" placeholder="请选择银行" />
-	<!-- 	<u-picker :show="showpick" :columns="columns" @cancel="cancel" @confirm="confirm" ></u-picker> -->
+		<uv-picker ref="Upicker" :columns="columns" @cancel="cancel" @confirm="confirm" ></uv-picker>
 		<input class="mima"  @click="showkey2" v-model="password" type="password" maxlength="6" placeholder="请输入取款密码" />
 		<view class="zhichi">
 1.支持中行借记卡、信用卡。
@@ -37,8 +37,6 @@
 		dotDisabled
 		:overlay="false"
 		></u-keyboard>
-		<view>{{this.ID_card}}</view>
-		<view>{{this.password}}</view>
 	</view>
 </template>
 
@@ -74,43 +72,49 @@
 			 	  uni.showToast({
 			 	    title: '密码错误',
 			 })
+			 }else{
+				 let res=/^[0-9]{6}$/
+				 if(res.test(this.password)){
+					 let that=this
+					 uni.getStorage({
+					 	key:"token",
+					 	success(res) {
+					 		let _token=res.data
+					 		uni.request({
+					 			url:'https://120.55.37.93/register/verifyCardAndIdentity',
+					 			method:'POST',
+					 			header:{
+					 				"token" : _token
+					 			},
+					 			data:{
+					 				"cardNumber":that.ID_card,
+					 				"password":that.password
+					 			},
+					 			success(data) {
+					 				console.log(data)
+					 				uni.navigateTo({
+					 					url:'/pages/phoneNumber/phoneNumber'
+					 				})
+					 			}
+					 			// fail(error){
+					 			// 	console.log(error)
+					 			// }
+					 		})
+					 	}
+					 })
+				 }
+				 else{
+					 uni.showModal({
+					 	title:"请输入六位数字密码"
+					 })
+					 this.password=""
+				 }
 			 }
 			//  else if (this.institute.trim() === '') {
 			//     uni.showToast({
 			//       title: '请选择银行',
 			// })
 			// }
-			 
-				let that=this
-				uni.getStorage({
-					key:"token",
-					success(res) {
-						let _token=res.data
-						uni.request({
-							url:'https://120.55.37.93/register/verifyCardAndIdentity',
-							method:'POST',
-							header:{
-								"token" : _token
-							},
-							data:{
-								"cardNumber":that.ID_card,
-								"password":that.password
-							},
-							success(data) {
-								console.log(data)
-								uni.navigateTo({
-									url:'/pages/phoneNumber/phoneNumber'
-								})
-							}
-							// fail(error){
-							// 	console.log(error)
-							// }
-						})
-					}
-				})
-				
-			
-			
 	},
 showkey1(){
 	if(this.show2){
@@ -150,14 +154,14 @@ this.show1=false
 			this.show2=false
 		},
 		cancel(){
-			this.showpick=false
+			this.$refs.Upicker.close();
 		},
 		confirm(index){
 			this.institute=String(index.value)
-			this.showpick=false
+			this.$refs.Upicker.close();
 		},
 		bankclick(){
-			this.showpick=true
+			this.$refs.Upicker.open();
 		}
 	}
 	}
