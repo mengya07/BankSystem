@@ -49,6 +49,7 @@
 			return {
 				codeTips:"",
 				isvisible: false,
+				phoneTail: "",
 				card:{
 					id:"",
 					account:"",
@@ -60,18 +61,6 @@
 			};
 		},
 		computed:{
-			phoneTail: function(){
-				let that = this
-				let temp = ""
-				uni.getStorage({
-					key:'userName',
-					success(res) {
-						console.log(res)
-						temp =  res.data.slice(-4)
-					}
-				})
-				return temp
-			}
 		},
 		methods:{
 			codeChange(text){
@@ -199,6 +188,11 @@
 		},
 		onLoad(option) {
 			let that = this
+			let temp = ""
+			temp = uni.getStorageSync('userName')
+			temp = temp.slice(-4)
+			this.phoneTail = temp
+			console.log(this.phoneTail)
 			const eventChannel = this.getOpenerEventChannel();
 			eventChannel.on('card', function(data) {
 				that.card.id = data.id

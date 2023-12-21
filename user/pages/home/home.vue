@@ -189,8 +189,45 @@ export default {
 				content: "请确认是否退出当前登录账号？",
 				success(res) {
 					if(res.confirm){
-						// getApp().globalData.islogin = false
-						// that.state = false
+						let that = this
+						uni.getStorage({
+							key: 'token',
+							success: function (res) {
+								let _token = res.data
+								uni.showLoading({
+									title: "",
+									mask: true
+								})
+								uni.request({
+										  url: 'https://120.55.37.93/user/logout',  
+										  method: 'GET',
+										  header: {  
+											'token': _token
+										  },
+										  data:{
+										  },
+										  success: function (res) {
+											if(res.data.code == 200){
+												uni.showToast({
+													title:"注销成功"
+												})
+												uni.navigateTo({
+													url:"/pages/login/login"
+												})
+											}
+											uni.hideLoading()
+										  },  
+										  fail: function (error) {  
+											uni.hideLoading()
+											uni.showToast({
+												title: '错误，稍后再试',
+												icon: 'error',
+												duration: 2000
+											}) 
+										  }  
+										})
+							}
+						})
 					}
 				}
 			})
@@ -561,11 +598,11 @@ page {
 		}
 	}
 }
-.pick{
-	width: 95%;
-	padding: 0 2.5vw 2.5vw 2.5vw;
-	background: linear-gradient(to bottom, #ff570a 0%,#ffffff 105%);
-}
+// .pick{
+// 	width: 95%;
+// 	padding: 0 2.5vw 2.5vw 2.5vw;
+// 	background: linear-gradient(to bottom, #ff570a 0%,#ffffff 105%);
+// }
 .banner{
 	image{
 		width: 100%;

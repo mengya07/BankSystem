@@ -5,7 +5,7 @@
 	    <!-- 漂浮头部 -->
 	    <view class="header" :style="{position:headerPosition}">
 	    	<view class="menu">
-	    		<image mode="widthFix" src="../../static/icon/icon_login.svg" @click="clickExit"></image>
+	    		<image mode="widthFix" src="../../static/icon/icon_exit.svg" @click="clickExit"></image>
 	    	</view>
 <!-- 	    	<view v-else class="menu">
 	    		<image mode="widthFix" src="../../static/icon/icon_exit.svg" @click="clickLogin"></image>
@@ -85,6 +85,7 @@
 		data() {
 			return {
 				headerPosition:"fixed",
+				name:"",
 			};
 		},
 		methods:{
@@ -146,17 +147,17 @@
 			// islogin: function(){
 			// 	return getApp().globalData.islogin
 			// },
-			name: function(){
-				let temp = ""
-				uni.getStorage({
-					key:'name',
-					success(res) {
-						console.log(res)
-						temp = res.data
-					}
-				})
-				return temp
-			},
+			// name: function(){
+			// 	let temp = ""
+			// 	uni.getStorage({
+			// 		key:'name',
+			// 		success(res) {
+			// 			console.log(res)
+			// 			temp = res.data
+			// 		}
+			// 	})
+			// 	return temp
+			// },
 			timePeriod: function(){
 				  const now = new Date();  
 				  const hours = now.getHours();  
@@ -170,7 +171,7 @@
 			}
 		},
 		onLoad() {
-
+			this.name = uni.getStorageSync('name')
 		}
 	}
 </script>

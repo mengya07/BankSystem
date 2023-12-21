@@ -65,21 +65,10 @@ export default {
 			transferMessage: '',
 			token: '',
 			phoneNumber: '',
+			phoneTail: "",
         }  
     },  
 	computed:{
-		phoneTail: function(){
-			let that = this
-			let temp = ""
-			uni.getStorage({
-				key:'userName',
-				success(res) {
-					console.log(res)
-					temp =  res.data.slice(-4)
-				}
-			})
-			return temp
-		}
 	},
     methods: {  
     
@@ -236,6 +225,10 @@ export default {
 		
 	},
     onLoad() { 
+		let temp = ""
+		temp = uni.getStorageSync('userName')
+		temp = temp.slice(-4)
+		this.phoneTail = temp
         this.getDataFromStorage();  
 		let value=this.transferData.Amount;
 		this.transferMoney=value.toFixed(2);	
