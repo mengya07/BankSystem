@@ -28,22 +28,20 @@
 			</checkbox-group>
 		</view>
 		<button class="xbu" v-on:click="clickNUM">下一步</button>
-		<u-keyboard 
+		<uv-keyboard 
 		ref="uKeyboard"
 		 mode="card"  
 		 @change="valchange" 
 		 @backspace="backspace" 
-		 :show="show" 
 		 @cancel="Clickclose"
 		@confirm="clickconfirm" 
 		dotDisabled
 		:overlay="false"
-		></u-keyboard>
+		></uv-keyboard>
 		</view>
 </template>
 
 <script>
-//import test from '../../../uni_modules/uview-ui/libs/function/test'
 	export default{	
 		data() {
 				return {
@@ -138,7 +136,7 @@
 						}
 					},
 					showkey(){
-						this.show=true
+						this.$refs.uKeyboard.open();
 					},
 					valchange(val){
 						this.ID+=val
