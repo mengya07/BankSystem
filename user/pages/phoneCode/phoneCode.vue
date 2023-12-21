@@ -144,20 +144,28 @@
               * */ 
              submitFun(){  
 				 let that=this
-                 uni.request({
-                 	url:'https://120.55.37.93/register/bindBankCardForIdentity',
-					method:'POST',
-					header:{
-						"token" : 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1MmRjMmJlYmUyODA0YzQ2YmMyNjFjNjYzZDUyYjI4MCIsInN1YiI6IjExIiwiaXNzIjoicG0iLCJpYXQiOjE3MDMwNTIwMjIsImV4cCI6MTcwMzEzODQyMn0.lpAOlrNRIOF0Ykoc-B6cRDEk-xwthwAwx1WwoYXvBqI',
-					},
-					data:{
-						"phoneNumber":that.newPhone,
-						"verifyCode":that.code
-					},
-					success(data) {
-						console.log(data)
+				 
+				 uni.getStorage({
+				 	key:"token",
+					success(res) {
+						let _token=res.data
+						uni.request({
+							url:'https://120.55.37.93/register/bindBankCardForIdentity',
+											method:'POST',
+											header:{
+												"token" : _token
+											},
+											data:{
+												"phoneNumber":that.newPhone,
+												"verifyCode":that.code
+											},
+											success(data) {
+												console.log(data)
+											}
+						})
 					}
-                 })
+				 })
+               
              },
 			 showkey1(){
 			 this.show1=true

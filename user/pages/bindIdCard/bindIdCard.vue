@@ -82,26 +82,33 @@
 			// }
 			 
 				let that=this
-				uni.request({
-					url:'https://120.55.37.93/register/verifyCardAndIdentity',
-					method:'POST',
-					header:{
-						"token" : 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1MmRjMmJlYmUyODA0YzQ2YmMyNjFjNjYzZDUyYjI4MCIsInN1YiI6IjExIiwiaXNzIjoicG0iLCJpYXQiOjE3MDMwNTIwMjIsImV4cCI6MTcwMzEzODQyMn0.lpAOlrNRIOF0Ykoc-B6cRDEk-xwthwAwx1WwoYXvBqI',
-					},
-					data:{
-						"cardNumber":that.ID_card,
-						"password":that.password
-					},
-					success(data) {
-						console.log(data)
-						uni.navigateTo({
-							url:'/pages/index/phoneNumber/phoneNumber'
+				uni.getStorage({
+					key:"token",
+					success(res) {
+						let _token=res.data
+						uni.request({
+							url:'https://120.55.37.93/register/verifyCardAndIdentity',
+							method:'POST',
+							header:{
+								"token" : _token
+							},
+							data:{
+								"cardNumber":that.ID_card,
+								"password":that.password
+							},
+							success(data) {
+								console.log(data)
+								uni.navigateTo({
+									url:'/pages/phoneNumber/phoneNumber'
+								})
+							}
+							// fail(error){
+							// 	console.log(error)
+							// }
 						})
 					}
-					// fail(error){
-					// 	console.log(error)
-					// }
 				})
+				
 			
 			
 	},

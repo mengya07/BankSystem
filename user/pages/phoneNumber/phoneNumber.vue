@@ -40,7 +40,7 @@
 							//success:function(res){
 								//console.log(res)
 												uni.navigateTo({
-												url:"/pages/index/mima/test/test",
+												url:"/pages/phoneCode/phoneCode",
 												success: function(res){
 													res.eventChannel.emit('setData', that.phoneNUmber)
 												},	
