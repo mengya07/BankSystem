@@ -30,7 +30,7 @@ export default {
 	  handleCardClick(index) {  
 	      // 在这里处理卡片点击事件，card 参数是当前点击的卡片数据 
 		  uni.setStorageSync('tranferCardId',this.datas[index].cardId);
-		  uni.navigateTo({
+		  uni.navigateBack({
 		  	url:'/pages/transfer/transfer'
 		  });
 	      console.log('Card clicked:'+ this.datas[index].cardId);  
