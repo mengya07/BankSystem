@@ -7,6 +7,9 @@ import com.liaoyun.domain.TransferUnit;
 import java.math.BigDecimal;
 
 public interface TransferMoneyService {
+     static final Integer commonTransfer = 0;
+     static final Integer TDCodeTransfer = 1;
+    ResponseResult transferMoney(TransferUnit transferUnit);
+    ResponseResult commonTransferMoney(String verifyCode,TransferUnit transferUnit);
 
-    ResponseResult transferMoney(String verifyCode,TransferUnit transferUnit);
 }

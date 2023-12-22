@@ -1,14 +1,39 @@
 server:
-  port: 80
+#  port: 80
+  port: 443
+  ssl:
+    key-store: classpath:keystore.jks
+    key-store-password: 18177481040
+    key-store-type: JKS
+    key-alias: iot
+
 
 spring:
+  ssl:
+    bundle:
+
+        server:
+          key:
+            alias: "iot"
+          keystore:
+            location: "classpath:iot.p12"
+            password: "18177481040"
+            type: "PKCS12"
   datasource:
-    url: jdbc:mysql://localhost:3306/bank_system?characterEncoding=utf-8&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/bank_system?characterEncoding=utf-8&serverTimezone=UTC
     username: root
-    password: mysql.20231002
+#    password: mysql.20231002
+    password: Mysql.20231002
     driver-class-name: com.mysql.cj.jdbc.Driver
   jackson:
-    date-format: "yyyy-MM-dd"
+    date-format: "yyyy-MM-dd HH:mm:ss"
+#    mvc:
+#        # URL响应地址（Springboot默认为/**)
+#      static-path-pattern: /**
+#    web:
+#      resources:
+#          # 静态文件地址，保留官方内容后，进行追加
+#        static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resources,classpath:/.well-known/pki-validation
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml

@@ -7,17 +7,14 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SimpleTransferTransaction {
-    private int transactionId;
-    private String payerName;
-    private String payerCardNumber;
-    private BigDecimal transferAmount;
+public class SimpleTransactionRecord {
+    private String transactionId;
+    private String counterpartyName;
+    private BigDecimal balance;
+    private BigDecimal amount;
     private byte status;
     private String statusComments;
-    private Date transferTime;
-
 }

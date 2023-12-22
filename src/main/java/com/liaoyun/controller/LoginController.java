@@ -1,6 +1,7 @@
 package com.liaoyun.controller;
 
 
+import com.liaoyun.domain.DomainWithVerifyCode;
 import com.liaoyun.domain.dataBaseType.AccountUserPassword;
 import com.liaoyun.domain.MobilePhoneCode;
 import com.liaoyun.domain.ResponseResult;
@@ -21,12 +22,12 @@ public class LoginController {
     }
 
     @PostMapping("/vcodelogin")
-    public ResponseResult vCodeLogin(@RequestBody MobilePhoneCode mobilePhoneCode){
-        return loginService.loginWithVCode( mobilePhoneCode.getCode(),mobilePhoneCode.getPhoneNumber());
+    public ResponseResult vCodeLogin(@RequestBody DomainWithVerifyCode domainWithVerifyCode){
+        return loginService.loginWithVCode( domainWithVerifyCode.getVerifyCode(),domainWithVerifyCode.getPhoneNumber());
     }
 
     @RequestMapping("/user/logout")
-    @PreAuthorize(value = "hasAuthority('user,unbinduser')")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser','unbinduser')")
     public ResponseResult logout(){
         return loginService.logout();
     }

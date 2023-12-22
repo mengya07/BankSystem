@@ -138,6 +138,6 @@ public class InfoInspecter {
         System.out.println(checkPhoneNumber(("15505819189")));
         System.out.println(checkIdentityCard("36253120040112033X"));
         System.out.println(checkBankCard("6216636109000224342"));
-        System.out.println(checkBankCard("6216636109000220779"));
+        System.out.println(checkBankCard("6216636110000220884"));
     }
 }

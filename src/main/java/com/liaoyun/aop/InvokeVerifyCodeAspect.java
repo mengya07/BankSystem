@@ -55,7 +55,7 @@ public class InvokeVerifyCodeAspect {
         String redisVerifyCode = redisCache.getCacheObject("vCode." + phoneNumber + ":");
         String verifyCode = (String)args[0];
         if(Objects.isNull(redisVerifyCode) || !redisVerifyCode.equals(verifyCode)){
-            return new ResponseResult<>(1,"验证码错误");
+            return new ResponseResult<>(110,"验证码错误");
         }
         try {
             //调用被增强方法
@@ -65,7 +65,7 @@ public class InvokeVerifyCodeAspect {
             throw new RuntimeException(e);
         }
         //操作成功后把验证码删除
-//        redisCache.deleteObject("vCode." + phoneNumber + ":");
+        redisCache.deleteObject("vCode." + phoneNumber + ":");
         return (ResponseResult) proceed;
     }
 

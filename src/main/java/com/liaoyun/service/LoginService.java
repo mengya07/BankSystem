@@ -9,5 +9,7 @@ public interface LoginService {
 
     ResponseResult loginWithVCode(String phoneNumber,String vCode);
 
+    ResponseResult loginAfterRegister(String phoneNumber);
+
     ResponseResult logout();
 }

@@ -20,10 +20,10 @@ public class TransferMoneyController {
     @Autowired
     TokenToId tokenToId;
     @PostMapping("/user/transferMoney")
-    @PreAuthorize(value = "hasAuthority('user')")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
     public ResponseResult  TransferMoney(@RequestBody DomainWithVerifyCode domainWithVerifyCode, HttpServletRequest request) throws Exception {
         TransferUnit transferUnit = JSONObject.parseObject(JSONObject.toJSONString(domainWithVerifyCode.getPojo()), TransferUnit.class);
         transferUnit.setSenderCustomerId(tokenToId.toCustomerId(request));
-        return transferMoneyService.transferMoney(domainWithVerifyCode.getVerifyCode(),transferUnit);
+        return transferMoneyService.commonTransferMoney(domainWithVerifyCode.getVerifyCode(),transferUnit);
     }
 }

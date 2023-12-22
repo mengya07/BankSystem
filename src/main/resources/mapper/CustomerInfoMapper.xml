@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liaoyun.mapper.CustomerInfoMapper">
+    <update id="updateCustomerInfo">
+        update customer
+        set
+        nationality = #{customerInfo.nationality},date_of_birth = #{customerInfo.dateOfBirth}, place_of_birth = #{customerInfo.placeOfBirth},
+        provinces_city = #{customerInfo.provincesCity}, detailed_address = #{customerInfo.detailedAddress}, postal_code = #{customerInfo.postalCode},
+        profession =#{customerInfo.profession}, work_of_unit = #{customerInfo.workOfUnit}, industry_of_the_organization = #{customerInfo.industryOfTheOrganization},
+        sex =
+        <if test ="customerInfo.sex =''">
+             '1',
+        </if>
+        <if test ="customerInfo.sex == '女'">
+             '0',
+        </if>
+        income_range = #{customerInfo.incomeRange}
+        where customer_id = #{customerId}
+    </update>
+
+
+    <select id="selectCustomerInfo" resultType="com.liaoyun.domain.dataBaseType.CustomerInfo">
+            select customer_id, surname, is_active,
+            CASE
+                when char_length(name) > 1 then concat('*', RIGHT(name, 1))
+                else '*'
+            end as name,
+            CONCAT(LEFT(spell_name,1),'*****',RIGHT(spell_name,1)) as spellName,
+            CONCAT(LEFT(identity_card,1),'****************',RIGHT(identity_card,1)) as identityCard,
+            nationality, date_of_birth, place_of_birth, provinces_city, detailed_address, postal_code,
+            profession, work_of_unit, industry_of_the_organization, income_range, phone_number, nation,
+            case
+            when sex = '1' then '男'
+            when sex = '0' then '女'
+            end as sex
+            from customer
+            where customer_id = #{customerId}
+    </select>
+</mapper>

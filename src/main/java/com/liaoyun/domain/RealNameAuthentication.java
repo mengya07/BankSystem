@@ -12,8 +12,9 @@ public class RealNameAuthentication {
     private String surname;
     private String name;
     private String identityCard;
-    private int customerId;
-    private int cardId;
+    private String reservePhoneNumber;
+    private Integer customerId;
+    private Integer cardId;
 
 
 }

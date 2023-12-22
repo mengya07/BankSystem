@@ -12,13 +12,13 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransferRecordQueryConditions {
-    private int cardId;
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private Integer cardId;
+    private Timestamp startTime;
+    private Timestamp endTime;
     private BigDecimal miniAmount;
     private BigDecimal maxAmount;
     private String payeeName;
-    private String payeePhoneNumber;
+    private String payeeCardNumber;
     private byte status;
     private boolean payeeLimit;
 }

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liaoyun.mapper.TransactionRecordMapper">
+
+    <insert id="insertTransferTransaction">
+        insert into transfer_transaction (transaction_id,sender_customer_id,sender_card_id,sender_card_number, sender_card_balance,sender_name,
+                receiver_customer_id,receiver_card_id, receiver_card_number, receiver_card_balance,receiver_name,amount,transfer_time,status,postscript)
+        values (#{transactionId},#{senderCustomerId},#{senderCardId},#{senderCardNumber},#{senderBalance},
+                #{senderName},#{receiverCustomerId},#{receiverCardId},#{receiverCardNumber},#{receiverBalance},
+                #{receiverName},#{amount},#{transferTime},#{status},#{postscript})
+    </insert>
+    <select id="selectTransferRecordPages"
+            resultType="com.liaoyun.domain.responseType.SimpleTransferRecord">
+            select tt.transaction_id as transactionId, bc.card_holder_name as payerName ,
+            tt.amount as transferAmount,tt.status as status,tt.transfer_time as transferTime,
+            right(bc.card_number, 4) as payerCardNumber,
+            if(tt.status = 1, '交易成功', '交易失败') as statusComments
+            from transfer_transaction as tt
+            join bank_card as bc on tt.sender_card_id = bc.card_id
+            where tt.sender_card_id in
+            <foreach collection="idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+            and tt.transfer_time between #{queryConditions.startTime} and #{queryConditions.endTime}
+            and tt.amount between #{queryConditions.miniAmount} and #{queryConditions.maxAmount}
+            <if test="queryConditions.payeeName != null">
+                and receiver_name = #{queryConditions.payeeName}
+            </if>
+            <if test="queryConditions.payeeCardNumber != null">
+                and receiver_card_number = #{queryConditions.payeeCardNumber}
+            </if>
+            <if test="queryConditions.status != 0">
+                and status = #{queryConditions.status}
+            </if>
+            order by tt.transfer_time desc
+    </select>
+    <select id="selectTransactionRecordPages"
+            resultType="com.liaoyun.domain.responseType.SimpleTransactionRecord">
+        select transaction_id as transactionId, transfer_time,
+        case
+            when sender_customer_id = #{customerId} then receiver_name
+            when receiver_customer_id = #{customerId} then sender_name
+        end as counterpartyName,
+        case
+            when sender_customer_id = #{customerId} then sender_card_balance
+            when receiver_customer_id = #{customerId} then receiver_card_balance
+        end as balance,
+        case
+        when sender_customer_id = #{customerId} then -amount
+        when receiver_customer_id = #{customerId} then amount
+        end as amount,
+        case
+            when sender_customer_id = #{customerId} then '转账支出'
+            when receiver_customer_id = #{customerId} then '转账收入'
+        end as statusComments
+        from transfer_transaction
+        where
+            (sender_customer_id = #{customerId} or receiver_customer_id = #{customerId})and
+            transfer_time between #{queryConditions.startTime} and #{queryConditions.endTime}
+            and amount between #{queryConditions.miniAmount} and #{queryConditions.maxAmount}
+            and status = 1
+            <if test="queryConditions.payeeName != null">
+                and receiver_name = #{queryConditions.payeeName}
+            </if>
+            <if test="queryConditions.payeeCardNumber != null">
+                and receiver_card_number = #{queryConditions.payeeCardNumber}
+            </if>
+            <if test="queryConditions.status == 1">
+                and sender_customer_id = #{customerId}
+            </if>
+            <if test="queryConditions.status == 2">
+                and receiver_customer_id = #{customerId}
+            </if>
+            order by transfer_time desc
+    </select>
+
+    <select id="selectTransferDetails" resultType="com.liaoyun.domain.responseType.TransferRecordDetails">
+        select sender_card_id ,sender_name, receiver_name,
+               amount , postscript, transaction_id, status , transfer_time,
+               CONCAT(
+                   LEFT(sender_card_number, 4),
+                       REPEAT('*', CHAR_LENGTH(sender_card_number) - 8),
+                   RIGHT(sender_card_number, 4)
+                ) AS sender_card_number,
+               CONCAT(
+                   LEFT(receiver_card_number, 4),
+                       REPEAT('*', CHAR_LENGTH(receiver_card_number) - 8),
+                   RIGHT(receiver_card_number, 4)
+                ) AS receiver_card_number
+            from transfer_transaction
+            where transaction_id = #{transactionId} and sender_customer_id = #{customerId}
+    </select>
+    <select id="selectTransactionDetails" resultType="com.liaoyun.domain.responseType.TransactionRecordDetails">
+        select amount, postscript,transfer_time, transaction_id,
+            case
+            when sender_customer_id = #{customerId} then
+                CONCAT(
+                LEFT(sender_card_number, 4),
+                    REPEAT('*', CHAR_LENGTH(sender_card_number) - 8),
+                RIGHT(sender_card_number, 4)
+                )
+            when receiver_customer_id = #{customerId} then
+                CONCAT(
+                    LEFT(receiver_card_number, 4),
+                        REPEAT('*', CHAR_LENGTH(receiver_card_number) - 8),
+                    RIGHT(receiver_card_number, 4)
+                )
+            end as transactionAccount,
+            case
+                when sender_customer_id = #{customerId} then
+                    CONCAT(
+                        LEFT(receiver_card_number, 4),
+                            REPEAT('*', CHAR_LENGTH(receiver_card_number) - 8),
+                        RIGHT(receiver_card_number, 4)
+                )
+                when receiver_customer_id = #{customerId} then
+                    CONCAT(
+                        LEFT(sender_card_number, 4),
+                            REPEAT('*', CHAR_LENGTH(sender_card_number) - 8),
+                        RIGHT(sender_card_number, 4)
+                )
+            end as counterpartyAccount,
+            case
+                when sender_customer_id = #{customerId} then receiver_name
+                when receiver_customer_id = #{customerId} then sender_name
+            end as counterpartyName,
+            case
+                when sender_customer_id = #{customerId} then sender_card_balance
+                when receiver_customer_id = #{customerId} then receiver_card_balance
+            end as balance,
+            case
+            when sender_customer_id = #{customerId} then '转账支出（人民币元）'
+            when receiver_customer_id = #{customerId} then '转账收入（人民币元）'
+            end as statusComments
+            from transfer_transaction
+        where transaction_id = #{transactionId} and status != '2' and(sender_customer_id = #{customerId} or receiver_customer_id = #{customerId})
+    </select>
+    <select id="selectMonthlyCheck" resultType="com.liaoyun.domain.responseType.MonthlyCheck">
+        SELECT
+            DATE_FORMAT(transfer_time, '%Y-%m') AS yearMonth,
+    SUM(CASE WHEN sender_customer_id = #{customerId} THEN amount ELSE 0 END) AS outcome,
+    SUM(CASE WHEN receiver_customer_id = #{customerId}  THEN amount ELSE 0 END) AS income
+        FROM
+            transfer_transaction
+        WHERE
+            (sender_customer_id = #{customerId} OR receiver_customer_id = #{customerId}) and status = 1
+        GROUP BY
+            yearMonth
+        ORDER BY
+            yearMonth DESC;
+    </select>
+</mapper>

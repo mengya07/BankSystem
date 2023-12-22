@@ -26,4 +26,9 @@ public class BankCardInfo {
         this.cardId = cardId;
         this.cardNumber = cardNumber;
     }
+
+    public BankCardInfo(String cardNumber, String cardHolderName) {
+        this.cardNumber = cardNumber;
+        this.cardHolderName = cardHolderName;
+    }
 }

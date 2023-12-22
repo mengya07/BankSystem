@@ -4,6 +4,7 @@ import com.liaoyun.domain.dataBaseType.AccountUserPassword;
 import com.liaoyun.domain.LoginUserDetail;
 import com.liaoyun.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

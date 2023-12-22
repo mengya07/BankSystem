@@ -29,6 +29,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
@@ -55,7 +56,9 @@ public class WebSecurityConfig {
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/login","/register","/sendsms/nologin","vcodelogin").anonymous()
+                        .requestMatchers(new AntPathRequestMatcher("/static/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/.well-known/**")).permitAll()
+                        .requestMatchers("/login","/register/appAccount","/sendsms/nologin","vcodelogin").anonymous()
                         .anyRequest().authenticated()
                 )
                 .logout((logout) -> logout.permitAll());
@@ -81,5 +84,6 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
 
 }
