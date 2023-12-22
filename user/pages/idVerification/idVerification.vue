@@ -127,6 +127,7 @@
 			},
 			clickbuttom(){
 				this.$refs.picker.open();
+				uni.hideKeyboard();
 			},
 			handleChange(e) {
 						if(this.ifchecked){

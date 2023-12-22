@@ -116,7 +116,7 @@
 		margin: 40px 50px 40px 10px;
 		left:4%;
 		position: fixed;
-		bottom:520px;
+		top:280px;
 	}
 	.xiansi{
 		color: red;
@@ -124,7 +124,7 @@
 		margin: 10px 15px 40px 10px;
 	}
 	.uni-list{
-		bottom: 510px;
+		top: 270px;
 		position:fixed;
 		margin:5px 15px 10px 15px ;
 	}

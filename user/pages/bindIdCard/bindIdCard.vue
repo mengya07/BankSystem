@@ -162,6 +162,7 @@ this.show1=false
 		},
 		bankclick(){
 			this.$refs.Upicker.open();
+			uni.hideKeyboard();
 		}
 	}
 	}
