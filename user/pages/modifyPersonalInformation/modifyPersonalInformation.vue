@@ -1,26 +1,20 @@
 <template>
-	<view style="margin-left: 20rpx;">
+	<view style="margin-left: 20rpx; margin-top: 20rpx;">
 		<text>基本信息</text>
 		<uv-form :model="model1" :rules="rule1" ref="form1" style="background: white; margin-right: 20rpx;">
-			<uv-form-item label="电子银行客户序号" label-width="100rpx" prop="userInfo.number" :borderBottom="true">
+			<uv-form-item label="电子银行客户序号" label-width="150rpx" prop="userInfo.number" :borderBottom="true">
 				<uv-input v-model="model1.userInfo.num" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true" input-align="right"></uv-input>
 			</uv-form-item>
-			<uv-form-item label="姓名" label-width="100rpx" prop="userInfo.name" :borderBottom="true">
+			<uv-form-item label="姓名" label-width="150rpx" prop="userInfo.name" :borderBottom="true">
 				<uv-input v-model="model1.userInfo.name" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true" input-align="right"></uv-input>
 			</uv-form-item>
-			<uv-form-item label="英文/拼音姓名" label-width="100rpx" prop="userInfo.ename" :borderBottom="true">
+			<uv-form-item label="英文/拼音姓名" label-width="150rpx" prop="userInfo.ename" :borderBottom="true">
 				<uv-input v-model="model1.userInfo.ename" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true" input-align="right"></uv-input>
 			</uv-form-item>
-			<uv-form-item label="证件类型" label-width="100rpx" prop="userInfo.cardType" :borderBottom="true">
-				<uv-input v-model="model1.userInfo.cardType" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true" input-align="right"></uv-input>
-			</uv-form-item>
-			<uv-form-item label="证件号码" label-width="100rpx" prop="userInfo.cardNumber" :borderBottom="true">
+			<uv-form-item label="证件号码" label-width="150rpx" prop="userInfo.cardNumber" :borderBottom="true">
 				<uv-input v-model="model1.userInfo.cardNumber" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true" input-align="right"></uv-input>
 			</uv-form-item>
-			<uv-form-item label="国家/地区" label-width="100rpx" prop="userInfo.country" :borderBottom="true">
-				<uv-input v-model="model1.userInfo.country" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true" input-align="right"></uv-input>
-			</uv-form-item>
-			<uv-form-item label="民族" label-width="100rpx" prop="userInfo.nation" :borderBottom="true" ref="item1" @click="showNationSelect">
+			<uv-form-item label="民族" label-width="150rpx" prop="userInfo.nation" :borderBottom="true" ref="item1" @click="showNationSelect">
 				<uv-input v-model="model1.userInfo.nation" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -28,7 +22,7 @@
 					></uv-icon>
 				</template>
 			</uv-form-item>
-			<uv-form-item label="性别" label-width="100rpx" prop="userInfo.sex" :borderBottom="true" @click="showSexSelect" ref="item2" >
+			<uv-form-item label="性别" label-width="150rpx" prop="userInfo.sex" :borderBottom="true" @click="showSexSelect" ref="item2" >
 				<uv-input v-model="model1.userInfo.sex" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" :readonly="true" input-align="right"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -36,7 +30,7 @@
 					></uv-icon>
 				</template>
 			</uv-form-item>
-			<uv-form-item label="出生日期" label-width="100rpx" prop="userInfo.bornTime" :borderBottom="true" ref="item3">
+			<uv-form-item label="出生日期" label-width="150rpx" prop="userInfo.bornTime" :borderBottom="true" ref="item3" @click="showBornTimeSelect">
 				<uv-input v-model="model1.userInfo.bornTime" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -44,38 +38,8 @@
 					></uv-icon>
 				</template>
 			</uv-form-item>
-			<uv-form-item label="出生地" label-width="100rpx" prop="userInfo.bornPlace" :borderBottom="true">
+			<uv-form-item label="出生地" label-width="150rpx" prop="userInfo.bornPlace" :borderBottom="true">
 				<uv-input v-model="model1.userInfo.bornPlace" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right"></uv-input>
-			</uv-form-item>
-		</uv-form>
-	</view>
-	
-	<view style="margin-left: 20rpx; margin-top: 20rpx; margin-right: 20rpx;">
-		<text>证件地址信息</text>
-		<uv-form :model="model1" :rules="rule1" ref="form2" style="background: white;">
-			<uv-form-item label="国家/地区" label-width="100rpx" prop="cardInfo.country" :borderBottom="true" @click="showCountrySelect">
-				<uv-input v-model="model1.cardInfo.country" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
-				<template v-slot:right>
-					<uv-icon
-						name="arrow-right"
-					></uv-icon>
-				</template>
-			</uv-form-item>
-			<uv-form-item label="省/市/区" label-width="100rpx" prop="cardInfo.region" :borderBottom="true">
-				<uv-input v-model="model1.cardInfo.region" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
-				<template v-slot:right>
-					<uv-icon
-						name="arrow-right"
-					></uv-icon>
-				</template>
-			</uv-form-item>
-			<uv-form-item label="详细地址" label-width="100rpx" prop="cardInfo.detailAddress" :borderBottom="true">
-				<uv-input v-model="model1.cardInfo.detailAddress" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
-				<template v-slot:right>
-					<uv-icon
-						name="arrow-right"
-					></uv-icon>
-				</template>
 			</uv-form-item>
 		</uv-form>
 	</view>
@@ -83,26 +47,13 @@
 	<view style="margin-left: 20rpx; margin-top: 20rpx; margin-right: 20rpx;">
 		<text>本人常住地址信息</text>
 		<uv-form :model="model1" :rules="rule1" ref="form3" style="background: white;">
-			<uv-form-item label="国家/地区" label-width="100rpx" prop="addressInfo.country" :borderBottom="true">
-				<uv-input v-model="model1.addressInfo.country" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
-				<template v-slot:right>
-					<uv-icon
-						name="arrow-right"
-					></uv-icon>
-				</template>
+			<uv-form-item label="省/市/区" label-width="150rpx" prop="addressInfo.region" :borderBottom="true">
+				<uv-input v-model="model1.addressInfo.region" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true"></uv-input>
 			</uv-form-item>
-			<uv-form-item label="省/市/区" label-width="100rpx" prop="addressInfo.region" :borderBottom="true">
-				<uv-input v-model="model1.addressInfo.region" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
-				<template v-slot:right>
-					<uv-icon
-						name="arrow-right"
-					></uv-icon>
-				</template>
-			</uv-form-item>
-			<uv-form-item label="详细地址" label-width="100rpx" prop="addressInfo.detailAddress" :borderBottom="true">
+			<uv-form-item label="详细地址" label-width="150rpx" prop="addressInfo.detailAddress" :borderBottom="true">
 				<uv-input v-model="model1.addressInfo.detailAddress" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right"></uv-input>
 			</uv-form-item>
-			<uv-form-item label="邮编" label-width="100rpx" prop="addressInfo.zipCode" :borderBottom="true">
+			<uv-form-item label="邮编" label-width="150rpx" prop="addressInfo.zipCode" :borderBottom="true">
 				<uv-input v-model="model1.addressInfo.zipCode" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right"></uv-input>
 			</uv-form-item>
 		</uv-form>
@@ -111,7 +62,7 @@
 	<view style="margin-left: 20rpx; margin-top: 20rpx;">
 		<text>工作信息</text>
 		<uv-form :model="model1" :rules="rule1" ref="form4" style="background: white;">
-			<uv-form-item label="职业" label-width="100rpx" prop="workInfo.profession" :borderBottom="true">
+			<uv-form-item label="职业" label-width="150rpx" prop="workInfo.profession" :borderBottom="true">
 				<uv-input v-model="model1.workInfo.profession" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -119,13 +70,10 @@
 					></uv-icon>
 				</template>
 			</uv-form-item>
-			<uv-form-item label="工作单位名称" label-width="100rpx" prop="workInfo.workPlaceName" :borderBottom="true">
+			<uv-form-item label="工作单位名称" label-width="150rpx" prop="workInfo.workPlaceName" :borderBottom="true">
 				<uv-input v-model="model1.workInfo.workPlaceName" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right"></uv-input>
 			</uv-form-item>
-			<uv-form-item label="学校名称" label-width="100rpx" prop="workInfo.schoolName" :borderBottom="true">
-				<uv-input v-model="model1.workInfo.schoolName" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right"></uv-input>
-			</uv-form-item>
-			<uv-form-item label="单位所属行业" label-width="100rpx" prop="workInfo.sector" :borderBottom="true">
+			<uv-form-item label="单位所属行业" label-width="150rpx" prop="workInfo.sector" :borderBottom="true">
 				<uv-input v-model="model1.workInfo.sector" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -133,7 +81,7 @@
 					></uv-icon>
 				</template>
 			</uv-form-item>
-			<uv-form-item label="个人月收入区间" label-width="100rpx" prop="workInfo.salaryInterval" :borderBottom="true">
+			<uv-form-item label="个人月收入区间" label-width="150rpx" prop="workInfo.salaryInterval" :borderBottom="true">
 				<uv-input v-model="model1.workInfo.salaryInterval" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -147,7 +95,7 @@
 	<view style="margin-left: 20rpx; margin-top: 20rpx; margin-right: 20rpx;">
 		<text>联系信息</text>
 		<uv-form :model="model1" :rules="rule1" ref="form5" style="background: white;">
-			<uv-form-item label="手机号码" label-width="100rpx" prop="phonenumber" :borderBottom="true">
+			<uv-form-item label="手机号码" label-width="150rpx" prop="phonenumber" :borderBottom="true">
 				<uv-input v-model="model1.phonenumber" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -157,7 +105,9 @@
 			</uv-form-item>
 		</uv-form>
 	</view>
-	
+	<view>
+		<button style="color: white; background-color: blue;" @click="turnToNext">下一步</button>
+	</view>
 	<uv-action-sheet
 		ref="sexSelect"
 		:actions="sexes"
@@ -177,50 +127,79 @@
 		@confirm="setCountry"
 	></uv-picker>
 	
+	<uv-picker
+		ref="statePicker"
+		:columns="state"
+		@confirm="setState"
+	></uv-picker>
+	
+	<uv-picker
+		ref="countriPicker"
+		:columns="countries"
+		@confirm="setCountri"
+	></uv-picker>
+	
+	<uv-picker
+		ref="regionPicker"
+		:columns="state"
+		@confirm="setRegion"
+	></uv-picker>
+	
+	<uv-datetime-picker 
+		ref="BornTimePicker"
+		mode="date"
+		v-model="pickDate"
+		@change="bornTimeChange"
+		:formatter="formatter"
+		@confirm="setBornTimeChange"
+	></uv-datetime-picker>
 </template>
 
 <script>
+import { date, number } from '../../uni_modules/uv-ui-tools/libs/function/test'
 	export default {
 		data() {
 			return {
 				model1: {
 					userInfo: {
-						num: '123456',
-						name: '张三',
-						ename: 'zhangsan',
-						cardType: '居民身份证',
-						cardNumber: '3****************X',
-						country: '中国',
-						nation: '汉族',
-						sex: '男',
-						bornTime: '2001/01/01',
-						bornPlace: '1',
+						num: '',
+						name: '',
+						ename: '',
+						cardType: '',
+						cardNumber: '',
+						country: '',
+						nation: '',
+						sex: '',
+						bornTime: '',
+						bornPlace: '',
 					},
 					
 					cardInfo: {
-						country: '1',
-						region: '1',
-						detailAddress: '1',
+						country: '',
+						region: '',
+						detailAddress: '',
 					},
 					
 					addressInfo: {
-						country: '1',
-						region: '1',
-						detailAddress: '1',
-						zipCode: '1',
+						country: '',
+						region: '',
+						detailAddress: '',
+						zipCode: '',
 					},
 					
 					workInfo: {
-						profession: '1',
-						workPlaceName: '1',
-						schoolName: '1',
-						sector: '1',
-						salaryInterval: '0-1000',
+						profession: '',
+						workPlaceName: '',
+						schoolName: '',
+						sector: '',
+						salaryInterval: '',
 					},
 					
-					phonenumber: '1',
+					phonenumber: '',
 					
 				},
+				
+				pickDate: '',
 				
 				rule1: {
 					'userInfo.num': {
@@ -235,11 +214,19 @@
 						trigger: ['change'],
 						message: '姓名不能为空'
 					},
-					
+	
 					'userInfo.sex': {
 						tpye: 'string',
 						required: true,
 						trigger: ['change'],
+					},
+					
+					'addressInfo.zipCode': {
+						tpye: 'number',
+						require: true,
+						trigger: ['change'],
+						len: 6,
+						message: '请输入6位的有效邮编'
 					},
 				},
 				
@@ -463,51 +450,198 @@
 							'坦桑尼亚联合共和国（坦桑尼亚）',
 							'泰国王国（泰国）',
 							'前南斯拉夫的马其顿共和国（马其顿）',
+					],
+				],
+				
+				state: [
+					[
+						'北京市',
+						  '天津市',
+						  '上海市',
+						  '重庆市',
+						  '河北省',
+						  '山西省',
+						  '辽宁省',
+						  '吉林省',
+						  '黑龙江省',
+						  '江苏省',
+						  '浙江省',
+						  '安徽省',
+						  '福建省',
+						  '江西省',
+						  '山东省',
+						  '河南省',
+						  '湖北省',
+						  '湖南省',
+						  '广东省',
+						  '海南省',
+						  '四川省',
+						  '贵州省',
+						  '云南省',
+						  '陕西省',
+						  '甘肃省',
+						  '青海省',
+						  '台湾省',
+						  '内蒙古自治区',
+						  '广西壮族自治区',
+						  '宁夏回族自治区',
+						  '新疆维吾尔自治区',
+						  '西藏自治区',
+						  '香港特别行政区',
+						  '澳门特别行政区',
+					],
+				],
+				
+				career: [
+					[
+						'中国共产党中央委员会和地方各级组织负责人',
+						'国家机关及其工作机构负责人',
+						'民主党派，社会团体及工作机构负责人',
+						'事业单位负责人',
+						'企业负责人',
+						'科学研究人员',
+						'工程技术（计算机）人员',
+						'农业技术人员',
+						'飞行和船舶技术等人员',
+						'卫生专业技术人员',
+						'经济业务人员（不含会计师）',
+						'会计师',
+						'金融业务人员（不含律师）',
+						'律师',
+						'教学人员',
+						'文学艺术工作人员',
+						'体育工作人员',
+						'新闻出版，文化工作人员',
+						'其他专业技术人员',
+						'行政办公人员',
+						'安全保卫和消防工作人员',
+						'邮电和电信业务人员',
+						'事业单位员工',
+						'其他办事人员和有关人员',
+						'商业，服务业人员',
+						'农，林，牧，渔，水利业生产人员',
+						'生产，运输设备操作人员及有关人员',
+						'军人',
+						'学生',
+						'外交人员',
+						'私营业主',
+						'退休人员',
+						'家庭主妇',
+						'无职业活动人员（不含退休人员，家庭主妇）',
+					],
+				],
+				
+				sector: [
+					[
+						'农，林，牧，渔业',
+						'采矿业',
+						'制造业',
+						'电力，热力，燃气及水生产和供应业',
+						'建筑业',
+						'批发和零售业（不含贸易代理）',
+						'贸易代理',
+						'交通运输，仓储和邮政业',
+						'住宿和餐饮业',
+						'信息传输，软件和信息技术服务业',
+						'金融业',
+						'房地产业',
+						'租赁业',
+						'商务服务业',
+						'法律服务',
+						'会计，审计及税务服务',
+						'旅行社及相关服务',
+						'科学研究和技术服务业',
+						'水利，环境和公共设施管理业',
+						'居民服务，修理和其他服务业',
+						'教育',
+						'卫生和社会工作',
+						'文化，体育和娱乐业',
+						'公共管理，社会保障和社会组织',
+						'国际组织',
+						'其他未包含的行业',
 					]
-				]
+				],
+				
+				incomeRage: [
+					[
+						'0-4999',
+						'5000-19999',
+						'20000-49999',
+						'50000-99999',
+						'100000以上',
+					]
+				],
+				
+				
 			}
 		},
 		
 		onReady() {
-			// 如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则
-			this.$refs.form1.setRules(this.rule1)
-			// 获取数据
 			let that = this
-			uni.getStorage({
-				key: 'token',
-				success: function (res) {
-					console.log(res.data)
-					let _token = res.data
-					uni.request({
-							  url: 'http://vpqs7u.natappfree.cc/query/transferRecord?pageNum=0&pageSize=5',  
-							  method: 'POST',  
-							  header: {  
-								'token': _token
-							  },
-							  data:{
+			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则
+			this.$refs.form1.setRules(this.rule1)
+			// // 获取数据
+			// let that = this
+			// uni.getStorage({
+			// 	key: 'token',
+			// 	success: function (res) {
+			// 		console.log(res.data)
+			// 		let _token = res.data
+			// 		uni.request({
+			// 				  url: 'http://vpqs7u.natappfree.cc/query/transferRecord?pageNum=0&pageSize=5',  
+			// 				  method: 'POST',  
+			// 				  header: {  
+			// 					'token': _token
+			// 				  },
+			// 				  data:{
 								
-							  },
-							  success: function (res) {
-								console.log(res)
-								res.data.data.list.forEach(item=>{
-									let temp = {"tailNumber":"","transferDate":"","transferNum":"","otherAccount":""}
-									temp.tailNumber = item.payerName
-									temp.transferDate = item.transferAmount
-									temp.date = item.transferTime
-									temp.class = item.statusComments
-									that.transferRecodes.push(temp)
-								})
-							  },  
-							  fail: function (error) {  
-								console.log("寄咯");  
-							  }  
-							})
-				},
-				fail: function(error) {
-				            console.log("获取token失败", error);
-				        }
+			// 				  },
+			// 				  success: function (res) {
+			// 					console.log(res)
+			// 					res.data.data.list.forEach(item=>{
+			// 						let temp = {"tailNumber":"","transferDate":"","transferNum":"","otherAccount":""}
+			// 						temp.tailNumber = item.payerName
+			// 						temp.transferDate = item.transferAmount
+			// 						temp.date = item.transferTime
+			// 						temp.class = item.statusComments
+			// 						that.transferRecodes.push(temp)
+			// 					})
+			// 				  },  
+			// 				  fail: function (error) {  
+			// 					console.log("寄咯");  
+			// 				  }  
+			// 				})
+			// 	},
+			// 	fail: function(error) {
+			// 	            console.log("获取token失败", error);
+			// 	        }
+			// });
+		},
+		
+		onLoad() {
+			let that = this
+			const eventChannel = this.getOpenerEventChannel();
+			eventChannel.on('personalInformation', (data) => {
+							that.model1.userInfo.num = data.num
+							that.model1.userInfo.name = data.name
+							that.model1.userInfo.ename = data.ename
+							that.model1.userInfo.cardNumber = data.cardNumber
+							that.model1.userInfo.nation = data.nation
+							that.model1.userInfo.sex = data.sex
+							that.model1.userInfo.bornTime = data.bornTime
+							that.model1.userInfo.bornPlace = data.bornPlace
+							that.model1.addressInfo.region = data.region
+							that.model1.addressInfo.detailAddress = data.detailAddress
+							that.model1.addressInfo.zipCode = data.zipCode
+							that.model1.workInfo.profession = data.profession
+							that.model1.workInfo.workPlaceName = data.workPlaceName
+							that.model1.workInfo.sector = data.sector
+							that.model1.workInfo.salaryInterval = data.salaryInterval
+							that.model1.phonenumber = data.phonenumber
+					
 			});
 		},
+		
 		methods: {
 			// 性别选择
 			showSexSelect() {
@@ -548,8 +682,122 @@
 				this.hideKeyboard();
 			},
 			
-		}
-	}
+			setState(e) {
+				this.model1.cardInfo.region = e.value[0]
+				this.$refs.form2.validateField('cardInfo.region')
+			},
+			
+			showStateSelect() {
+				this.$refs.statePicker.open();
+				this.hideKeyboard();
+			},
+			
+			setCountri(e) {
+				this.model1.addressInfo.country = e.value[0]
+				this.$refs.form2.validateField('addressInfo.country')
+			},
+			
+			showCountriSelect() {
+				this.$refs.countriPicker.open();
+				this.hideKeyboard();
+			},
+		
+			setRegion(e) {
+				this.model1.addressInfo.region = e.value[0]
+				this.$refs.form2.validateField('addressInfo.region')
+			},
+			showRegionSelect() {
+				this.$refs.regionPicker.open();
+				this.hideKeyboard();
+			},
+			
+			showBornTimeSelect() {
+				this.$refs.BornTimePicker.open();
+				this.hideKeyboard();
+			},
+			
+			
+			bornTimeChange(e) {
+				// this.model1.userInfo.bornTime = e
+				// this.$refs.form1.validateField('userInfo.bornTime')
+				let date = new Date(e.value).getFullYear() + "/" + (new Date(e.value).getMonth() + 1) + "/" + new Date(e.value).getDate()
+				const [year, month, day] = date.split('/')
+				const formattedMonth = month < 10 ? '0' + month : month
+				const formattedDay = day < 10 ? '0' + day : day
+				date = `${year}/${formattedMonth}/${formattedDay}`
+				if(date > this.currentDate()){
+					uni.showToast({
+						title:"超过当前日期",
+						icon:"error"
+					})
+					this.pickDate = this.currentDate()
+				}
+				console.log(this.pickDate)
+				// this.model1.userInfo.bornTime = 
+			},
+			
+			currentDate() {
+				let date = new Date().getFullYear() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getDate()
+				const [year, month, day] = date.split('/')
+				const formattedMonth = month < 10 ? '0' + month : month
+				const formattedDay = day < 10 ? '0' + day : day
+				return `${year}/${formattedMonth}/${formattedDay}`
+			},
+			
+			formatter(type, value) {
+				if (type === 'year') {
+					return `${value}年`
+				}
+				if (type === 'month') {
+					return `${value}月`
+				}
+				if (type === 'day') {
+					return `${value}日`
+				}
+				return value 
+			},	
+			
+			setBornTimeChange(e) {
+				let date = new Date(e.value).getFullYear() + "/" + (new Date(e.value).getMonth() + 1) + "/" + new Date(e.value).getDate()
+				const [year, month, day] = date.split('/')
+				const formattedMonth = month < 10 ? '0' + month : month
+				const formattedDay = day < 10 ? '0' + day : day
+				date = `${year}/${formattedMonth}/${formattedDay}`
+				
+				if(date < this.currentDate()){
+					this.model1.userInfo.bornTime =  date
+					this.$refs.form1.validateField('userInfo.bornTime')
+				}
+			},
+			
+			turnToNext() {
+				let that = this
+				uni.navigateTo({
+					url:"/pages/confirmModifyPersonalInformation/confirmModifyPersonalInformation",
+					success: function(res){
+						res.eventChannel.emit('newpersonalInformation',{
+						'num' : that.model1.userInfo.num, 
+						'name' : that.model1.userInfo.name ,
+						'ename' : that.model1.userInfo.ename ,
+						'cardNumber' : that.model1.userInfo.cardNumber ,
+						'nation' : that.model1.userInfo.nation ,
+						'sex' : that.model1.userInfo.sex ,
+						'bornTime' : that.model1.userInfo.bornTime ,
+						'bornPlace' : that.model1.userInfo.bornPlace ,
+						'region' : that.model1.addressInfo.region ,
+						'detailAddress' : that.model1.addressInfo.detailAddress ,
+						'zipCode' : that.model1.addressInfo.zipCode ,
+						'profession' : that.model1.workInfo.profession ,
+						'workPlaceName' : that.model1.workInfo.workPlaceName ,
+						'sector' : that.model1.workInfo.sector ,
+						'salaryInterval' : that.model1.workInfo.salaryInterval ,
+						'phonenumber' : that.model1.phonenumber,
+						})
+					}
+				});
+			},
+	},
+}	
 </script>
 
 <style lang="scss">

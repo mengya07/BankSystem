@@ -8,13 +8,25 @@
 				<uv-icon v-else name="/static/icon/icon_invisible.svg" @click="clickVisble"></uv-icon>
 			</view>
 			<view class="text">
-				<view class="text1">账户类别</view><view class="text2">{{card.class}}</view>
+				<view class="text1">账户类别</view><view class="text2">借记卡</view>
 			</view>
 		    <view class="text">
 		    	<view class="text1">人民币元</view><view class="text2">{{card.balance}}</view>
 		    </view>
 			<view class="transfer" @click="clickTransfer">转账</view>
 		</view>
+		
+		<uni-popup ref="popup" type="center" :isMaskClick="false">
+			<view style="display: flex;justify-content: flex-end;background-color: #FFFFFF;"><uv-icon name="close" size="14" style="margin-right: 5rpx;" @click="this.$refs.popup.close()"></uv-icon></view>
+			<view style="width: 600rpx; height: 350rpx; display: flex; flex-direction: column; align-items: center; background-color: #FFFFFF;">
+				<view>手机交易码</view>
+				<uv-line margin="10rpx"></uv-line>
+				<view style="margin-top: 20rpx;">正在向尾号{{phoneTail}}的手机发送验证码</view>
+				<uv-code-input mode="line" size="28" @finish="codeInputFinish" style="margin-top: 40rpx;"></uv-code-input>
+				<uv-code ref="uCode" @change="codeChange" seconds="60"></uv-code>
+				<button @click="getCode" style="border-radius: 10rpx; width: 300rpx; height: 60rpx; font-size: 0.8em; margin-top: 40rpx; background-color: red; color: #FFFFFF;">{{codeTips}}</button>
+			</view>
+		</uni-popup>
 		
 		
 		<view style="width: 700rpx;display: flex; justify-content: space-around;margin-top: 50rpx;align-items: center;">
@@ -24,25 +36,7 @@
 		</view>
 		
 		<view class="record-box">
-			<view>最近3天转账记录</view>
-			<uv-divider></uv-divider>
-			<view v-for="(item,index) in recordItem" :key="index" class="record-item" @click="clickRecord(index)">
-				<view class="column1">
-					{{item.otherName}}
-				</view>
-				<view class="column2">
-					<view v-if="item.class=='交易成功'" style="display: flex;">
-						<uv-icon name="/static/icon/icon_success.svg"></uv-icon>
-						<view>{{item.class}}</view>
-					</view>
-					<view v-else style="display: flex;">
-						<uv-icon name="/static/icon/icon_fail.svg"></uv-icon>
-						<view>{{item.class}}</view>
-					</view>
-					<view>{{item.date}}</view>
-					<view>人民币元 {{item.amount}}</view>
-				</view>
-			</view>
+			
 		</view>
 		
 		
@@ -53,65 +47,110 @@
 	export default {
 		data() {
 			return {
+				codeTips:"",
 				isvisible: false,
+				phoneTail: "",
 				card:{
 					id:"",
 					account:"",
 					class:"",
 					balance:"",
-					wholeAccount:"546546546546546"
+					wholeAccount:""
 				},
-				recordItem:[{
-					id:"4561586478",
-					date:"2023/10/22 14:31:54",
-					amount:"12.1",
-					balance:"1002.65",
-					name:"金正恩",
-					account:"12346846513",
-					otherName:"马化腾",
-					otherAccount:"464861534165",
-					class:"交易成功"
-				},{
-					id:"4561586478",
-					date:"2023/10/22 14:31:54",
-					amount:"12.1",
-					balance:"1002.65",
-					name:"金正恩",
-					account:"12346846513",
-					otherName:"马化腾",
-					otherAccount:"464861534165",
-					class:"交易失败"
-				}]
+				recordItem:[]
 			};
 		},
+		computed:{
+		},
 		methods:{
+			codeChange(text){
+				this.codeTips = text
+			},
+			getCode(){
+				if(this.$refs.uCode.canGetCode) {
+		            let that = this
+		            uni.getStorage({
+		            	key: 'token',
+		            	success: function (res) {
+		            		let _token = res.data
+		            		uni.showLoading({
+		            			title: "正在获取验证码",
+		            			mask: true
+		            		})
+		            		uni.request({
+		            				  url: 'https://120.55.37.93/sendsms/login',  
+		            				  method: 'GET',  
+		            				  header: {  
+		            					'token': _token
+		            				  },
+		            				  success: function (res) {
+		            					uni.hideLoading()
+										that.$refs.uCode.start()
+		            				  },  
+		            				  fail: function (error) {
+		            					uni.hideLoading()  
+		            					uni.showToast({
+		            						title: '错误，稍后再试',
+		            						icon: 'error',
+		            						duration: 2000
+		            					})
+		            				  }  
+		            				})
+		            	}
+		            })
+					   this.$refs.uCode.start()
+				} else {
+					this.$u.toast('倒计时结束后再发送');
+				}
+			},
+			codeInputFinish(e){
+				    let that = this
+				    uni.getStorage({
+				    	key: 'token',
+				    	success: function (res) {
+				    		let _token = res.data
+				    		uni.showLoading({
+				    			title: "",
+				    			mask: true
+				    		})
+				    		uni.request({
+				    				  url: 'https://120.55.37.93/query/cardNumber',  
+				    				  method: 'POST',  
+				    				  header: {  
+				    					'token': _token
+				    				  },
+									  data: {
+										'cardId': that.card.id,
+										'verifyCode' : String(e)
+									  },
+				    				  success: function (res) {
+										 if(res.data.code=="110"){
+											 uni.hideLoading()
+											 that.$refs.popup.close()
+											 uni.showToast({
+											 	title:"验证码错误",
+												icon:"none"
+											 })
+										 }
+										 else {
+											    that.record.wholeAccount = res.data.data
+				    					        uni.hideLoading()
+											}
+				    				  },  
+				    				  fail: function (error) {
+				    					uni.hideLoading()  
+				    					uni.showToast({
+				    						title: '错误，稍后再试',
+				    						icon: 'error',
+				    						duration: 2000
+				    					})
+				    				  }  
+				    				})
+				    	}
+				    })
+			},
 			clickVisble(){
-				this.isvisible=!this.isvisible
-				// uni.request({  
-				//   url: 'http://mk9fxg.natappfree.cc/query/bankCard',  
-				//   method: 'POST',  
-				//   header: {  
-				// 	'Content-Type': 'application/json',  
-				// 	'token': 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzOTAwZjJhYzFjOTE0NjZjYjg5ZjBmZGM3YjdmZmY3NyIsInN1YiI6IjYiLCJpc3MiOiJwbSIsImlhdCI6MTcwMjM4MjI5OSwiZXhwIjoxNzAyMzg1ODk5fQ.onbix801VA8L0tPpyICtFPrYehoR6YW4J9gpVNT59ig'  
-				//   },
-				//   data:{
-				// 	"startDate":"2023-01-01",
-				// 	"endDate":"2023-12-31",
-				// 	"cardNumber":"6216636109000220886",
-				// 	"miniAmount":"10",
-				// 	"maxAmount":"1100",
-				// 	"payeeName":null,
-				// 	"payeePhoneNumber":null,
-				// 	"status":"1",
-				// 	"payeeLimit":"false",
-				//   },
-				//   success: function (res) {  
-				// 	console.log(res.data);  
-				//   },  
-				//   fail: function (error) {  
-				// 	console.log(111);  
-				//   }  
-				// });
+				this.$refs.popup.open()
 			},
 			clickInvisble(){
 				this.isvisible=!this.isvisible
@@ -122,8 +161,9 @@
 				})
 			},
 			clickTransferRecord(){
+				let that = this
 				uni.navigateTo({
-					url:"/pages/transferRecord/transferRecord"
+					url:"/pages/transferRecord/transferRecord" + "?cardId=" + that.card.id,
 				})
 			},
 			clickCardLoss(){
@@ -138,21 +178,25 @@
 			},
 			clickRecord(index){
 				let that = this
-				uni.navigateTo({
-					url:"/pages/recordDetail/recordDetail",
-					success: function(res){
-						res.eventChannel.emit('acceptDataFromOpenerPage', that.recordItem[index])
-					}
-				})
+				// uni.navigateTo({
+				// 	url:"/pages/recordDetail/recordDetail",
+				// 	success: function(res){
+				// 		res.eventChannel.emit('cardId', that.recordItem[index])
+				// 	}
+				// })
 			}
 		},
 		onLoad(option) {
 			let that = this
+			let temp = ""
+			temp = uni.getStorageSync('userName')
+			temp = temp.slice(-4)
+			this.phoneTail = temp
+			console.log(this.phoneTail)
 			const eventChannel = this.getOpenerEventChannel();
-			eventChannel.on('acceptDataFromOpenerPage', function(data) {
+			eventChannel.on('card', function(data) {
 				that.card.id = data.id
 				that.card.account = data.account
-				that.card.class = data.class
 				that.card.balance = data.balance
 			})
 		}
