@@ -87,7 +87,7 @@
 		   
 		methods: {
 					choose() {
-						uni.navigateTo({
+						uni.redirectTo({
 							url: '/pages/transferCloose/transferCloose'
 						});
 

@@ -84,6 +84,9 @@
 					</uv-form-item>
 				</uv-form>
 			</view>
+			<view>
+				
+			</view>
 		</view>	
 	</view>
 	
@@ -168,8 +171,9 @@
 		onReady() {
 			this.$refs.form1.setRules(this.rule1)
 			let that = this
+			console.log(1)
 			const eventChannel = this.getOpenerEventChannel();
-			eventChannel.on('newpersonalInformation', (data) => {
+			eventChannel.on('newnewpersonalInformation', (data) => {
 				console.log(data)
 							that.model1.userInfo.num = data.num
 							that.model1.userInfo.name = data.name
@@ -192,7 +196,7 @@
 		},
 		methods: {
 			returnHome() {
-				uni.navigateTo({
+				uni.switchTab({
 					url:"/pages/home/home",
 					success: function(res){
 						

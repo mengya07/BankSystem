@@ -34,7 +34,7 @@
 					code: '',
 					precode: '',
 					newcode: '',
-					confirm: '',
+					confirmcode: '',
 				},
 				
 				rule1: {
@@ -49,8 +49,44 @@
 		},
 		methods: {
 			turnToNext() {
-				if(newcode == confirm & precode == code){
-					//结果
+				let that = this
+				if(that.model1.newcode === that.model1.confirmcode){
+					console.log(1)
+					
+					uni.getStorage({
+						key: 'token',
+						success: function (res) {
+							let _token = res.data
+							uni.request({
+									  url: 'https://120.55.37.93/edit/setPaymentPassword',  
+									  method: 'POST',  
+									  header: {  
+										'token': _token
+									  },
+									  data:{
+											 "paymentPassword": that.model1.newcode
+									  },
+									  success: function (res) {
+										  console.log(res)
+										uni.navigateTo({
+											url:"/pages/modifyCodePResult/modifyCodePResult",
+											success: function(res){
+												
+											}
+										});
+									  },  
+									  fail: function (error) {  
+										console.log("寄咯");  
+									  }  
+									})
+						},
+						fail: function(error) {
+						            console.log("获取token失败", error);
+						        }
+					});
+				}
+				else{
+					console.log(2)
 				}
 			}
 		}

@@ -1,0 +1,112 @@
+/* 水平间距 */
+/* 水平间距 */
+.uv-line[data-v-dcf8cb8f] {
+  vertical-align: middle;
+}
+/* 水平间距 */
+/* 水平间距 */
+uni-view[data-v-222d1a38], uni-scroll-view[data-v-222d1a38], uni-swiper-item[data-v-222d1a38] {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  align-items: stretch;
+  align-content: flex-start;
+}
+.uv-divider[data-v-222d1a38] {
+  display: flex;
+  flex-direction: row;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px 0;
+}
+.uv-divider__text[data-v-222d1a38] {
+  margin: 0 15px;
+}
+.uv-divider__dot[data-v-222d1a38] {
+  font-size: 12px;
+  margin: 0 12px;
+  color: #c0c4cc;
+}
+/* 水平间距 */
+/* 水平间距 */
+uni-view[data-v-d2bffd23], uni-scroll-view[data-v-d2bffd23], uni-swiper-item[data-v-d2bffd23] {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  align-items: stretch;
+  align-content: flex-start;
+}
+.uv-col[data-v-d2bffd23] {
+  padding: 0;
+  box-sizing: border-box;
+}
+.uv-col-0[data-v-d2bffd23] {
+  width: 0;
+}
+.uv-col-1[data-v-d2bffd23] {
+  width: 8.3333333333%;
+}
+.uv-col-2[data-v-d2bffd23] {
+  width: 16.6666666667%;
+}
+.uv-col-3[data-v-d2bffd23] {
+  width: 25%;
+}
+.uv-col-4[data-v-d2bffd23] {
+  width: 33.3333333333%;
+}
+.uv-col-5[data-v-d2bffd23] {
+  width: 41.6666666667%;
+}
+.uv-col-6[data-v-d2bffd23] {
+  width: 50%;
+}
+.uv-col-7[data-v-d2bffd23] {
+  width: 58.3333333333%;
+}
+.uv-col-8[data-v-d2bffd23] {
+  width: 66.6666666667%;
+}
+.uv-col-9[data-v-d2bffd23] {
+  width: 75%;
+}
+.uv-col-10[data-v-d2bffd23] {
+  width: 83.3333333333%;
+}
+.uv-col-11[data-v-d2bffd23] {
+  width: 91.6666666667%;
+}
+.uv-col-12[data-v-d2bffd23] {
+  width: 100%;
+}
+/* 水平间距 */
+/* 水平间距 */
+uni-view[data-v-692ff899], uni-scroll-view[data-v-692ff899], uni-swiper-item[data-v-692ff899] {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  align-items: stretch;
+  align-content: flex-start;
+}
+.uv-row[data-v-692ff899] {
+  display: flex;
+  flex-direction: row;
+}
+/* 水平间距 */
+/* 水平间距 */
+.left {
+  margin-left: 0.625rem;
+}
+.right {
+  font-weight: bold;
+}
+.item {
+  margin-top: 1.875rem;
+  margin-bottom: 1.875rem;
+}

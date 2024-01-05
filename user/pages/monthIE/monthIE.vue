@@ -78,24 +78,24 @@
 			itemClass(item) {  
 			  // 根据数据映射类名  
 			  switch (item.yearMonth.split("-")[1]) {  
-				case '1':  
-				  return 'card-box1';  
-				case '2':  
-				  return 'card-box2';  
-				case '3':  
-				  return 'card-box3';
-			    case '4':
-				  return 'card-box4';
-			    case '5':
-				  return 'card-box5';
-				case '6':
-				  return 'card-box6';
-			    case '7':
-				 return 'card-box7';
-				case '8':
-				  return 'card-box8';
-				case '9':
-				  return 'card-box9';
+				case '01':  
+				  return 'card-box01';  
+				case '02':  
+				  return 'card-box02';  
+				case '03':  
+				  return 'card-box03';
+			    case '04':
+				  return 'card-box04';
+			    case '05':
+				  return 'card-box05';
+				case '06':
+				  return 'card-box06';
+			    case '07':
+				 return 'card-box07';
+				case '08':
+				  return 'card-box08';
+				case '09':
+				  return 'card-box09';
 				case '10':
 				  return 'card-box10';
 				case '11':
@@ -156,7 +156,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		.card-box1{
+		.card-box01{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -189,7 +189,7 @@
 				}
 			}
 		}
-		.card-box1::before {  
+		.card-box01::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  
@@ -199,7 +199,7 @@
 		  background: inherit;  
 		  filter: blur(2px);  
 		}
-		.card-box2{
+		.card-box02{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -232,7 +232,7 @@
 				}
 			}
 		}
-		.card-box2::before {  
+		.card-box02::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  
@@ -242,7 +242,7 @@
 		  background: inherit;  
 		  filter: blur(2px);  
 		}
-		.card-box3{
+		.card-box03{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -275,7 +275,7 @@
 				}
 			}
 		}
-		.card-box3::before {  
+		.card-box03::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  
@@ -285,7 +285,7 @@
 		  background: inherit;  
 		  filter: blur(2px);  
 		}
-		.card-box4{
+		.card-box04{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -318,7 +318,7 @@
 				}
 			}
 		}
-		.card-box4::before {  
+		.card-box04::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  
@@ -328,7 +328,7 @@
 		  background: inherit;  
 		  filter: blur(2px);  
 		}
-		.card-box5{
+		.card-box05{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -361,7 +361,7 @@
 				}
 			}
 		}
-		.card-box5::before {  
+		.card-box05::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  
@@ -371,7 +371,7 @@
 		  background: inherit;  
 		  filter: blur(2px);  
 		}
-		.card-box6{
+		.card-box06{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -404,7 +404,7 @@
 				}
 			}
 		}
-		.card-box6::before {  
+		.card-box06::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  
@@ -414,7 +414,7 @@
 		  background: inherit;  
 		  filter: blur(2px);  
 		}
-		.card-box7{
+		.card-box07{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -447,7 +447,7 @@
 				}
 			}
 		}
-		.card-box7::before {  
+		.card-box07::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  
@@ -457,7 +457,7 @@
 		  background: inherit;  
 		  filter: blur(2px);  
 		}
-		.card-box8{
+		.card-box08{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -490,7 +490,7 @@
 				}
 			}
 		}
-		.card-box8::before {  
+		.card-box08::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  
@@ -500,7 +500,7 @@
 		  background: inherit;  
 		  filter: blur(2px);  
 		}
-		.card-box9{
+		.card-box09{
 			margin-top: 20rpx;
 			width: 680rpx;
 			height: 250rpx;
@@ -533,7 +533,7 @@
 				}
 			}
 		}
-		.card-box9::before {  
+		.card-box09::before {  
 		  content: '';  
 		  position: absolute;  
 		  top: 0;  

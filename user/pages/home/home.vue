@@ -56,16 +56,7 @@
 		<!-- 推荐商品 -->
 		<view class="pick">
 			<view class="box">
-				<view class="title">
-					<view class="big">推荐</view>
-				</view>
-				<view class="product-list">
-					<view v-for="product in pickList" :key="product.goods_id" @tap="toPick(product)">
-						<image mode="widthFix" :src="product.img"></image>
-						<view class="price">{{product.price}}</view>
-						<view class="slogan">{{product.slogan}}</view>
-					</view>
-				</view>
+				<image mode="widthFix" src="../../static/image/ad1.png"></image>
 			</view>
 		</view>
 		<!-- 广告横幅 -->
@@ -97,7 +88,7 @@ export default {
 					{ cat_id: 5, img: '../../static/icon/icon_home_RAE.svg', title: '月度收支',url:"/pages/monthIE/monthIE"},
 					{ cat_id: 6, img: '../../static/icon/icon_home_safetySettings.svg', title: '安全中心' ,url:"/pages/securityAndSettings/securityAndSettings"},
 					{ cat_id: 7, img: '../../static/icon/icon_home_code.svg', title: '收付款' ,url:"/pages/QRcode/QRcode"},
-					{ cat_id: 8, img: '../../static/icon/icon_home_scan.svg', title: '扫一扫' ,url:""},
+					{ cat_id: 8, img: '../../static/icon/icon_home_scan.svg', title: '扫一扫' ,url:"scan"},
 					{ cat_id: 9, img: '../../static/icon/icon_home_transactionSettings.svg', title: '限额' ,url:""}
 				],
 				// [//第二页
@@ -112,9 +103,9 @@ export default {
 			],
 			//推荐商品 3个
 			pickList:[
-				{ goods_id: 0, img: '../../static/HM-shophome/pick-img/p1.jpg', price: '￥168', slogan:'限时抢购' },
-				{ goods_id: 1, img: '../../static/HM-shophome/pick-img/p2.jpg', price: '￥168', slogan:'精选商品' },
-				{ goods_id: 2, img: '../../static/HM-shophome/pick-img/p3.jpg', price: '￥168', slogan:'今日疯抢' }
+				{ goods_id: 0, img: '../../static/image/ad1.png', price: '', slogan:'' },
+				{ goods_id: 1, img: '../../static/image/ad2.jpg', price: '', slogan:'' },
+				{ goods_id: 2, img: '../../static/image/ad3.jpg', price: '', slogan:'' }
 			],
 			//猜你喜欢列表
 			productList:[
@@ -235,71 +226,83 @@ export default {
 		//扫一扫
 		scan(){
 			let that=this
-			let token_ =''
+			let token_=''
 			uni.getStorage({
-				key:'token',
+				key: 'token',
 				success(res) {
-					token_ = res.data
-				}
-			})
-			uni.scanCode({
-				success: function(res) {
-					if(res.scanType === "QR_CODE"){
-						uni.request({
-							  url: 'https://120.55.37.93/TDCode/verify?orderId='+res.data,  
-							  method: 'GET',  
-							  header: {  
-								'token': token_
-							  },
-							  data: {
-								
-							  },
-							  success: function (res) {
+					token_=res.data
+					console.log(res.data)
+					console.log(1)
+					uni.scanCode({
+						success: function(res) {
+							if(res.scanType=="QR_CODE"){
+								uni.setStorageSync('orderId',res.result)
 								console.log(res)
-								uni.setStorage({
-									key: 'payeeName',
-									data: res.data.data.payeeName
-								})
-								uni.setStorage({
-									key: 'payeeCardNumber',
-									data: res.data.data.payeeCardNumber
-								})
-								
-								uni.getStorage({
-									key: 'payeeName',
-									success: function (res) {
-										console.log(res)
-									}	
-								})
-							  },  
-							  fail: function (error) {  
-								console.log("寄咯");  
-							  }  
-							})
-							uni.navigateTo({
-								url:"/pages/codeTransfer/codeTransfer",
-								success: function(res){
+									uni.request({
+										  url: 'https://120.55.37.93/TDCode/verify?orderId='+res.result,  
+										  method: 'GET',  
+										  header: {  
+											'token': token_,
+										  },
+										  success: function (res) {
+											console.log(res)
+											uni.setStorage({
+												key: 'payeeName',
+												data: res.data.data.payeeName
+											})
+											uni.setStorage({
+												key: 'payeeCardNumber',
+												data: res.data.data.payeeCardNumber
+											})
+											uni.getStorage({
+												key: 'payeeName',
+												success: function (res) {
+													console.log(res)
+												}	
+											})
+											uni.navigateTo({
+												url:"/pages/codeTransfer/codeTransfer",
+												success: function(res){
+													
+												}
+											});
+										  },  
+										  fail: function (error) {  
+											console.log("寄咯");  
+										  }  
+										})
+							}
+							
 									
-								}
-							});
-					}
+							
+						}
+					})
 				}
 			})
+			
 		},
 		//搜索跳转
 		toSearch(){
-			uni.showToast({title: "建议跳转到新页面做搜索功能"});
+			//uni.showToast({title: "建议跳转到新页面做搜索功能"});
 		},
 		//轮播图跳转
 		toSwiper(e){
-			uni.showToast({title: e.src});
+			//uni.showToast({title: e.src});
 		},
 		//分类跳转
 		toCategory(e){
-			// if(this.islogin()){
+			if(e.url == "scan"){
+				this.scan()
+			}
+			else{
 				uni.navigateTo({
 					url:e.url
 				})
+			}
+			// if(this.islogin()){
+				// uni.navigateTo({
+				// 	url:e.url
+				// })
 			// }else{
 			// 	uni.navigateTo({
 			// 		url:"/pages/login/login"
@@ -308,11 +311,11 @@ export default {
 		},
 		//推荐商品跳转
 		toPick(e){
-			uni.showToast({title: '推荐商品'+e.goods_id});
+			//uni.showToast({title: '推荐商品'+e.goods_id});
 		},
 		//商品跳转
 		toGoods(e){
-			uni.showToast({title: '商品'+e.goods_id});
+			//uni.showToast({title: '商品'+e.goods_id});
 		},
 		//更新分类指示器
 		categoryChange(event) {
@@ -523,25 +526,28 @@ page {
 	.box{
 		width: 100%;
 		border-radius: 20upx;
-		background-color: #ffffff;
-		.title{
-			display: flex;
-			justify-content: flex-start;
-			align-items: flex-end;
-			height: 60upx;
-			border-bottom: solid 1upx #eee;
-			padding-bottom: 10upx;
-			.big{
-				font-size: 34upx;
-				padding-left: 20upx;
-				color: #46434f;
-			}
-			.small{
-				font-size: 24upx;
-				padding-left: 20upx;
-				color: #827f8b;
-			}
-		}
+		// background-color: #ffffff;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		// .title{
+		// 	display: flex;
+		// 	justify-content: flex-start;
+		// 	align-items: flex-end;
+		// 	height: 60upx;
+		// 	border-bottom: solid 1upx #eee;
+		// 	padding-bottom: 10upx;
+		// 	.big{
+		// 		font-size: 34upx;
+		// 		padding-left: 20upx;
+		// 		color: #46434f;
+		// 	}
+		// 	.small{
+		// 		font-size: 24upx;
+		// 		padding-left: 20upx;
+		// 		color: #827f8b;
+		// 	}
+		// }
 		.product-list{
 			padding: 15upx 20upx 15upx 20upx;
 			column-count: 2;

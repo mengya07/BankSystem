@@ -160,16 +160,12 @@
 			this.$refs.form1.setRules(this.rule1)
 			// 获取数据
 			let that = this
-			uni.setStorage({
-				key: 'token',
-				data: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjMDAyYjY5MzkwMGE0ZTUwOTUxYzE4YjUxYmZlNDE5ZCIsInN1YiI6IjkiLCJpc3MiOiJwbSIsImlhdCI6MTcwMzE0MzEwNCwiZXhwIjoxNzAzMjI5NTA0fQ.cDcqrghrqMM7oRepfHFjlkFktC1ubEQelp4-0euPG3E'
-			})
 			uni.getStorage({
 				key: 'token',
 				success: function (res) {
 					let _token = res.data
 					uni.request({
-							  url: 'http://120.55.37.93:80/query/customerInfo',  
+							  url: 'https://120.55.37.93/query/customerInfo',  
 							  method: 'GET',  
 							  header: {  
 								'token': _token

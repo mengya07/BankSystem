@@ -96,6 +96,7 @@
               * DESC: 获取验证码   
               * */
              getCode(){
+				 let that=this
                  console.log("获取验证码", this.newPhone)
 				 this.code=''
                  if(this.count==0){
@@ -103,9 +104,19 @@
                      this.isReget = false 
                      this.getTimer()
 					 uni.request({
-					 	url:'https://120.55.37.93/sendsms/nologin?phoneNumber='+this.newPhone,
+					 	url:'https://120.55.37.93/sendsms/nologin?phoneNumber='+that.newPhone,
 						success(data) {
 							console.log(data)
+							
+							if(data.data.code==200){
+								
+							}else{
+								uni.showToast({
+									title:"短信发送失败",
+									icon:"error"
+								})
+								}
+							
 						}
 					 })
                  }
@@ -161,6 +172,16 @@
 											},
 											success(data) {
 												console.log(data)
+												if(data.data.code==200){
+													uni.switchTab({
+													url: "/pages/home/home"  
+													 });  
+												}else if(data.data.code==7){
+													uni.showModal({
+														title:
+														"手机号与银行预留手机号不符,如果已更换手机号请持相关证件到柜台办理"
+													})
+												}
 											}
 						})
 					}

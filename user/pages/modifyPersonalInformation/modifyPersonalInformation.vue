@@ -48,7 +48,7 @@
 		<text>本人常住地址信息</text>
 		<uv-form :model="model1" :rules="rule1" ref="form3" style="background: white;">
 			<uv-form-item label="省/市/区" label-width="150rpx" prop="addressInfo.region" :borderBottom="true">
-				<uv-input v-model="model1.addressInfo.region" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true"></uv-input>
+				<uv-input v-model="model1.addressInfo.region" border="none" style="margin-left: 20rpx; margin-right: 20rpx;" :readonly="true" input-align="right"></uv-input>
 			</uv-form-item>
 			<uv-form-item label="详细地址" label-width="150rpx" prop="addressInfo.detailAddress" :borderBottom="true">
 				<uv-input v-model="model1.addressInfo.detailAddress" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right"></uv-input>
@@ -62,7 +62,7 @@
 	<view style="margin-left: 20rpx; margin-top: 20rpx;">
 		<text>工作信息</text>
 		<uv-form :model="model1" :rules="rule1" ref="form4" style="background: white;">
-			<uv-form-item label="职业" label-width="150rpx" prop="workInfo.profession" :borderBottom="true">
+			<uv-form-item label="职业" label-width="150rpx" prop="workInfo.profession" :borderBottom="true" @click="showCareerSelect">
 				<uv-input v-model="model1.workInfo.profession" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -73,7 +73,7 @@
 			<uv-form-item label="工作单位名称" label-width="150rpx" prop="workInfo.workPlaceName" :borderBottom="true">
 				<uv-input v-model="model1.workInfo.workPlaceName" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right"></uv-input>
 			</uv-form-item>
-			<uv-form-item label="单位所属行业" label-width="150rpx" prop="workInfo.sector" :borderBottom="true">
+			<uv-form-item label="单位所属行业" label-width="150rpx" prop="workInfo.sector" :borderBottom="true" @click="showSectorSelect">
 				<uv-input v-model="model1.workInfo.sector" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -81,7 +81,7 @@
 					></uv-icon>
 				</template>
 			</uv-form-item>
-			<uv-form-item label="个人月收入区间" label-width="150rpx" prop="workInfo.salaryInterval" :borderBottom="true">
+			<uv-form-item label="个人月收入区间" label-width="150rpx" prop="workInfo.salaryInterval" :borderBottom="true" @click="showSalarySelect">
 				<uv-input v-model="model1.workInfo.salaryInterval" border="none" style="margin-left: 20rpx; font-weight: bold; margin-right: 20rpx;" input-align="right" :readonly="true"></uv-input>
 				<template v-slot:right>
 					<uv-icon
@@ -143,6 +143,24 @@
 		ref="regionPicker"
 		:columns="state"
 		@confirm="setRegion"
+	></uv-picker>
+	
+	<uv-picker
+		ref="professionPicker"
+		:columns="career"
+		@confirm="setCareer"
+	></uv-picker>
+	
+	<uv-picker
+		ref="sectorPicker"
+		:columns="sector"
+		@confirm="setSector"
+	></uv-picker>
+	
+	<uv-picker
+		ref="salaryPicker"
+		:columns="incomeRage"
+		@confirm="setSalary"
 	></uv-picker>
 	
 	<uv-datetime-picker 
@@ -715,8 +733,31 @@ import { date, number } from '../../uni_modules/uv-ui-tools/libs/function/test'
 				this.$refs.BornTimePicker.open();
 				this.hideKeyboard();
 			},
+			showCareerSelect() {
+				this.$refs.professionPicker.open();
+				this.hideKeyboard();
+			},
+			setCareer(e) {
+				this.model1.workInfo.profession = e.value[0]
+				this.$refs.form4.validateField('workInfo.profession')
+			},
 			
-			
+			showSectorSelect() {
+				this.$refs.sectorPicker.open();
+				this.hideKeyboard();
+			},
+			setSector(e) {
+				this.model1.workInfo.sector = e.value[0]
+				this.$refs.form4.validateField('workInfo.sector')
+			},
+			showSalarySelect() {
+				this.$refs.salaryPicker.open();
+				this.hideKeyboard();
+			},
+			setSalary(e) {
+				this.model1.workInfo.salaryInterval = e.value[0]
+				this.$refs.form4.validateField('workInfo.salaryInterval')
+			},
 			bornTimeChange(e) {
 				// this.model1.userInfo.bornTime = e
 				// this.$refs.form1.validateField('userInfo.bornTime')

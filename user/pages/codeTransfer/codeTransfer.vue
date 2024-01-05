@@ -190,6 +190,7 @@ import confirmModifyPersonalInformationVue from '../confirmModifyPersonalInforma
 			uni.getStorage({
 				key: 'orderId',
 				success: function (res) {
+					console.log(res.data)
 					that.orderId=res.data
 				}	
 			})
@@ -218,9 +219,6 @@ import confirmModifyPersonalInformationVue from '../confirmModifyPersonalInforma
 							  method: 'GET',  
 							  header: {  
 								'token': _token
-							  },
-							  data:{
-								
 							  },
 							  success: function (res) {
 								  console.log(res)

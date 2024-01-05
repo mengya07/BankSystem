@@ -66,10 +66,11 @@
 					if(res.test(this.value1))
 					{
 						uni.request({
-							url:'https://120.55.37.93',
+							url:'https://120.55.37.93/edit/setLoginPassword',
 							method:'POST',
+							
 							data:{
-								value1:this.value1
+								"loginPassword": this.value1
 							},
 							success:function(res){
 								console.log(res);

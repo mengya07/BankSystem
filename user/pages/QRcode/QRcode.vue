@@ -60,72 +60,73 @@ import UQRCode from '../../uni_modules/Sansnn-uQRCode/js_sdk/uqrcode/uqrcode.js'
 				key: 'token',
 				success: function (res) {
 					that.token_=res.data
+					uni.getStorage({
+						key: 'token',
+						success: function (res) {
+							let token_ = res.data
+							uni.request({
+									  url: 'https://120.55.37.93/query/bankCard',  
+									  method: 'GET',  
+									  header: {  
+										'token': token_
+									  },
+									  data:{
+										
+									  },
+									  success: function (res) {
+										  console.log(res)
+										res.data.data.forEach(item=>{
+											let temp = {"cardId":"","cardNumber":"","balance":""}
+											temp.cardId = item.cardId
+											temp.cardNumber = item.cardNumber
+											temp.balance = item.balance
+											that.card.push(temp)
+										});
+										that.cardNum=res.data.data[0].cardNumber
+										that.cardId=res.data.data[0].cardId
+												console.log(that.cardId)
+												uni.request({
+															  url: 'https://120.55.37.93/TDCode/generate?cardId='+that.cardId,  
+															  method: 'GET',  
+															  header: {  
+																'token': that.token_
+															  },
+															  data:{
+																
+															  },
+															  success: function (res) {
+																console.log(res)
+																that.orderId=res.data.data;
+																let qr = new UQRCode();
+																qr.data = that.orderId;//
+																qr.make();
+																that.modules = qr.modules;
+																uni.setStorage({
+																	key: 'orderId',
+																	data: res.data.data
+																})
+															  },  
+															  fail: function (error) {  
+																console.log("寄咯");  
+															  }  
+															})
+									  },  
+									  fail: function (error) {  
+										console.log("寄咯");  
+									  }  
+									})
+						},
+						fail: function(error) {
+						            console.log("获取token失败", error);
+						        }
+					});
 				},
 			})
 				
 				
 			//获取二维码信息
 			
-			uni.getStorage({
-				key: 'token',
-				success: function (res) {
-					let _token = res.data
-					uni.request({
-							  url: 'https://120.55.37.93/query/bankCard',  
-							  method: 'GET',  
-							  header: {  
-								'token': _token
-							  },
-							  data:{
-								
-							  },
-							  success: function (res) {
-								  console.log(res)
-								res.data.data.forEach(item=>{
-									let temp = {"cardId":"","cardNumber":"","balance":""}
-									temp.cardId = item.cardId
-									temp.cardNumber = item.cardNumber
-									temp.balance = item.balance
-									that.card.push(temp)
-								});
-								that.cardNum=res.data.data[0].cardNumber
-								that.cardId=res.data.data[0].cardId
-										console.log(that.cardId)
-										uni.request({
-													  url: 'https://120.55.37.93/TDCode/generate?cardId='+that.cardId,  
-													  method: 'GET',  
-													  header: {  
-														'token': that.token_
-													  },
-													  data:{
-														
-													  },
-													  success: function (res) {
-														console.log(res)
-														that.orderId=res.data.data;
-														let qr = new UQRCode();
-														qr.data = that.orderId;//
-														qr.make();
-														that.modules = qr.modules;
-														uni.setStorage({
-															key: 'orderId',
-															data: res.data.data
-														})
-													  },  
-													  fail: function (error) {  
-														console.log("寄咯");  
-													  }  
-													})
-							  },  
-							  fail: function (error) {  
-								console.log("寄咯");  
-							  }  
-							})
-				},
-				fail: function(error) {
-				            console.log("获取token失败", error);
-				        }
-			});
+			
 			
 			
 			//

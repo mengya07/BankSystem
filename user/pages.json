@@ -264,7 +264,7 @@
 		"path" : "pages/chooseCard/chooseCard",
 		"style" : 
 		{
-			"navigationBarTitleText" : "",
+			"navigationBarTitleText" : "选择账户",
 			"enablePullDownRefresh" : false
 		}
 	},
@@ -272,7 +272,7 @@
 		"path" : "pages/modifyPaymentCode/modifyPaymentCode",
 		"style" : 
 		{
-			"navigationBarTitleText" : "",
+			"navigationBarTitleText" : "修改支付密码",
 			"enablePullDownRefresh" : false
 		}
 	},
@@ -280,7 +280,7 @@
 		"path" : "pages/modifyPersonalInformationResult/modifyPersonalInformationResult",
 		"style" : 
 		{
-			"navigationBarTitleText" : "",
+			"navigationBarTitleText" : "操作结果",
 			"enablePullDownRefresh" : false
 		}
 	},
@@ -288,7 +288,7 @@
 		"path" : "pages/codeTransferResult/codeTransferResult",
 		"style" : 
 		{
-			"navigationBarTitleText" : "",
+			"navigationBarTitleText" : "操作结果",
 			"enablePullDownRefresh" : false
 		}
 	},
@@ -296,7 +296,15 @@
 		"path" : "pages/modifyCodePResult/modifyCodePResult",
 		"style" : 
 		{
-			"navigationBarTitleText" : "",
+			"navigationBarTitleText" : "操作结果",
+			"enablePullDownRefresh" : false
+		}
+	},
+	{
+		"path" : "pages/modifyPassword/modifyPassword",
+		"style" : 
+		{
+			"navigationBarTitleText" : "修改登录密码",
 			"enablePullDownRefresh" : false
 		}
 	}
@@ -317,14 +325,12 @@
 		"backgroundColor": "#FFFFFF",
 		"list": [{
 			"pagePath": "pages/home/home",
-			"iconPath": "static/c9.png",
-			"selectedIconPath": "static/c2.png",
-			"text": "主页"
+			"iconPath": "static/icon/icon_h_us.png",
+			"selectedIconPath": "static/icon/icon_h_s.png"
 		}, {
 			"pagePath": "pages/myself/myself",
-			"iconPath": "static/c1.png",
-			"selectedIconPath": "static/c5.png",
-			"text": "我的"
+			"iconPath": "static/icon/icon_m_us.png",
+			"selectedIconPath": "static/icon/icon_m_s.png"
 		}]
 	}
 

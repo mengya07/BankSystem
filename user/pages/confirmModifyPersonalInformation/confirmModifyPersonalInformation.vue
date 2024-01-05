@@ -98,6 +98,7 @@
 	export default {
 		data() {
 			return {
+				phoneTail: "",
 				model1: {
 					userInfo: {
 						num: '',
@@ -167,18 +168,6 @@
 			}
 		},
 		computed: {
-			phoneTail: function(){
-				let that = this
-				let temp = ""
-				uni.getStorage({
-					key:'userName',
-					success(res) {
-						console.log(res)
-						temp =  res.data.slice(-4)
-					}
-				})
-				return temp
-			}
 		},
 		onReady() {
 			// 如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则
@@ -237,24 +226,57 @@
 							mask: true
 						})
 						uni.request({
-								  url: 'https://120.55.37.93/query/cardNumber',  
+								  url: 'https://120.55.37.93/edit/customerInfo',  
 								  method: 'POST',  
 								  header: {  
 									'token': _token
 								  },
 								  data: {
-									
+									"pojo":{
+									    "nationality": that.model1.userInfo.nation,
+									    "dateOfBirth": that.model1.userInfo.bornTime,
+									    "placeOfBirth": that.model1.userInfo.bornPlace,
+									    "provincesCity": that.model1.addressInfo.region,
+									    "detailedAddress": that.model1.addressInfo.detailAddress,
+									    "postalCode": that.model1.addressInfo.zipCode,
+									    "profession": that.model1.workInfo.profession,
+									    "workOfUnit": that.model1.workInfo.workPlaceName,
+									    "industryOfTheOrganization": that.model1.workInfo.sector,
+									    "incomeRange": that.model1.workInfo.salaryInterval
+									    },
 									'verifyCode' : String(e)
 								  },
 								  success: function (res) {
 									uni.hideLoading()
-									uni.navigateTo({
-										url:"/pages/modifyCodePResult/modifyCodePResult",
-										success: function(res){
-											
-											
-										}
-									});
+									console.log(res)
+									if(res.data.code==200){
+										console.log(1111111)
+										uni.navigateTo({
+											url:"/pages/modifyPersonalInformationResult/modifyPersonalInformationResult",
+											success: function(res){
+												res.eventChannel.emit('newnewpersonalInformation',{
+												'num' : that.model1.userInfo.num, 
+												'name' : that.model1.userInfo.name ,
+												'ename' : that.model1.userInfo.ename ,
+												'cardNumber' : that.model1.userInfo.cardNumber ,
+												'nation' : that.model1.userInfo.nation ,
+												'sex' : that.model1.userInfo.sex ,
+												'bornTime' : that.model1.userInfo.bornTime ,
+												'bornPlace' : that.model1.userInfo.bornPlace ,
+												'region' : that.model1.addressInfo.region ,
+												'detailAddress' : that.model1.addressInfo.detailAddress ,
+												'zipCode' : that.model1.addressInfo.zipCode ,
+												'profession' : that.model1.workInfo.profession ,
+												'workPlaceName' : that.model1.workInfo.workPlaceName ,
+												'sector' : that.model1.workInfo.sector ,
+												'salaryInterval' : that.model1.workInfo.salaryInterval ,
+												'phonenumber' : that.model1.phonenumber,
+												})
+												
+											}
+										});
+									}
+									
 								  },  
 								  fail: function (error) {
 									uni.hideLoading()  
@@ -303,6 +325,12 @@
 			codeChange(text) {
 				this.codeTips = text
 			},
+		},
+		onLoad(){
+			let temp = ""
+			temp = uni.getStorageSync('userName')
+			temp = temp.slice(-4)
+			this.phoneTail = temp
 		}
 	}
 </script>

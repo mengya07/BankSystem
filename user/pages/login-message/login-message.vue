@@ -172,7 +172,7 @@ export default {
 			
     },
 	handleClick(){
-		
+		let that=this;
 		uni.request({
 		  url: 'https://120.55.37.93/sendsms/nologin?phoneNumber='+that.username,  
 		  method: 'POST',  

@@ -35,9 +35,23 @@
 			<view @click="clickLimitSetting"><uv-icon name="/static/icon/icon_limitSetting.svg" size="30" style="margin-left: 15rpx;"></uv-icon><text style="font-size: 0.8em;">限额设置</text></view>
 		</view>
 		
-		<view class="record-box">
-			
+<!-- 	<scroll-view v-if="recordItem.length > 0" scroll-y="true" @scrolltolower="loadMore()" :style="{ height: getScrollHeight() + 'rpx' }">
+	<view class="record-box">
+		<view v-for="(item,index) in recordItem" :key="index" class="record-item" @click="clickRecord(index)">
+			<view class="column1">
+				<view>{{item.statusComments}}</view>
+				<view style="margin-top: 10rpx; color: #A8A8A8; font-size: 0.8em;">余额 {{item.balance}}</view>
+			</view>
+			<view class="column2">
+				<view style="color: #A8A8A8;">{{item.counterpartyName}}</view>
+				<view style="margin-top: 10rpx; font-weight: bold; display: flex;">
+					<view>人民币元</view> 
+					<view :class="item.amount>=0 ? 'in' : 'out' ">{{item.amount}}</view> 
+				</view>
+			</view>
 		</view>
+	</view>
+	</scroll-view> -->
 		
 		
 	</view>
@@ -61,8 +75,91 @@
 			};
 		},
 		computed:{
+			currentDate: function(){
+			    return this.formattedDate(new Date().getFullYear(),new Date().getMonth() + 1,new Date().getDate())
+			},
+			defaultDateStart: function(){
+				const [year, month, day] = this.currentDate.split('-')
+				const date = new Date(year, month - 1, day)
+				const oneWeekAgo = new Date(date.setDate(date.getDate() - 7)) 
+				return this.formattedDate(oneWeekAgo.getFullYear(),oneWeekAgo.getMonth() + 1,oneWeekAgo.getDate())
+			},
 		},
 		methods:{
+			formattedDate(year,month,day){
+				const formattedMonth = month < 10 ? '0' + month : month
+				const formattedDay = day < 10 ? '0' + day : day
+				return `${year}-${formattedMonth}-${formattedDay}`
+			},
+			requestTransactionRecord(){
+				let that = this
+				uni.getStorage({
+					key: 'token',
+					success: function (res) {
+						let _token = res.data
+						uni.showLoading({
+							title: "",
+							mask: true
+						})
+						uni.request({
+								  url: 'https://120.55.37.93/query/transactionRecord?pageNum='+ that.pageNum + '&pageSize=' + that.pageSize,  
+								  method: 'POST',  
+								  header: {  
+									'token': _token
+								  },				
+								  data:{
+									"startTime":that.currentDate + " 00:00:00",
+									"endTime":that.defaultDateStart + " 23:59:59",
+									"cardId":that.card.id,
+									"miniAmount":that.moneyStart,
+									"maxAmount":that.moneyEnd,
+									"payeeName":null,
+									"payeePhoneNumber":null,
+									"status":that.status,
+								  },
+								  success: function (res) {
+									  console.log(res)
+									  if(res.data.code == 200){
+										  console.log(res)
+										  that.totalPage = res.data.data.totalPage
+										  res.data.data.list.forEach(item=>{
+										  let temp = {"counterpartyName": "","transactionId": null,"balance": null,"amount": -648,"status": 0,"statusComments": "转账支出"}
+										  temp.counterpartyName = item.counterpartyName
+										  temp.balance = parseFloat(item.balance).toFixed(2)
+										  temp.transactionId = item.transactionId
+										  temp.statusComments = item.statusComments
+										  temp.amount = parseFloat(item.amount).toFixed(2)
+										  that.recordItem.push(temp)
+										  })
+									  }
+									  
+									uni.hideLoading()
+								  },  
+								  fail: function (error) {
+									uni.hideLoading()  
+									uni.showToast({
+										title: '错误，稍后再试',
+										icon: 'error',
+										duration: 2000
+									})
+								  }  
+								})
+					}
+				})
+			},
+			getScrollHeight() {
+			  let sys = uni.getSystemInfoSync()
+			  let winWidth = sys.windowWidth
+			  let winrate = 750 / winWidth
+			  let winHeight = parseInt(sys.windowHeight * winrate)
+			  return winHeight - 20
+			},
+			loadMore(){
+				if(this.pageNum < this.totalPage){
+					this.pageNum++
+					this.requestTransactionRecord()
+				}
+			},
 			codeChange(text){
 				this.codeTips = text
 			},
@@ -124,6 +221,7 @@
 										'verifyCode' : String(e)
 									  },
 				    				  success: function (res) {
+										  console.log(res)
 										 if(res.data.code=="110"){
 											 uni.hideLoading()
 											 that.$refs.popup.close()
@@ -133,7 +231,7 @@
 											 })
 										 }
 										 else {
-											    that.record.wholeAccount = res.data.data
+											    that.card.wholeAccount = res.data.data
 				    					        uni.hideLoading()
 											}
 				    				  },  
@@ -178,13 +276,10 @@
 			},
 			clickRecord(index){
 				let that = this
-				// uni.navigateTo({
-				// 	url:"/pages/recordDetail/recordDetail",
-				// 	success: function(res){
-				// 		res.eventChannel.emit('cardId', that.recordItem[index])
-				// 	}
-				// })
-			}
+				uni.navigateTo({
+					url:"/pages/transactionDetail/transactionDetail?transactionId=" + that.recordItem[index].transactionId,
+				})
+			},
 		},
 		onLoad(option) {
 			let that = this
@@ -198,6 +293,7 @@
 				that.card.id = data.id
 				that.card.account = data.account
 				that.card.balance = data.balance
+				//that.requestTransactionRecord()
 			})
 		}
 	}
@@ -259,6 +355,44 @@
 			}
 			.column2{
 				margin-right: 20rpx;
+			}
+		}
+	}
+	.record-box{
+		margin-top: 20rpx;
+		.record-item{
+			margin: 15rpx;
+			height: 120rpx;
+			border-radius: 10rpx;
+			margin-left: 10rpx;
+			margin-right: 10rpx;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background-color: #FFFFFF;
+			// border-style: solid;
+			// border-width: 2px;
+			// border-color: silver;
+			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+			padding: 10rpx;
+			.column1{
+				margin-left: 20rpx;
+			}
+			.column2{
+				margin-right: 20rpx;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				.out{
+					font-weight: bold;
+					margin-left: 10rpx;
+					color: green;
+				}
+				.in{
+					font-weight: bold;
+					margin-left: 10rpx;
+					color: red;
+				}
 			}
 		}
 	}

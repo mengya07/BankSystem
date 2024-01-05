@@ -123,7 +123,6 @@
 										
 									  },
 									  success: function (res) {
-										
 									  },  
 									  fail: function (error) {  
 										console.log("获取验证码失败");  
@@ -152,20 +151,19 @@
 					zhuce() {
 						let that = this
 						uni.request({
-								  url: 'https://120.55.37.93/register',  
+								  url: 'https://120.55.37.93/register/appAccount',  
 								  method: 'POST',  
-								  header: {  
+								  data:{
 									"phoneNumber": that.model1.phoneNumber,
 									"verifyCode": that.model1.code,
-								  },
-								  data:{
-									
 								  },
 								  success: function (res) {
 									 
 									console.log(res)
+									console.log(11)
+									uni.setStorageSync('token',res.data.data.token)
 									uni.navigateTo({
-										url:"/pages/login/login",
+										url:"/pages/modifyPassword/modifyPassword",
 										success: function(res){
 											
 										}

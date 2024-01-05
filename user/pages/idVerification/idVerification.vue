@@ -80,6 +80,14 @@
 									},
 									success(data) {
 										console.log(data)
+										if(data.data.code==200){
+										uni.navigateTo({
+											url:"/pages/bindIdCard/bindIdCard",
+											success: function(res){
+												
+											}
+										});
+										}
 									}
 								})
 							}

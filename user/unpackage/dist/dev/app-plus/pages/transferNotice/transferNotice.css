@@ -1,0 +1,18 @@
+/* 水平间距 */
+/* 水平间距 */
+.transferType {
+  font-size: 60%;
+  padding: 5px;
+  color: #34ffc6;
+  vertical-align: 30%;
+  border-radius: 3px;
+  background-color: #bdffed;
+}
+.receiptTpye {
+  font-size: 60%;
+  padding: 5px;
+  color: #ff1e2d;
+  vertical-align: 30%;
+  border-radius: 3px;
+  background-color: #ffb0b2;
+}

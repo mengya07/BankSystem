@@ -82,7 +82,7 @@ import { date } from '../../uni_modules/uv-ui-tools/libs/function/test';
 		data() {
 			return {
 				pageNum:1,
-				pageSize:5,
+				pageSize:10,
 				totalPage:1,
 				show: false,
 				selectedDate:1, //约定1为近一周，2为一个月，3为三个月

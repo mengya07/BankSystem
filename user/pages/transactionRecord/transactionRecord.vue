@@ -83,7 +83,7 @@
 		data() {
 			return {
 				pageNum:1,
-				pageSize:7,
+				pageSize:15,
 				show: false,
 				selectedDate:1, //约定1为近一周，2为一个月，3为三个月
 				dateStart:"",
@@ -265,6 +265,9 @@
 			cardConfirm(e){
 				this.cardId = this.cardItem[e.indexs[0]].id
 				this.cardAccountText = this.cardItem[e.indexs[0]].account
+				this.pageNum = 1
+				this.recordItem = []
+				this.requestTransactionRecord()
 			},
 			clickRecord(index){
 				let that = this

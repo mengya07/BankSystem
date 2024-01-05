@@ -120,8 +120,9 @@ export default {
 				    header: {  
 				      "token": res.data.data.token,  
 				    },  
-				    success: (res) => {  
-				      uni.setStorageSync('name',res.data.data.surname+res.data.data.name);//存姓名
+				    success: (res) => {
+					  console.log(res)
+				      //uni.setStorageSync('name',res.data.data.surname+res.data.data.name);//存姓名
 				    },  
 				    fail: (error) => {  
 				      console.log(error);  

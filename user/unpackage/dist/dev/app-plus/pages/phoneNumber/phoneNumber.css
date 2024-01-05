@@ -1,0 +1,31 @@
+/* 水平间距 */
+/* 水平间距 */
+.info {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 100px 15px 40px 10px;
+}
+.phone {
+  margin: 5px 15px 10px 15px;
+  border-bottom: 1px solid black;
+}
+.xb {
+  width: 20.3125rem;
+  color: white;
+  background-color: red;
+  border-radius: 25px;
+  margin: 40px 50px 40px 10px;
+  left: 4%;
+  position: fixed;
+  top: 280px;
+}
+.xiansi {
+  color: red;
+  font-size: 15px;
+  margin: 10px 15px 40px 10px;
+}
+.uni-list {
+  top: 270px;
+  position: fixed;
+  margin: 5px 15px 10px 15px;
+}

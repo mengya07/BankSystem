@@ -65,11 +65,11 @@
 		
         <view class="pick">
 		<view class="list">
-		    <view class="list-item">我的账户</view>
+		    <view class="list-item" @click="clickAccount">我的账户</view>
 			<uv-line margin="10rpx"></uv-line>
-		    <view class="list-item">安全与设置</view>
+		    <view class="list-item" @click="clickSettings">安全与设置</view>
 			<uv-line margin="10rpx"></uv-line>
-			<view class="list-item">收支记录</view>
+			<view class="list-item" @click="clickRecord">收支记录</view>
 			<uv-line margin="10rpx"></uv-line>
 			<view class="list-item">关于我们</view>
 			<uv-line margin="10rpx"></uv-line>
@@ -94,9 +94,70 @@
 					url:"/pages/login/login"
 				})
 			},
-			clickExit(){
-				// getApp().globalData.islogin = false
+			clickAccount(){
+				uni.navigateTo({
+					url:"/pages/accountView/accountView"
+				})
 			},
+			clickSettings(){
+				uni.navigateTo({
+					url:"/pages/securityAndSettings/securityAndSettings"
+				})
+			},
+			clickRecord(){
+				uni.navigateTo({
+					url:"/pages/monthIE/monthIE"
+				})
+			},
+		clickExit(){
+			let that = this
+			uni.showModal({
+				content: "请确认是否退出当前登录账号？",
+				success(res) {
+					if(res.confirm){
+						let that = this
+						uni.getStorage({
+							key: 'token',
+							success: function (res) {
+								let _token = res.data
+								uni.showLoading({
+									title: "",
+									mask: true
+								})
+								uni.request({
+										  url: 'https://120.55.37.93/user/logout',  
+										  method: 'GET',
+										  header: {  
+											'token': _token
+										  },
+										  data:{
+										  },
+										  success: function (res) {
+											if(res.data.code == 200){
+												uni.showToast({
+													title:"注销成功"
+												})
+												uni.navigateTo({
+													url:"/pages/login/login"
+												})
+											}
+											uni.hideLoading()
+										  },  
+										  fail: function (error) {  
+											uni.hideLoading()
+											uni.showToast({
+												title: '错误，稍后再试',
+												icon: 'error',
+												duration: 2000
+											}) 
+										  }  
+										})
+							}
+						})
+					}
+				}
+			})
+		},
 			//扫一扫
 			scan(){
 				uni.scanCode({
@@ -171,7 +232,9 @@
 			}
 		},
 		onLoad() {
+			console.log("上面" + this.name)
 			this.name = uni.getStorageSync('name')
+			console.log("下面" + this.name)
 		}
 	}
 </script>

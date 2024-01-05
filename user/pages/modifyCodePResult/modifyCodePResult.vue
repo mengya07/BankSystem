@@ -25,7 +25,7 @@
 		},
 		methods: {
 			returnHome() {
-				uni.navigateTo({
+				uni.switchTab({
 					url:"/pages/home/home",
 					success: function(res){
 						
