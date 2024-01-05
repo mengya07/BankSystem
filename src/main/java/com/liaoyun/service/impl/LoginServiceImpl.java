@@ -35,10 +35,15 @@ public class LoginServiceImpl implements LoginService {
         //根据userId生成jwt对象
         String jwt = JwtUtil.createJWT(userId);
         //将该用户redis中的token值更新
-        redisCache.setCacheObject("validToken:"+ userId,jwt);
+        //因为jwt载荷部分是用户id所以签名部分具有唯一性，只需保存签名即可
+        String[] jwtSection = jwt.split("\\.");
+        redisCache.setCacheObject("validToken:"+ userId,jwtSection[jwtSection.length-1]);
+        //TODO 记得改
         redisCache.expire("validToken:"+ userId,3600);
         //authenticate存入redis
         redisCache.setCacheObject("login:"+userId,loginUser);
+
+        //TODO 记得改
         redisCache.expire("login:"+userId,3600);
         //把token封装成map响应给前端
         HashMap<String,String> map = new HashMap<>();
@@ -49,14 +54,14 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ResponseResult login(AccountUserPassword user) {
+
         //封装成Authentication对象
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
         //这里利用了自己写的UserServiceDetailImpl去查了数据库，并在provider里验证了密码，如果正确就带回来用户信息和权限信息
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         if(Objects.isNull(authenticate)){
-            throw new RuntimeException("登录失败");
-        }else{
 
+            throw new RuntimeException("登录失败");
         }
         //使用userid生成token
         LoginUserDetail loginUser = (LoginUserDetail) authenticate.getPrincipal();
@@ -67,6 +72,22 @@ public class LoginServiceImpl implements LoginService {
     @Override
     @InvokeVerifyCode
     public ResponseResult loginWithVCode(String vCode,String phoneNumber) {
+
+        String redisVerifyCode = redisCache.getCacheObject("vCode." + phoneNumber + ":");
+        if(!redisVerifyCode.equals(vCode)){
+            //            记录登录失败信息
+            userMapper.updateFailedAttempts(phoneNumber);
+            throw new RuntimeException("验证码错误");
+        }
+        return getPermissions(phoneNumber);
+    }
+
+    @Override
+    public ResponseResult loginAfterRegister(String phoneNumber) {
+            return getPermissions(phoneNumber);
+    }
+
+    private ResponseResult getPermissions(String phoneNumber){
         AccountUserPassword user = userMapper.selectOne(phoneNumber);
         //查询权限信息
         String permissions = userMapper.selectPermissionsById(user.getUserId());

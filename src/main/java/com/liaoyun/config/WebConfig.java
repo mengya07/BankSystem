@@ -7,6 +7,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -49,4 +50,10 @@ public class WebConfig implements WebMvcConfigurer {
         resolvers.add(userArgumentResolver);
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //配置静态资源处理
+        registry.addResourceHandler("/.well-known/**","/static/**")
+                .addResourceLocations("classpath:/static/","classpath:/.well-known/");
+    }
 }

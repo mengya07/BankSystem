@@ -27,12 +27,7 @@ public class SendSMSCode {
 
         // 请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID 和 ALIBABA_CLOUD_ACCESS_KEY_SECRET。
         // 工程代码泄露可能会导致 AccessKey 泄露，并威胁账号下所有资源的安全性。以下代码示例使用环境变量获取 AccessKey 的方式进行调用，仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378657.html
-        com.aliyun.dysmsapi20170525.Client client = SendSMSCode.createClient("LTAI5tMqC7MX9WRng3kS7kYQ", "kcLfyQ9Z9JEj63pSuDENVY9v8VWrsf");
-        com.aliyun.dysmsapi20170525.models.SendSmsRequest sendSmsRequest = new com.aliyun.dysmsapi20170525.models.SendSmsRequest()
-                .setSignName("bankapp")
-                .setTemplateCode("SMS_464215424")
-                .setPhoneNumbers(phoneNumbers)
-                .setTemplateParam(vCode);
+        
         try {
             // 复制代码运行请自行打印 API 的返回值
             SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, new RuntimeOptions());

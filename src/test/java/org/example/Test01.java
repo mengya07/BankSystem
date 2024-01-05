@@ -12,7 +12,7 @@ public class Test01 {
     @Test
     public void test() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String encode = bCryptPasswordEncoder.encode("253627");
+        String encode = bCryptPasswordEncoder.encode("123456");
         System.out.println(encode);
     }
 }

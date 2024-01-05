@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.liaoyun.mapper.BankCardMapper">
-
+    <update id="updateBankCardBalance">
+        update bank_card set balance = #{newBalance} where card_id = #{cardId}
+    </update>
+    <update id="updateBankCardStatus">
+        UPDATE bank_card
+        <set>
+            <if test="isActive != -1">is_active = #{isActive},</if>
+            <if test="isBind != -1">is_bind = #{isBind},</if>
+        </set>
+        WHERE card_id = #{cardId}
+    </update>
     <select id="selectSingleBankCard" resultType="com.liaoyun.domain.dataBaseType.BankCardInfo">
-        select card_id,card_number, balance, is_active, open_account_bank
+        select card_id,card_number, balance, is_active, customer_id, card_holder_name,open_account_bank
         from bank_card
         where card_id = #{cardId} and customer_id = #{customerId} and is_bind = 1
     </select>
@@ -13,8 +23,38 @@
         where customer_id = #{customerId} and is_bind = 1
     </select>
     <select id="selectCardInfoByCardNumber" resultType="com.liaoyun.domain.dataBaseType.BankCardInfo">
-        select card_id, balance, card_holder_name, open_account_bank
+        select card_id, balance, card_holder_name,reserve_phone_number, card_number,open_account_bank, customer_id
         from bank_card
         where card_number = #{cardNumber}
+        <if test="name != null">
+            and card_holder_name = #{name}
+        </if>
+    </select>
+    <select id="selectCardId" resultType="java.lang.Integer">
+        select card_id from customer as cus join bank_card as bc on cus.customer_id = bc.customer_id
+        where cus.customer_id = #{customerId}
+        <if test="cardId != null">
+            and bc.card_id = #{cardId}
+        </if>
+    </select>
+
+    <select id="selectCardNumberByCardId" resultType="java.lang.String">
+        select card_number from bank_card where card_id = #{cardId}
+    </select>
+
+    <select id="selectBankCardPasswordByCardId" resultType="java.lang.String">
+        select hashed_password from card_password where card_id = #{cardId}
+    </select>
+    <select id="selectNameAndCardNumber" resultType="com.liaoyun.domain.responseType.NameAndCardNumber">
+        select
+            CONCAT('*',RIGHT(card_holder_name,CHAR_LENGTH(card_holder_name) - 1)
+                ) as payeeName,
+            CONCAT(
+            LEFT(card_number, 4),
+                REPEAT('*', CHAR_LENGTH(card_number) - 8),
+            RIGHT(card_number, 4)
+                ) as payeeCardNumber
+        from bank_card
+        where card_id = #{cardId}
     </select>
 </mapper>

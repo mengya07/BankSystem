@@ -13,9 +13,18 @@ public class AccountUserPassword {
     private Integer userId;
     private String userName;
     private String password;
-
-    public AccountUserPassword(String userName){
+    private Integer failedAttempts;
+    public AccountUserPassword(String userName,String password){
         this.userName = userName;
+        this.password = password;
     }
 
+    public AccountUserPassword(String phoneNumber) {
+        this.userName = phoneNumber;
+    }
+
+    public AccountUserPassword(Integer userId, String password) {
+        this.userId = userId;
+        this.password = password;
+    }
 }

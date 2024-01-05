@@ -5,22 +5,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionRecordDetails {
-    private int inOrOut;
-    private int senderCardId;
-    private String payerName;
-    private String payerCardNumber;
-    private String payeeName;
-    private String payeeCardNumber;
-    private BigDecimal transferAmount;
+
+    private String transactionAccount;
+    private BigDecimal balance;
+    private String counterpartyName;
+    private String counterpartyAccount;
+    private BigDecimal amount;
     private String postscript;
-    private int serialNumber;
+    //成功或失败，收入或支出
     private byte status;
-    private Date transferTime;
+    private String statusComments;
+    private Long transactionId;
+    private Timestamp transferTime;
 }

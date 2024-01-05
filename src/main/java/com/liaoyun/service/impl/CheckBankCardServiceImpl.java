@@ -11,17 +11,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class CheckBankCardServiceImpl implements CheckBankCardService {
 
-    @Autowired
-    UserMapper userMapper;
 
     @Autowired
     BankCardMapper bankCardMapper;
-    //成功返回卡ID
-    //失败返回-1
+
+    /**
+     *
+     * @param cardNumber
+     * @param password
+     * @return 密码正确返回查询到的卡信息 失败返回null
+     */
     @Override
     public BankCardInfo checkCardNumberAndPassword(String cardNumber, String password) {
-        BankCardInfo bankCardInfo = bankCardMapper.selectCardInfoByCardNumber(cardNumber);
-        String bankCardPassword = userMapper.selectBankCardPasswordByCardId(bankCardInfo.getCardId());
+        BankCardInfo bankCardInfo = bankCardMapper.selectCardInfoByCardNumber(null,cardNumber);
+        String bankCardPassword = bankCardMapper.selectBankCardPasswordByCardId(bankCardInfo.getCardId());
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if (bCryptPasswordEncoder.matches(password,bankCardPassword)) {
             return bankCardInfo;

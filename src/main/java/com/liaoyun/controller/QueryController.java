@@ -25,39 +25,72 @@ public class QueryController {
 
 
     @RequestMapping("/query/singleCard")
-    @PreAuthorize(value = "hasAuthority('user')")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
     ResponseResult querySingleCard(@RequestParam Integer cardId, HttpServletRequest request) throws Exception {
         return queryInfo.querySingleBankCard(tokenToId.toCustomerId(request),cardId);
     }
 
     @RequestMapping("/query/bankCard")
-    @PreAuthorize(value = "hasAuthority('user')")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
     ResponseResult queryBankCards(HttpServletRequest request) throws Exception {
         return queryInfo.queryBankCards(tokenToId.toCustomerId(request));
     }
-    @RequestMapping("/query/customerInfo")
-    @PreAuthorize(value = "hasAuthority('user')")
-    ResponseResult queryCustomerInfo(HttpServletRequest request) throws Exception {
-        return queryInfo.queryPersonalInformation(tokenToId.toCustomerId(request));
-    }
+//    @RequestMapping("/query/customerInfo")
+//    @PreAuthorize(value = "hasAuthority('user')")
+//    ResponseResult queryCustomerInfo(HttpServletRequest request) throws Exception {
+//        return queryInfo.queryPersonalInformation(tokenToId.toCustomerId(request));
+//    }
 
     @RequestMapping("/query/transferRecord")
-    @PreAuthorize(value = "hasAuthority('user')")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
     ResponseResult queryTransferRecord(@RequestBody TransferRecordQueryConditions queryConditions,
                                        @RequestParam int pageNum, @RequestParam int pageSize, HttpServletRequest request) throws Exception {
 
         return queryInfo.queryTransferRecord(tokenToId.toCustomerId(request),queryConditions,pageNum,pageSize);
     }
 
-    @RequestMapping("/query/cardnumber")
-    @PreAuthorize(value = "hasAuthority('user')")
+    @RequestMapping("/query/cardNumber")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
     ResponseResult queryCardNumber(@RequestBody DomainWithVerifyCode domainWithVerifyCode){
-        int cardId = JSONObject.parseObject(JSONObject.toJSONString(domainWithVerifyCode.getPojo()), Integer.class);
+        Integer cardId = domainWithVerifyCode.getCardId();
         return queryInfo.queryCardNumberByCardId(domainWithVerifyCode.getVerifyCode(), cardId);
     }
 
-    @RequestMapping("/query/transactionDetails")
-    ResponseResult queryTransactionDetails(@RequestParam Integer transactionId,HttpServletRequest request) throws Exception {
-        return queryInfo.queryTransactionDetails(transactionId,tokenToId.toCustomerId(request));
+    @RequestMapping("/query/transferRecordDetail")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
+    ResponseResult queryTransferDetails(@RequestParam String transactionId,HttpServletRequest request) throws Exception {
+        return queryInfo.queryTransferRecordDetail(transactionId,tokenToId.toCustomerId(request));
+    }
+
+    @RequestMapping("/query/transactionRecord")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
+    ResponseResult queryTransaction(@RequestBody TransferRecordQueryConditions queryConditions,
+                                    @RequestParam int pageNum, @RequestParam int pageSize, HttpServletRequest request) throws Exception {
+        return queryInfo.queryTransactionRecord(tokenToId.toCustomerId(request),queryConditions,pageNum,pageSize);
+    }
+
+    /**
+     * 查询交易明细的单条记录的详细信息
+     * @param transactionId
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/query/transactionDetail")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
+    ResponseResult queryTransaction(@RequestParam String transactionId,HttpServletRequest request) throws Exception {
+        return queryInfo.queryTransactionRecordDetail(transactionId,tokenToId.toCustomerId(request));
+    }
+
+    @RequestMapping("/query/customerInfo")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
+    ResponseResult queryCustomerInfo(HttpServletRequest request) throws Exception {
+        return queryInfo.queryCustomerInfo(tokenToId.toCustomerId(request));
+    }
+
+    @RequestMapping("/query/monthlycheck")
+    @PreAuthorize(value = "hasAnyAuthority('user','safeuser')")
+    ResponseResult queryMonthlyCheck(HttpServletRequest request) throws Exception {
+        return queryInfo.queryMonthlyCheck(tokenToId.toCustomerId(request));
     }
 }

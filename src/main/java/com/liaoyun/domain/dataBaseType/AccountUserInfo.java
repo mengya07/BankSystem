@@ -25,4 +25,8 @@ public class AccountUserInfo {
         this.isBind = isBind;
     }
 
+    public AccountUserInfo(Integer userId, String permissions) {
+        this.userId = userId;
+        this.permissions = permissions;
+    }
 }

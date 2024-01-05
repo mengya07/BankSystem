@@ -1,9 +1,6 @@
 package com.liaoyun.mapper;
 
 import com.liaoyun.domain.dataBaseType.*;
-import com.liaoyun.domain.requestType.TransferRecordQueryConditions;
-import com.liaoyun.domain.responseType.SimpleTransferTransaction;
-import com.liaoyun.domain.responseType.TransactionRecordDetails;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +23,7 @@ public interface UserMapper {
     void inserterUserInfo(AccountUserInfo accountUserInfo);
 
 
-    int selectCustomerIdByUserId(int userId);
+    Integer selectCustomerIdByUserId(int userId);
 
     BankCardInfo selectBalanceByCustomerId(int customerId);
 
@@ -37,30 +34,26 @@ public interface UserMapper {
     BigDecimal selectBalanceByCardNumber(String cardNumber);
 
 
-    void updateBankCardBalance(int cardId,BigDecimal newBalance);
-
-    int insertTransferTransaction(TransferTransaction transferTransaction);
-
-    List<Integer> selectCardId( int customerId,int cardId);
-    List<SimpleTransferTransaction> selectTransferRecordPages(TransferRecordQueryConditions queryConditions, List<Integer> idList, int customerId);
-
     AccountUserPassword selectPasswordByUserId(int userId);
 
     int updateAppPassword(AccountUserPassword accountUserPassword);
 
-    String selectCardNumberByCardId(int cardId);
 
     boolean selectCustomerInfoExists(CustomerInfo customerInfo);
 
     Boolean selectIdentityExits(String identityCard);
 
-    String selectBankCardPasswordByCardId(int cardId);
-
     int updateCustomerInfo(CustomerInfo customerInfo);
 
     int updateAppUserInfo(AccountUserInfo accountUserInfo);
 
-    int updateBankCardStatus(byte isActive, byte isBind,int cardId);
+    String selectPaymentPassword(Integer userId);
 
-    TransactionRecordDetails selectTransactionDetails(int transactionId);
+    Integer inserterUserPaymentPassword();
+
+    Integer updatePaymentPassword(Integer userId);
+
+    Integer updateFailedAttempts(String userName);
+
+    Integer updateUserPaymentPassword(Integer userId, String encodePassword);
 }

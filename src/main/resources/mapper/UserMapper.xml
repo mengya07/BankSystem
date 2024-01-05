@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.liaoyun.mapper.UserMapper">
     <insert id="insertUserPassword">
-        insert into app_user_password (user_id,user_name,password) values (LAST_INSERT_ID(),#{userName},#{password})
+        insert into app_user_password (user_id,user_name) values (LAST_INSERT_ID(),#{userName})
     </insert>
     <insert id="inserterUserInfo">
         INSERT INTO app_user_info
@@ -10,21 +10,23 @@
             <if test="phoneNumber != null">phone_number,</if>
             <if test="identityCard != null">identity_card,</if>
             <if test="permissions != null">permissions,</if>
-            <if test="is_bind != null">is_bind,</if>
+<!--            <if test="isBind != null">is_bind,</if>-->
             <!-- 其他属性 -->
         </trim>
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="phoneNumber != null">#{phone_number},</if>
-            <if test="identityCard != null">#{identity_card},</if>
+            <if test="phoneNumber != null">#{phoneNumber},</if>
+            <if test="identityCard != null">#{identityCard},</if>
             <if test="permissions != null">#{permissions},</if>
-            <if test="is_bind != null">#{is_bind},</if>
+<!--            <if test="isBind != null">#{isBind},</if>-->
             <!-- 其他属性 -->
         </trim>
     </insert>
-    <insert id="insertTransferTransaction">
-        insert into transfer_transaction (sender_card_id,sender_card_number,receiver_card_id,receiver_card_number,receiver_name,amount,transfer_date,status,postscript)
-        values (#{senderCardId},#{senderCardNumber},#{receiverCardId},#{receiverCardNumber},#{receiverName},#{amount},#{transferDate},#{status},#{postscript})
+    <insert id="inserterUserPaymentPassword">
+        insert into app_user_payment_password
+        (user_id)
+        values
+        (LAST_INSERT_ID())
     </insert>
     <update id="updateBankCardBalance">
         update bank_card set balance = #{newBalance} where card_id = #{cardId}
@@ -47,6 +49,7 @@
     <update id="updateAppUserInfo">
         UPDATE app_user_info
         <set>
+            <if test="customerId != null">customer_id = #{customerId},</if>
             <if test="phoneNumber != null">phone_number = #{phoneNumber},</if>
             <if test="identityCard != null">Identity_card = #{identityCard},</if>
             <if test="permissions != null">permissions = #{permissions},</if>
@@ -54,13 +57,18 @@
         </set>
         WHERE user_id = #{userId}
     </update>
-    <update id="updateBankCardStatus">
-        UPDATE bank_card
-        <set>
-            <if test="isActive != -1">is_active = #{isActive},</if>
-            <if test="isBind != -1">is_bind = #{isBind},</if>
-        </set>
-        WHERE card_id = #{cardId}
+    <update id="updatePaymentPassword">
+
+    </update>
+    <update id="updateFailedAttempts">
+        update app_user_password
+        set failed_attempts = failed_attempts + 1
+        where user_name = #{userName}
+    </update>
+    <update id="updateUserPaymentPassword">
+        update app_user_payment_password
+        set payment_password = #{encodePassword}
+        where user_id = #{userId}
     </update>
     <select id="selectOne" resultType="com.liaoyun.domain.dataBaseType.AccountUserPassword">
         select * from app_user_password where user_name=#{username}
@@ -78,7 +86,7 @@
         select card_id,card_number,balance,is_active from bank_card where customer_id = #{customerId} and is_bind = 1;
     </select>
     <select id="selectCustomerInfo" resultType="com.liaoyun.domain.dataBaseType.CustomerInfo">
-        select surname,name, date_of_birth, address, phone_number, email, identity_card, is_active from customer where customer_id = #{customerId}
+        select surname,name, phone_number, identity_card, is_active from customer where customer_id = #{customerId}
     </select>
     <select id="selectBalanceByCardNumber" resultType="java.math.BigDecimal">
         select balance from bank_card wherr card_number = #{cardNumber}
@@ -87,39 +95,9 @@
         select card_id,customer_id, card_number, reserve_phone_number,card_holder_name ,balance,is_active from bank_card
         where card_number = #{cardNumber}
     </select>
-    <select id="selectTransferRecordPages" resultType="com.liaoyun.domain.responseType.SimpleTransferTransaction">
-        select tt.transaction_id as transactionId, bc.card_holder_name as payerName ,bc.card_number as payerCardNumber,
-               tt.amount as transferAmount,tt.status as status,tt.transfer_date as transferTime from transfer_transaction as tt
-        join bank_card as bc on tt.sender_card_id = bc.card_id
-<!--        <if test="queryConditions.payeeLimit">-->
-<!--            join bank_card as bc2 on tt.receiver_card_id = bc2.card_id-->
-<!--        </if>-->
-        where tt.sender_card_id in
-        <foreach collection="idList" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-        and tt.transfer_date between #{queryConditions.startDate} and #{queryConditions.endDate}
-        and tt.amount between #{queryConditions.miniAmount} and #{queryConditions.maxAmount}
-        <if test="queryConditions.payeeName != null">
-            and receiver_name = #{queryConditions.payeeName}
-        </if>
-<!--        <if test="queryConditions.payeePhoneNumber != null">-->
-<!--            and bc2.reserve_phone_number = #{queryConditions.payeePhoneNumber}-->
-<!--        </if>-->
 
-    </select>
-    <select id="selectCardId" resultType="java.lang.Integer">
-        select card_id from customer as cus join bank_card as bc on cus.customer_id = bc.customer_id
-        where cus.customer_id = #{customerId}
-        <if test="cardId != 0">
-            and bc.card_id = #{cardId}
-        </if>
-    </select>
     <select id="selectPasswordByUserId" resultType="com.liaoyun.domain.dataBaseType.AccountUserPassword">
         select * from app_user_password where user_id = #{userId}
-    </select>
-    <select id="selectCardNumberByCardId" resultType="java.lang.String">
-        select card_number from bank_card where card_id = #{cardId}
     </select>
     <select id="selectCustomerInfoExists" resultType="java.lang.Boolean">
     select exists(
@@ -134,17 +112,10 @@
     <select id="selectIdentityExits" resultType="java.lang.Boolean">
         select count(*) from app_user_info where identity_card = #{identityCard}
     </select>
-    <select id="selectBankCardPasswordByCardId" resultType="java.lang.String">
-        select hashed_password from card_password where card_id = #{cardId}
+    <select id="selectPaymentPassword" resultType="java.lang.String">
+        select payment_password as paymentPassword
+        from app_user_payment_password
+        where user_id = #{userId}
     </select>
-    <select id="selectTransactionDetails" resultType="com.liaoyun.domain.responseType.TransactionRecordDetails">
-        select tt.sender_card_id as senderCardId, bc.card_holder_name as payerName, bc.card_number as payerCardNumber,
-        tt.receiver_name as payeeName, tt.receiver_card_number as payeeCardNumber, tt.amount as transferAmount,
-        tt.postscript as postscript, tt.transaction_id as serialNumber, tt.status as status,tt.transfer_date as transferTime
-        from transfer_transaction as tt
-        join bank_card as bc on tt.sender_card_id = bc.card_id
-        where transaction_id = #{transactionId}
-    </select>
-
 
 </mapper>
